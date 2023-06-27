@@ -1,0 +1,23 @@
+<div class="topSearchWrap">
+    <div>
+        <form class="search" method="post" action="/subm/mnu001">
+<div style="width:100%">
+            <div class="DateFrom" style="width:15%;align-items:center">시작시간</div>
+            <div></div>
+            <input style="width:150px" type="date" id="datefrom" name="datefrom" class="setdate">
+            <input style="width:150px" type="time" id="timefrom" name="timefrom"value="11:50:00">
+            <div></div>
+            <div class="DateTo" style="width:15%">종료시간</div>
+            <input style="width:150px" type="date" id="dateto" name="dateto"class="setdate">
+            <input style="width:150px" type="time" id="timeto" name="timeto" value="12:00:00">
+            <div></div>
+            <div> <input type="text" id="whereplus" name="whereplus" style="width: 500px"/></div>
+            <input type="submit" value="search">
+</div>
+        </form>
+</div>
+</div>
+<script>
+  document.getElementById('datefrom').value= new Date().toISOString().slice(0, 10);
+  document.getElementById('dateto').value= new Date().toISOString().slice(0, 10);
+</script>

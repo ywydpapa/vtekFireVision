@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+    <script>
+        $(document).ready(function () {
+            let result = {{result|tojson}};
+            let cond = {{cond|tojson}};
+            pageDataSettings(result, cond);
+        });
+
+    </script>
+</head>
+<body>
+    <div id="commonTopHeader">
+    {% include './menu/comTopHeader.html' %}
+    </div>
+    <div id="commonBodyContents">
+    {% include './menu/sidemenu2.html' %}
+        <!-- commonSideMenu end-->
+        <div id="commonContent">
+            <div class="container">
+            {% include './Search/comSearch.html' %}
+            {% include './subm/mainTables.html' %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

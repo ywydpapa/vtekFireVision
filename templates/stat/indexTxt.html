@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+    <script>
+        $(document).ready(function () {
+            $('#foo-table thead td').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="' + title + '" />');
+            });
+
+            $('#foo-table').DataTable({
+             "pageLength":20,
+             "destroy":true,
+             "order":[2,'desc'],
+                initComplete: function () {
+            // Apply the Search
+            this.api()
+                .columns('.showMenu')
+                .every(function () {
+                    var that = this;
+                    $('input', this.header()).on('keyup change clear', function () {
+                        if (that.search() !== this.value) {
+                            that.search(this.value).draw();
+                        }
+                    });
+                });
+        },
+        });
+        });
+    </script>
+</head>
+<body>
+    <div id="commonTopHeader">
+        <div id="mainTopLogo">
+            <a href="">
+                <img src="" alt=""/>
+            </a>
+        </div>
+{% include './menu/topmenu.html' %}
+        <div id="mainInfo"></div>
+    </div>
+
+    <div id="commonBodyContents">
+{% include './menu/sidemenu.html' %}
+        <!-- commonSideMenu end-->
+
+        <div id="commonContent">
+            <div class="container">
+                <div>
+                   <table id="foo-table" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+
+                            <tr>
+                            <td>D001</td>
+                            <td>D002</td>
+                            <td class = "showMenu">D003</td>
+                            <td class = "showMenu">D004</td>
+                            <td class = "showMenu">D005</td>
+                            <td class = "showMenu">D006</td>
+                            <td>D007</td>
+                            <td class = "showMenu">D008</td>
+                            <td class = "showMenu">D009</td>
+                            <td class = "showMenu">D010</td>
+                            <td class = "showMenu">D012</td>
+                            <td class = "showMenu">D013</td>
+                            <td class = "showMenu">D014</td>
+                            <td class = "showMenu">D015</td>
+                            <td class = "showMenu">D016</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in result %}
+                            <tr>
+                            <td>{{i[0]}}</td>
+                            <td>{{i[1]}}</td>
+                            <td class = "showMenu">{{i[2]}}</td>
+                            <td class = "showMenu">{{i[3]}}</td>
+                            <td class = "showMenu">{{i[4]}}</td>
+                            <td class = "showMenu">{{i[5]}}</td>
+                            <td>{{i[6]}}</td>
+                            <td class = "showMenu">{{i[7]}}</td>
+                            <td class = "showMenu">{{i[8]}}</td>
+                            <td class = "showMenu">{{i[9]}}</td>
+                            <td class = "showMenu">{{i[10]}}</td>
+                            <td class = "showMenu">{{i[11]}}</td>
+                            <td class = "showMenu">{{i[12]}}</td>
+                            <td class = "showMenu">{{i[13]}}</td>
+                            <td class = "showMenu">{{i[14]}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                            <td></td>
+                            <td></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td  class = "showMenu"></td>
+                            <td></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            <td class = "showMenu"></td>
+                            </tr>
+                        </tfoot>
+                   </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+    <script>
+        $(document).ready(function () {
+            readyTable();
+            /*$('#admin-table thead td').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="' + title + '" />');
+            });
+            $('#admin-table').DataTable({
+                "pageLength":20,
+                "destroy":true,
+                "order":[2,'desc'],
+                    initComplete: function () {
+                // Apply the Search
+                this.api()
+                    .columns('.showMenu')
+                    .every(function () {
+                        var that = this;
+                        $('input', this.header()).on('keyup change clear', function () {
+                            if (that.Search() !== this.value) {
+                                that.Search(this.value).draw();
+                            }
+                        });
+                    });
+                },
+            });*/
+        });
+
+        function tableChange(){
+            location.href = "/menuset?selectValue=" + $("#menuSelect").val();
+        }
+
+        function readyTable(){
+            let url = new URL(location.href);
+            let searchParams = url.searchParams;
+            let selectValue = searchParams.get("selectValue");
+            let cond = {{cond|tojson}};
+            let dataArr = [];
+            let datas = {};
+            let html = "";
+            $("#admin-table tbody").html("");
+
+            for(let i = 0; i < cond.length; i++){
+                html += "<tr>";
+                html += "<td class = \"showMenu\" ><input type=\"text\" name = \"mkey\" value=\"" + cond[i][0] + "\" readonly /></td>";
+                html += "<td class = \"showMenu\"><input type=\"text\" name = \"mtitle\" value = \"" + cond[i][1] + "\"></td>";
+                html += "<td class = \"showMenu\">" + cond[i][2];
+                html += "<select name = \"muse\">";
+                if(cond[i][2] === "Y"){
+                    html += "<option value = \"Y\" selected>사용</option>";
+                    html += "<option value = \"N\">미사용</option>";
+                }else{
+                    html += "<option value = \"Y\">사용</option>";
+                    html += "<option value = \"N\" selected>미사용</option>";
+                }
+                html += "</select>";
+                html += "</td>";
+                html += "<td class = \"showMenu\" ><input type=\"number\" min=\"0\" max=\"1000\" name = \"msort\" value=\"" + cond[i][3] + "\" /></td>";
+                html += "</tr>";
+            }
+
+            $("#admin-table tbody").html(html);
+
+            $('#admin-table thead td').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="' + title + '" />');
+            });
+
+            setTimeout(() => {
+                $(window).resize(function() {
+                    $('.dataTables_scrollBody').css('height', $(window).height());
+                });
+    
+                $('#admin-table').DataTable({
+                    "searching": false,
+                    "info": false,
+                    "paging": false,
+                    "destroy":true,
+                    "scrollY": ($(window).height() - 230),
+                    initComplete: function () {
+                    // Apply the Search
+                    this.api()
+                        .columns('.showMenu')
+                        .every(function () {
+                            var that = this;
+                            $('input', this.header()).on('keyup change clear', function () {
+                                if (that.search() !== this.value) {
+                                    that.search(this.value).draw();
+                                }
+                            });
+                        });
+                    },
+                });
+
+                if(selectValue != null){
+                    $("#menuSelect").val(selectValue);
+                }
+            }, 300);
+            
+           /* setTimeout(() => {
+                if(localStorage.getItem("selectValue") !== undefined){
+                    datas.selectValue = $("#menuSelect").val();
+                }
+
+                $(window).resize(function() {
+                    $('.dataTables_scrollBody').css('height', ($(window).height() - 200));
+                });
+    
+                $('#admin-table').DataTable({
+                    "searching": false,
+                    "info": false,
+                    "scrollY": ($(window).height() - 230),
+                    "destroy":true,
+                    "dom": 't<"bottom"lp>',
+                    "order": [0, "desc"],
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '/subm/menusetjson',
+                        "type": 'get',
+                        "contentType": "application/json",
+                        "dataType": 'json',
+                        "data": datas,
+                    },
+                    "columns": dataArr,
+                    "lengthChange" : true, 
+                    "lengthMenu" : [10, 20, 30, 40, 50, 100],
+                    "pageLength": 50,
+                });
+            }) */
+        }
+    </script>
+</head>
+<body>
+    <div id="commonTopHeader">
+{% include './menu/comTopHeader.html' %}
+    </div>
+
+    <div id="commonBodyContents">
+{% include './menu/sidemenu3.html' %}
+        <!-- commonSideMenu end-->
+
+        <div id="commonContent">
+        <form method="post" action="/updatemenu">
+            <div class="menuCustomHeader">
+                <div>
+                    <span>Menu Custom</span>
+                </div>
+                <div class="menuSelectContent">
+                    <select id="menuSelect" name="menuSelect" onchange="tableChange();">
+                        <option value="TRAF">Traffic</option>
+                        <option value="THRE">Threat</option>
+                        <option value="URLF">URL Filtering</option>
+                        <option value="WILD">WildFire Submissions</option>
+                        <option value="DATA">Data Filtering</option>
+                        <option value="HIPM">HIP Match</option>
+                        <option value="GLOB">GlobalProtect</option>
+                        <option value="IPTA">IP-Tag</option>
+                        <option value="USER">User-ID</option>
+                        <option value="DESC">Description</option>
+                        <option value="TUNN">Tunnel Inspection</option>
+                        <option value="CONF">Configuration</option>
+                        <option value="SYST">System</option>
+                        <option value="ALAR">Alarm</option>
+                        <option value="AUTH">Authentication</option>
+                        <option value="UNIF">Unified</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="변경사항 저장"/>
+                </div>
+            </div>
+            <div class="container" style="width: 100%;">
+                <div>
+                  <table id="admin-table" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <td class = "showMenu">컬럼명</td>
+                                <td>표시제목</td>
+                                <td>사용여부</td>
+                                <td>배치순번</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--
+                            {% for i in cond %}
+                            <tr>
+                                <td class = "showMenu" ><input type="text" name = "mkey" value="{{i[0]}}" readonly /></td>
+				                <td class = "showMenu"><input type="text" name = "mtitle" value = "{{i[1]}}"></td>
+				                <td class = "showMenu">{{i[2]}}
+                                    <select name = "muse">
+							            <option value = "Y" {% if i[2] == 'Y' %} selected {% endif %} >사용</option>
+							            <option value = "N" {% if i[2] == 'N' %} selected {% endif %} >미사용</option>
+							        </select>
+					            </td>
+                                <td class = "showMenu" ><input type="number" min="0" max="100" name = "msort" value="{{i[3]}}" /></td>
+                            </tr>
+                            {% endfor %}
+                            -->
+                        </tbody>
+                   </table>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

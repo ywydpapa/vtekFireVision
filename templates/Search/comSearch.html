@@ -1,0 +1,55 @@
+<div class="topSearchWrap">
+  <div>
+      <form class="search" onsubmit="return false;">
+          <div>
+            <div>
+                <div class="DateFrom">시작시간: </div>
+                <input type="date" id="datefrom" name="datefrom" class="setdate">
+                <input type="time" id="timefrom" name="timefrom">
+                <div class="DateTo">종료시간: </div>
+                <input type="date" id="dateto" name="dateto"class="setdate">
+                <input type="time" id="timeto" name="timeto">
+            </div>
+            <div>
+              <button type="button" id="csvExportBtn" onClick="downloadCSV(this);">CSV Export</button>
+            </div>
+          </div>
+          <div>
+              <img src="/static/images/magnifier.png" />
+              <input type="text" id="whereplus" name="whereplus" />
+              <button type="button" onclick="searchSubmit();"><img src="/static/images/right.png" /></button>
+          </div>
+      </form>
+  </div>
+</div>
+<script>
+  $(window).ready(function(){
+      if(localStorage.getItem("setSearchDateFrom") !== null){
+        let splitStr = localStorage.getItem("setSearchDateFrom").split(" ");
+        $("#datefrom").val(splitStr[0]);
+        $("#timefrom").val(splitStr[1]);
+      }else{
+        $("#datefrom").val(new Date().toISOString().slice(0, 10));
+      }
+
+      if(localStorage.getItem("setSearchDateTo") !== null){
+        let splitStr = localStorage.getItem("setSearchDateTo").split(" ");
+        $("#dateto").val(splitStr[0]);
+        $("#timeto").val(splitStr[1]);
+      }else{
+        $("#dateto").val(new Date().toISOString().slice(0, 10));
+      }
+
+      if(localStorage.getItem("setSearchText") !== null){
+        $("#whereplus").val(localStorage.getItem("setSearchText"));
+      }
+  });
+
+  function searchSubmit(){
+      localStorage.setItem("setSearchDateFrom", $("#datefrom").val() + " " + $("#timefrom").val());
+      localStorage.setItem("setSearchDateTo", $("#dateto").val() + " " + $("#timeto").val());
+      localStorage.setItem("setSearchText", $("#whereplus").val());
+      localStorage.setItem("searchFlag", true);
+      location.reload();
+  }
+</script>

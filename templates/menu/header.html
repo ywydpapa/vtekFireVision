@@ -1,0 +1,251 @@
+    <meta charset="UTF-8">
+    <title>PALO LOG ver 230331</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename = '/js/loading.js') }}"></script>
+    <script src="{{ url_for('static', filename = '/js/chart.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/>
+    <link href="{{ url_for('static', filename = 'css/root.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static', filename = 'css/commonHeader.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static', filename = 'css/commonContent.css') }}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = '/css/loading.css') }}" />
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <div id="loadingDiv"></div>
+    <style>
+        .bottom{
+            display: flex;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        .bottom > .dataTables_length{
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            width: 100%;
+        }
+
+        .bottom > .dataTables_paginate{
+            display: flex;
+            align-items: center;
+            justify-content: right;
+            width: 100%;
+        }
+
+        .dataTables_scrollBody > table{
+            width: inherit !important;
+        }
+
+        .container{
+            max-height: 100%;
+            overflow: hidden;
+        }
+    </style>
+    <script>
+        $("#loadingDiv").loading({
+            onStart: function (loading) {
+                loading.overlay.fadeIn(1000);
+            },
+            onStop: function (loading) {
+                loading.overlay.fadeOut(1000);
+            }
+        });
+
+        $(window).ready(function(){
+            $("#loadingDiv").hide();
+            $("#loadingDiv").loading("toggle");
+            $("html").on("keydown", function(e){
+                if(e.which==13){
+                    if(document.getElementsByClassName("search")[0] !== undefined){
+                        e.preventDefault();
+                        searchSubmit();
+                    }
+                }
+            });
+        });
+
+        function searchTextCol(e){
+            let thisEle = $(e);
+            let dataColumn = thisEle.data("colname");
+            let whereplus = $("#whereplus");
+            let setText = "";
+
+            if(whereplus.val() === ""){
+                setText += " AND (" + dataColumn + "='" + thisEle.data("value") + "')";
+            }else{
+                setText += whereplus.val() + " AND (" + dataColumn + "='" + thisEle.data("value") + "')";
+            }
+
+            whereplus.val(setText);
+        }
+
+        function pageDataSettings(result, cond){
+            let dataArr = [];
+            let datas = {};
+            let d002Index = 0;
+
+            for(let i = 0; i < cond.length; i++){
+                let dataObj = {};
+                dataObj.data = cond[i].activeMenu;
+                
+                if(cond[i].activeMenu === "d002"){
+                    d002Index = i;
+                }
+
+                dataObj.render = function(data, type, row){
+                    let dataFormat = Date.parse(data);
+                    let valueData;
+                    
+                    if(cond[i].activeMenu === "d002"){
+                        let getDate = dateConvert(data);
+                        valueData = getDate.getFullYear() + "-" + String((getDate.getMonth() + 1)).padStart(2, "0") + "-" + String(getDate.getDate()).padStart(2, "0") + " " + String(getDate.getHours()).padStart(2, "0") + ":" + String(getDate.getMinutes()).padStart(2, "0") + ":" + String(getDate.getSeconds()).padStart(2, "0");
+                    }else{
+                        valueData = data;
+                    }
+
+                    if(!isNaN(dataFormat)){
+                        data = "<a href=\"javascript:void(0);\" data-colname=\"" + cond[i].activeMenu + "\" data-value=\"" + valueData + "\" onClick=\"searchTextCol(this);\">" + valueData + "</a>";
+                    }else{
+                        data = "<a href=\"javascript:void(0);\" data-colname=\"" + cond[i].activeMenu + "\" data-value=\"" + valueData + "\" onClick=\"searchTextCol(this);\">" + data + "</a>";
+                    }
+
+                    return data;
+                };
+                dataArr.push(dataObj);
+            }
+
+            $('#foo-table thead tr:last td').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="' + title + '" />');
+            });
+
+            setTimeout(() => {
+                if(localStorage.getItem("searchFlag") && localStorage.getItem("searchFlag") !== null){
+                    datas.datefrom = $("#datefrom").val();
+                    datas.timefrom = $("#timefrom").val();
+                    datas.dateto = $("#dateto").val();
+                    datas.datetimetofrom = $("#timeto").val();
+                    datas.whereplus = $("#whereplus").val();
+                    datas.menuTitle = localStorage.getItem("menuTitle");
+                    datas.menuIndex = localStorage.getItem("menuIndex");
+                    localStorage.clear();
+                }else{
+                    let nowDate = new Date();
+                    $("#timeto").val(String(nowDate.getHours()).padStart(2, "0") + ":" + String(nowDate.getMinutes()).padStart(2, "0"));
+
+                    if((nowDate.getMinutes() - 5) < 0){
+                        nowDate.setHours(nowDate.getHours() - 1);
+                        nowDate.setMinutes(60 - Math.abs(String((nowDate.getMinutes() - 5)).padStart(2, "0")));
+                        $("#timefrom").val(String(nowDate.getHours()).padStart(2, "0") + ":" + String(nowDate.getMinutes()).padStart(2, "0"));
+                    }else{
+                        $("#timefrom").val(String(nowDate.getHours()).padStart(2, "0") + ":" + String(nowDate.getMinutes() - 5).padStart(2, "0"));
+                    }
+
+                    datas.datefrom = $("#datefrom").val();
+                    datas.timefrom = $("#timefrom").val();
+                    datas.dateto = $("#dateto").val();
+                    datas.datetimetofrom = $("#timeto").val();
+                    datas.menuTitle = localStorage.getItem("menuTitle");
+                    datas.menuIndex = localStorage.getItem("menuIndex");
+                }
+
+                $(window).resize(function() {
+                    $('.dataTables_scrollBody').css('height', ($(window).height() - 180));
+                });
+
+
+                $('#foo-table').DataTable({
+                    "searching": false,
+                    "info": false,
+                    "scrollX": true,
+                    "scrollY": ($(window).height() - 230),
+                    "dom": 't<"bottom"lp>',
+                    "processing": true,
+                    "serverSide": true,
+                    "order": [[d002Index, "desc"]],
+                    "ajax": {
+                        "url": '/subm/mnujson',
+                        "type": 'get',
+                        "data": datas,
+                        "beforeSend": function(){
+                            $("#loadingDiv").loading({
+                                onStart: function (loading) {
+                                    loading.overlay.fadeIn(1000);
+                                },
+                                onStop: function (loading) {
+                                    loading.overlay.fadeOut(1000);
+                                }
+                            });
+                        },
+                        
+                        "complete": function(){
+                            $("#loadingDiv").hide();
+                            $("#loadingDiv").loading("toggle");
+                        }
+                    },
+                    "columns": dataArr,
+                    "lengthChange" : true, 
+                    "lengthMenu" : [10, 20, 30, 40, 50, 100],
+                    "pageLength": 50,
+                });
+
+                if(localStorage.getItem("menuTitle") && localStorage.getItem("menuTitle") !== null){
+                    $("#csvExportBtn").attr("data-title", localStorage.getItem("menuTitle"));
+                    localStorage.removeItem("menuTitle");
+                }else{
+                    if($("#csvExportBtn").length > 0){
+                        $("#csvExportBtn").attr("data-title", "Monitoring");
+                    }
+                }
+            }, 300);
+        }
+
+        function dateConvert(date){
+            let getDate = new Date(date);
+            let utcDate = getDate.getTime() + (getDate.getTimezoneOffset() * 60 * 1000);
+            //let koreaTimeDiff = 9 * 60 * 60 * 1000;
+            
+            return new Date(utcDate);
+        }
+
+        function downloadCSV(thisEle) {
+            let fileName = $(thisEle).data("title") + ".csv";
+            let csv = convertNodeToCsvString();
+            let link = document.createElement("a");
+            let blob = new Blob(["\uFEFF" + csv], {type: 'text/csv; charset=utf-8'});
+            let url = URL.createObjectURL(blob);
+
+            $(link).attr({"download" : fileName , "href" : url});
+            link.click();
+        }
+    
+        function convertNodeToCsvString() {
+            let result = "";
+            let node = $("#foo-table thead tr").children();
+            let nodeIndex = 0;
+
+            $(node).each(function (index, value) {
+                result += $(value).text() + ",";
+                nodeIndex++;
+            })
+
+            result += "\n";
+    
+            let itemNodes = $("#foo-table tbody tr td");
+            $(itemNodes).each(function (index, value) {
+                if(index > 0 && index % nodeIndex == 0){
+                    result += "\n";
+                }
+                result += $(value).text().trim() + ",";
+            });
+
+            return result;
+        }
+
+        function pageMove(thisEle){
+            localStorage.setItem("menuTitle", $(thisEle).text());
+            localStorage.setItem("menuIndex", $(thisEle).data("index"));
+            location.href = $(thisEle).data("href");
+        }
+    </script>

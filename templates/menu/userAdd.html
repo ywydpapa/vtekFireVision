@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+<style>
+    .userAddContents{
+        width: 100%;
+        padding-bottom: 10px;
+    }
+
+    .userAddContents > div{
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        padding-bottom: 10px;
+    }
+
+    .userAddContents > table{
+        width: 100%;
+    }
+
+    .userAddContents > table > thead > tr > th{
+        padding: 5px;
+    }
+
+    .userAddContents > table > tbody > tr > td{
+        padding: 5px;
+    }
+
+    .userAddContents > table > tbody > tr > td > input{
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+    <div id="commonTopHeader">
+{% include './menu/comTopHeader.html' %}
+    </div>
+
+    <div id="commonBodyContents">
+{% include './menu/sidemenu3.html' %}  
+    <div id="commonContent">
+        <div class="container">
+            <div class="userAddContents">
+                <div>
+                    <button type="button" onclick="userAddSubmit();">유저등록</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>아이디</th>
+                            <th>비밀번호</th>
+                            <th>이름</th>
+                            <th>이메일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" id="userId"></td>
+                            <td><input type="password" id="userPasswd"></td>
+                            <td><input type="text" id="userName"></td>
+                            <td><input type="text" id="userEmail"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <table id="foo-table" class="table table-striped table-bordered nowrap overflow-auto">
+                    <thead>
+                        <tr>
+                            <th>아이디</th>
+                            <th>이름</th>
+                            <th>이메일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k in cond %}
+                        <tr>
+                            <td>{{k[1]}}</td>
+                            <td>{{k[2]}}</td>
+                            <td>{{k[4]}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function userAddSubmit(){
+        let datas = {};
+        datas.userId = $("#userId").val();
+        datas.userPasswd = $("#userPasswd").val();
+        datas.userName = $("#userName").val();
+        datas.userEmail = $("#userEmail").val();
+
+        $.ajax({
+            "url": "/userAdd",
+            "method": "post",
+            "data": datas,
+            "success": function(){
+                alert("등록되었습니다.");
+                location.reload();
+            }
+        })
+    }
+</script>
+</html>

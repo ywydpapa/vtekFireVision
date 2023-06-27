@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+    <script>
+        $(document).ready(function () {
+            $('#foo-table').DataTable({
+             "pageLength":20,
+             "destroy":true,
+             "order":[2,'desc'],
+                initComplete: function () {
+                this.api()
+                .columns('.showMenu')
+                .every(function () {
+                    var column = this;
+                    var select = $('<select class="form-control"><option value=""></option></select>')
+                        .appendTo($(column.header()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        });
+                     column
+                        .data()
+                        .unique()
+                        .sort()
+                        .each(function (d, j) {
+                             select.append('<option value="' + d + '">' + d + '</option>');
+                        });
+                });
+        },
+        });
+        });
+    </script>
+</head>
+<body>
+    <div id="commonTopHeader">
+{% include './menu/comTopHeader.html' %}      
+    </div>
+
+    <div id="commonBodyContents">
+{% include './menu/sidemenu1.html' %}
+        <!-- commonSideMenu end-->
+
+        <div id="commonContent">
+            <div class="container">
+<hr>
+             <div>
+                <div style ="float:left;width:30%;padding: 15px">
+                    Disk : {{result}}
+                </div>
+             </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+<style>
+    .container{
+        padding-right: 0;
+        overflow: auto;
+    }
+
+    .chartContents{
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        padding-bottom: 20px;
+    }
+
+    .chartContents > div{
+        border: 1px solid #BDBDBD;
+        padding: 10px;
+        box-shadow: 1px solid #BDBDBD;
+        box-shadow: 3px 3px 3px 3px #BDBDBD;
+        margin-right: 20px;
+        margin-bottom: 20px;
+    }
+
+</style>
+</head>
+<body>
+    <div id="commonTopHeader">
+{% include './menu/comTopHeader.html' %}      
+    </div>
+
+    <div id="commonBodyContents">
+{% include './menu/sidemenu1.html' %}
+        <!-- commonSideMenu end-->
+
+        <div id="commonContent">
+            <div class="container">
+            <hr>
+             <div>
+                <div class="chartContents">
+                    <div>
+                        <div>SERVICE(%)</div>
+                        <canvas id="serviceChart" width="375" height="400"></canvas>
+                    </div>
+                    <!-- <div>
+                        <canvas id="areaChart" width="375" height="420"></canvas>
+                    </div> -->
+                    <div>
+                        <div>DISK(%)</div>
+                        <canvas id="diskChart" width="375" height="400"></canvas>
+                    </div>
+                    <div>
+                        <div>CPU(%)</div> 
+                        <canvas id="cpuChart" width="375" height="400"></canvas>
+                    </div>
+                    <div>
+                        <div>MEMORY(%)</div>
+                        <canvas id="memoryChart" width="375" height="400"></canvas>
+                    </div>
+                    <div>
+                        <div>일별(건)</div>
+                        <canvas id="monthChart" width="792" height="400"></canvas>
+                    </div>
+                    <div>
+                        <div>시간별(건)</div>
+                        <canvas id="hourChart" width="792" height="400"></canvas>
+                    </div>
+                </div>
+                <!--<div class="chartContents2">
+                    <div>
+                        <div>CPU</div> 
+                        <canvas id="cpuChart" width="400"></canvas>
+                    </div>
+                    <div>
+                        <div>MEMORY</div>
+                        <canvas id="memoryChart" width="400"></canvas>
+                    </div>
+                </div> -->
+             </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        serviceChartSet();
+        diskChartSet();
+        cpuChartSet();
+        memoryChartSet();
+        monthChartSet();
+        hourChartSet();
+        //areaChartSet();
+    });
+
+    function serviceChartSet(){
+        let serviceChart = document.getElementById("serviceChart").getContext('2d');
+        let resultArr = {{result|tojson}};
+        let labelArr = [];
+        let dataArr = [];
+
+        for(let i = 0; i < resultArr.length; i++){
+            labelArr.push(resultArr[i][0]);
+            dataArr.push(Math.round(resultArr[i][2] * 100) / 100);
+        }
+
+        new Chart(serviceChart, {
+            type: "doughnut",
+            data: {
+                labels: labelArr,
+                datasets: [
+                    {
+                        data: dataArr,
+                        backgroundColor: [
+                            "#FFA7A7",
+                            "#FFE08C",
+                            "#CEF279",
+                            "#B2EBF4",
+                            "#B5B2FF",
+                            "#FFB2F5",
+                            "#D5D5D5",
+                            "#FFC19E",
+                            "#FAED7D",
+                            "#B7F0B1",
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+
+    function diskChartSet(){
+        let diskChart = document.getElementById("diskChart").getContext('2d');
+        let disk = {{result_disk|tojson}};
+        disk[1] = disk[1] / disk[0] * 100;
+        disk[2] = disk[2] / disk[0] * 100;
+
+        new Chart(diskChart, {
+            type: "doughnut",
+            data: {
+                labels: ["used", "free"],
+                datasets: [
+                    {
+                        data: [(disk[1]).toFixed(2), (disk[2]).toFixed(2)],
+                        backgroundColor: [
+                            "#ff5377",
+                            "#95c1e6"
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+
+    /* function areaChartSet(){
+        let areaChart = document.getElementById("areaChart").getContext('2d');
+        let areaArr = {{area|tojson}};
+        let labelArr = [];
+        let dataArr = [];
+
+        for(let i = 0; i < areaArr.length; i++){
+            labelArr.push(areaArr[i][0]);
+            dataArr.push(areaArr[i][2]);
+        }
+
+
+        new Chart(areaChart, {
+            type: "doughnut",
+            data: {
+                labels: labelArr,
+                datasets: [
+                    {
+                        data: dataArr,
+                        backgroundColor: [
+                            "#FFA7A7",
+                            "#FFE08C",
+                            "#CEF279",
+                            "#B2EBF4",
+                            "#B5B2FF",
+                            "#FFB2F5",
+                            "#D5D5D5",
+                            "#FFC19E",
+                            "#FAED7D",
+                            "#B7F0B1",
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    } */
+
+    function cpuChartSet(){
+        let cpuChart = document.getElementById("cpuChart").getContext('2d');
+        let cpu_remain = {{cpu_remain|tojson}};
+        let cpu_percent = {{cpu_percent|tojson}};
+
+        new Chart(cpuChart, {
+            type: "doughnut",
+            data: {
+                labels: ["used", "free"],
+                datasets: [
+                    {
+                        data: [cpu_percent, cpu_remain],
+                        backgroundColor: [
+                            "#ff5377",
+                            "#95c1e6"
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+
+    function memoryChartSet(){
+        let memoryChart = document.getElementById("memoryChart").getContext('2d');
+        let memory = {{result_mem|tojson}};
+        memory[3] = memory[3] / memory[0] * 100;
+        memory[4] = memory[4] / memory[0] * 100;
+
+        new Chart(memoryChart, {
+            type: "doughnut",
+            data: {
+                labels: ["used", "free"],
+                datasets: [
+                    {
+                        data: [(memory[3]).toFixed(2), (memory[4]).toFixed(2)],
+                        backgroundColor: [
+                            "#ff5377",
+                            "#95c1e6"
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+
+    function memoryChartSet(){
+        let memoryChart = document.getElementById("memoryChart").getContext('2d');
+        let memory = {{result_mem|tojson}};
+        memory[3] = memory[3] / memory[0] * 100;
+        memory[4] = memory[4] / memory[0] * 100;
+
+        new Chart(memoryChart, {
+            type: "doughnut",
+            data: {
+                labels: ["used", "free"],
+                datasets: [
+                    {
+                        data: [(memory[3]).toFixed(2), (memory[4]).toFixed(2)],
+                        backgroundColor: [
+                            "#ff5377",
+                            "#95c1e6"
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+
+    function monthChartSet(){
+        let monthChart = document.getElementById("monthChart").getContext('2d');
+        let month = {{result_month|tojson}};
+        let dateArr = [];
+        let dataArr = [];
+
+        for(let i = 0; i < month.length; i++){
+            dateArr.push(month[i][0]);
+            dataArr.push(month[i][1]);
+        }
+
+        new Chart(monthChart, {
+            type: "bar",
+            data: {
+                labels: dateArr,
+                datasets: [
+                    {
+                        label: "일자별 데이터",
+                        data: dataArr,
+                        backgroundColor: "#86E57F",
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+        });
+    }
+
+    function hourChartSet(){
+        let hourChart = document.getElementById("hourChart").getContext('2d');
+        let hour = {{result_hour|tojson}};
+        let dateArr = [];
+        let dataArr = [];
+
+        for(let i = 0; i < hour.length; i++){
+            dateArr.push(hour[i][0]);
+            dataArr.push(hour[i][1]);
+        }
+
+        new Chart(hourChart, {
+            type: "bar",
+            data: {
+                labels: dateArr,
+                datasets: [
+                    {
+                        label: "시간별 데이터",
+                        data: dataArr,
+                        backgroundColor: "#6799FF",
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+        });
+    }
+</script>
+</html>

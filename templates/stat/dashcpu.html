@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+<style>
+    .chartContents{
+        display: flex;
+        align-items: center;
+    }
+
+    .chartContents > div{
+        border: 1px solid #BDBDBD;
+        padding: 10px;
+        box-shadow: 1px solid #BDBDBD;
+        box-shadow: 3px 3px 3px 3px #BDBDBD;
+    }
+
+    .chartContents > div:first-child{
+        margin-right: 20px;
+    }
+
+    .chartContents > div:nth-child(2){
+        margin-right: 20px;
+    }
+</style>
+</head>
+<body>
+    <div id="commonTopHeader">
+{% include './menu/comTopHeader.html' %}      
+    </div>
+
+    <div id="commonBodyContents">
+{% include './menu/sidemenu1.html' %}
+        <!-- commonSideMenu end-->
+
+        <div id="commonContent">
+            <div class="container">
+            <hr>
+                <div>
+                    <div class="chartContents">
+                        <div>
+                            <div>CPU</div> 
+                            <canvas id="cpuChart" width="400"></canvas>
+                        </div>
+                        <div>
+                            <div>MEMORY</div>
+                            <canvas id="memoryChart" width="400"></canvas>
+                        </div>
+                        <div>
+                            <div>DISK</div>
+                            <canvas id="diskChart" width="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        cpuChartSet();
+        memoryChartSet();
+        diskChartSet();
+    });
+
+    function cpuChartSet(){
+        let cpuChart = document.getElementById("cpuChart").getContext('2d');
+        let cpu_remain = {{cpu_remain|tojson}};
+        let cpu_percent = {{cpu_percent|tojson}};
+
+        new Chart(cpuChart, {
+            type: "doughnut",
+            data: {
+                labels: ["used", "free"],
+                datasets: [
+                    {
+                        data: [cpu_percent, cpu_remain],
+                        backgroundColor: [
+                            "#ff5377",
+                            "#95c1e6"
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+
+    function memoryChartSet(){
+        let memoryChart = document.getElementById("memoryChart").getContext('2d');
+        let memory = {{result_mem|tojson}};
+        memory[3] = memory[3] / memory[0] * 100;
+        memory[4] = memory[4] / memory[0] * 100;
+
+        new Chart(memoryChart, {
+            type: "doughnut",
+            data: {
+                labels: ["used", "free"],
+                datasets: [
+                    {
+                        data: [(memory[3]).toFixed(2), (memory[4]).toFixed(2)],
+                        backgroundColor: [
+                            "#ff5377",
+                            "#95c1e6"
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+
+    function diskChartSet(){
+        let diskChart = document.getElementById("diskChart").getContext('2d');
+        let disk = {{result_disk|tojson}};
+        disk[1] = disk[1] / disk[0] * 100;
+        disk[2] = disk[2] / disk[0] * 100;
+
+        new Chart(diskChart, {
+            type: "doughnut",
+            data: {
+                labels: ["used", "free"],
+                datasets: [
+                    {
+                        data: [(disk[1]).toFixed(2), (disk[2]).toFixed(2)],
+                        backgroundColor: [
+                            "#ff5377",
+                            "#95c1e6"
+                        ],
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            },
+        });
+    }
+</script>
+</html>
