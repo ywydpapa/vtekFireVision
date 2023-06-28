@@ -2,13 +2,6 @@
 <html lang="en">
 <head>
 {% include '/menu/header.html' %}
-    <script>
-        $(document).ready(function(){
-            let result = {{result|tojson}};
-            let cond = {{cond|tojson}};
-            pageDataSettings(result, cond);
-        })
-    </script>
 </head>
 <body>
     <div id="commonTopHeader">
@@ -19,10 +12,72 @@
         <!-- commonSideMenu end-->
         <div id="commonContent">
             <div class="container">
-                {% include './Search/comSearch.html' %}
-                {% include './subm/mainTables.html' %}
+                <div id="map1" style="width:500px; height:400px;"></div>
+                <div id="map2" style="width:500px; height:400px;"></div>
             </div>
-        </div>
+        </div> 
     </div>
 </body>
+<script>
+    $(document).ready(function(){
+        kakaoMapLatLng(document.getElementById("map1"));
+        kakaoMapPlace("벽산e센텀클래스원2차", document.getElementById("map2"));
+    })
+
+    function kakaoMapLatLng(container, lat, lng){
+        if(lat === undefined) lat = 33.450701;
+        if(lng === undefined) lng = 126.570667;
+        
+        kakaoArr.options = {
+            center: new kakao.maps.LatLng(lat, lng),
+            level: 3
+        };
+        kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
+        let markerPosition  = new kakao.maps.LatLng(lat, lng); 
+        let marker = new kakao.maps.Marker({
+            position: markerPosition
+        });
+    
+        marker.setMap(kakaoArr.map);
+    }
+
+    function kakaoMapPlace(keyword, container, lat, lng){
+        if(lat === undefined) lat = 33.450701;
+        if(lng === undefined) lng = 126.570667;
+
+        kakaoArr.infowindow = new kakao.maps.InfoWindow({zIndex:1});
+        kakaoArr.options = {
+            center: new kakao.maps.LatLng(lat, lng),
+            level: 3
+        };
+        kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options); 
+        let place = new kakao.maps.services.Places();
+        place.keywordSearch(keyword, placesSearchCB);
+    }
+
+    function placesSearchCB (data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+            var bounds = new kakao.maps.LatLngBounds();
+
+            for (var i=0; i < data.length; i++) {
+                console.log(data);
+                displayMarker(data[i]);    
+                bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+            }       
+            kakaoArr.map.setBounds(bounds);
+        } 
+    }
+
+    function displayMarker(place) {
+        var marker = new kakao.maps.Marker({
+            map: kakaoArr.map,
+            position: new kakao.maps.LatLng(place.y, place.x) 
+        });
+
+        kakao.maps.event.addListener(marker, 'click', function() {
+            kakaoArr.infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+            kakaoArr.infowindow.open(kakaoArr.map, marker);
+        });
+    }
+</script>
 </html>

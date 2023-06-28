@@ -11,6 +11,7 @@
     <link href="{{ url_for('static', filename = 'css/commonContent.css') }}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = '/css/loading.css') }}" />
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=65dd993d57fe1f0cffa674c5e447cf7d&libraries=services,clusterer,drawing"></script>
     <div id="loadingDiv"></div>
     <style>
         .bottom{
@@ -43,6 +44,7 @@
         }
     </style>
     <script>
+        let kakaoArr = {};
         $("#loadingDiv").loading({
             onStart: function (loading) {
                 loading.overlay.fadeIn(1000);
