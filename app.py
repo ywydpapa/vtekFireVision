@@ -310,17 +310,17 @@ def updatemenu():
 def searchSel():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select * from dayservice limit 10"
+    sql = "select * from inoutT limit 10"
     cur.execute(sql)
     result_service = cur.fetchall()
-    sql = "select * from areafrom limit 10"
+    sql = "select * from inoutT limit 10"
     cur.execute(sql)
     result_area = cur.fetchall()
     result_disk = psutil.disk_usage(os.getcwd())
-    sql = "select * from monthcount order by d002 asc"
+    sql = "select * from inoutT order by d002 asc"
     cur.execute(sql)
     result_month = cur.fetchall()
-    sql = "select * from hourcount order by d002 asc"
+    sql = "select * from inoutT order by d002 asc"
     cur.execute(sql)
     result_hour = cur.fetchall()
     db.close()

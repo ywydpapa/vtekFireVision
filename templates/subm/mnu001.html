@@ -12,8 +12,7 @@
         <!-- commonSideMenu end-->
         <div id="commonContent">
             <div class="container">
-                <div id="map1" style="width:500px; height:400px;"></div>
-                <div id="map2" style="width:500px; height:400px;"></div>
+                <div id="map1" style="width:1024px; height:768px;"></div>
             </div>
         </div> 
     </div>
@@ -21,7 +20,6 @@
 <script>
     $(document).ready(function(){
         kakaoMapLatLng(document.getElementById("map1"));
-        kakaoMapPlace("벽산e센텀클래스원2차", document.getElementById("map2"));
     })
 
     function kakaoMapLatLng(container, lat, lng){
