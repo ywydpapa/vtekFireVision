@@ -360,6 +360,26 @@ def logout():
     return render_template('./login/login.html')
 
 
+@app.route('/deviceAdd')
+def deviceAdd():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "select deviceType, deviceSerial, deviceMacaddr,camNo  from camdevice where attrib not like 'XXX%'"
+    cur.execute(sql1)
+    cond = cur.fetchall()
+    db.close()
+    return render_template("subm/deviceman.html", cond=cond)
+
+@app.route('/siteAdd')
+def siteAdd():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "select camName, camPostno, serviceNo, deviceNo from camlist where attrib not like 'XXX%'"
+    cur.execute(sql1)
+    cond = cur.fetchall()
+    db.close()
+    return render_template("subm/siteman.html", cond=cond)
+
 @app.route('/userAdd', methods=['GET', 'POST'])
 def userAdd():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
@@ -372,7 +392,7 @@ def userAdd():
         db.close()
         return render_template("menu/userAdd.html", cond=cond)
     else:
-        sql1 = "insert into userAccount (userId, userName, userPasswd, userEmail, userKey, userRole, attrib) values (%s, %s, %s, %s, %s, %s, %s)"
+        sql1 = "insert into userAccount (userId, userName, userPasswd, userEmail, userKey, userRole, attrib) values (%s, %s, password(%s), %s, %s, %s, %s)"
         cur.execute(sql1, (
         str(request.form.get("userId")), str(request.form.get("userName")), str(request.form.get("userPasswd")),
         str(request.form.get("userEmail")), str("1111111111"), str("ADMIN"), str("10000")))
@@ -380,6 +400,42 @@ def userAdd():
         cond = cur.fetchall()
         db.close()
         return render_template("menu/userAdd.html")
+
+@app.route('/devInsert', methods=['GET', 'POST'])
+def devinsert():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    if request.method == 'GET':
+        sql1 = "select * from camdevice where attrib not like 'XXX%'"
+        cur.execute(sql1)
+        cond = cur.fetchall()
+        db.close()
+        return render_template("subm/deviceman.html", cond=cond)
+    else:
+        sql1 = "insert into camdevice (deviceType, deviceSerial, deviceMacaddr, regDate) values (%s, %s, %s, now())"
+        cur.execute(sql1, (str(request.form.get("devType")), str(request.form.get("devSerial")), str(request.form.get("devMac"))))
+        db.commit()
+        cond = cur.fetchall()
+        db.close()
+        return render_template("subm/deviceman.html")
+
+@app.route('/siteInsert', methods=['GET', 'POST'])
+def siteinsert():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    if request.method == 'GET':
+        sql1 = "select * from camlist where attrib not like 'XXX%'"
+        cur.execute(sql1)
+        cond = cur.fetchall()
+        db.close()
+        return render_template("subm/siteman.html", cond=cond)
+    else:
+        sql1 = "insert into camlist (camName, deviceNo, userNo, serviceNo, regDate) values (%s, %s, %s, %s, now())"
+        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),str(request.form.get("userNo")), str(request.form.get("serviceType"))))
+        db.commit()
+        cond = cur.fetchall()
+        db.close()
+        return render_template("subm/siteman.html")
 
 
 if __name__ == '__main__':
