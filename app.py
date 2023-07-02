@@ -26,7 +26,7 @@ envcharset = os.getenv('envcharset')
 app = Flask(__name__)
 app.secret_key = 'fsdfsfgsfdg3234'
 
-source = "rtsp://coredjk:core2020@swc200e.iptimecam.com"
+source = "rtsp://coredjk:core2020@swc200e.iptimecam.com:21064/stream_ch00_0"
 cap = cv2.VideoCapture(source)
 time.sleep(2.0)
 
