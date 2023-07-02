@@ -1,13 +1,19 @@
 import json
-from flask import Flask, jsonify, request, render_template, redirect, session
+from flask import Flask, jsonify, request, render_template, redirect, session, Response
 import dbconn
 from dbconn import selectUsers
 import pymysql
-import datetime
+import datetime,time
 import os
 import psutil
 from dotenv import load_dotenv
-from geopy.geocoders import Nominatim
+import cv2
+import imutils
+import threading
+import argparse
+
+outputFrame = None
+lock = threading.Lock()
 
 load_dotenv()
 db = None
@@ -20,10 +26,19 @@ envcharset = os.getenv('envcharset')
 app = Flask(__name__)
 app.secret_key = 'fsdfsfgsfdg3234'
 
+source = "rtsp://coredjk:core2020@swc200e.iptimecam.com"
+cap = cv2.VideoCapture(source)
+time.sleep(2.0)
+
 
 @app.route('/')
 def home():
     return render_template('./login/login.html')
+
+@app.route("/video")
+def video():
+    # return the rendered template
+    return render_template("/subm/videofeed.html")
 
 @app.route('/subm/mnu001', methods=['GET', 'POST'])
 def mnu001f():
@@ -304,8 +319,72 @@ def custinsert():
         db.close()
         return render_template("subm/custman.html")
 
+@app.route("/video_feed")
+def video_feed():
+    # return the response generated along with the specific media
+    # type (mime type)
+    return Response(generate(),
+                    mimetype="multipart/x-mixed-replace; boundary=frame")
+
+def stream(frameCount):
+    global outputFrame, lock
+    if cap.isOpened():
+        # cv2.namedWindow(('CCTV camera'), cv2.WINDOW_AUTOSIZE)
+        while True:
+            ret_val, frame = cap.read()
+            if frame.shape:
+                frame = cv2.resize(frame, (640, 360))
+                with lock:
+                    outputFrame = frame.copy()
+            else:
+                continue
+    else:
+        print('camera open failed')
+
+def generate():
+    # grab global references to the output frame and lock variables
+    global outputFrame, lock
+
+    # loop over frames from the output stream
+    while True:
+        # wait until the lock is acquired
+        with lock:
+            # check if the output frame is available, otherwise skip
+            # the iteration of the loop
+            if outputFrame is None:
+                continue
+            # encode the frame in JPEG format
+            (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
+            # ensure the frame was successfully encoded
+            if not flag:
+                continue
+        # yield the output frame in the byte format
+        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
+               bytearray(encodedImage) + b'\r\n')
+
+
+
 
 if __name__ == '__main__':
     app.degub = True
     # app.run(host='0.0.0.0', port="443", ssl_context="adhoc")
-    app.run(debug=True, port=80, host='0.0.0.0')
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-i", "--ip", type=str, required=False, default='127.0.0.1',
+                    help="ip address of the device")
+    ap.add_argument("-o", "--port", type=int, required=False, default=8000,
+                    help="ephemeral port number of the server (1024 to 65535)")
+    ap.add_argument("-f", "--frame-count", type=int, default=32,
+                    help="# of frames used to construct the background model")
+    args = vars(ap.parse_args())
+
+    t = threading.Thread(target=stream, args=(args["frame_count"],))
+    t.daemon = True
+    t.start()
+
+    # app.run(debug=True, port=80, host='0.0.0.0')
+    app.run(host=args["ip"], port=args["port"], debug=True,
+            threaded=True, use_reloader=False)
+
+# release the video stream pointer
+cap.release()
+cv2.destroyAllWindows()

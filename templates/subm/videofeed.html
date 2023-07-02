@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+</head>
+<body>
+    <div id="commonTopHeader">
+    {% include './menu/comTopHeader.html' %}
+    </div>
+    <div id="commonBodyContents">
+        {% include './menu/sidemenu2.html' %}
+        <!-- commonSideMenu end-->
+        <div id="commonContent">
+            <div class="container">
+                <div id="videoScreen" style="width:1024px; height:768px;">
+                    <img src="{{ url_for('video_feed') }}">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
