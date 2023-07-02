@@ -27,18 +27,32 @@ def home():
 
 @app.route('/subm/mnu001', methods=['GET', 'POST'])
 def mnu001f():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select camName,camLat,camLong from camlist where attrib not like 'XXX%'"
+    cur.execute(sql)
+    result = cur.fetchall()
+    print(result)
+    db.close()
     if request.method == 'GET':
-        return render_template('./subm/mnu001.html')
+        return render_template('./subm/mnu001.html', result=result)
     else:
-        return render_template("./subm/mnu001.html")
+        return render_template("./subm/mnu001.html", result=result)
 
 
 @app.route('/subm/mnu002', methods=['GET', 'POST'])
 def mnu002f():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select camName, camAddr from camlist where attrib not like 'XXX%'"
+    cur.execute(sql)
+    result = cur.fetchall()
+    print(result)
+    db.close()
     if request.method == 'GET':
-        return render_template('./subm/mnu002.html')
+        return render_template('./subm/mnu002.html', result=result)
     else:
-        return render_template("./subm/mnu002.html")
+        return render_template("./subm/mnu002.html", result=result)
 
 
 @app.route('/subm/cpu')  # 요청
@@ -183,7 +197,7 @@ def logout():
 def deviceAdd():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select deviceType, deviceSerial, deviceMacaddr,camNo  from camdevice where attrib not like 'XXX%'"
+    sql1 = "select * from camdevice where attrib not like 'XXX%'"
     cur.execute(sql1)
     cond = cur.fetchall()
     db.close()
@@ -265,17 +279,8 @@ def siteinsert():
         db.close()
         return render_template("subm/siteman.html", cond=cond)
     else:
-        def geocoding(address):
-            geolocoder = Nominatim(user_agent='South Korea', timeout=None)
-            geo = geolocoder.geocode(address)
-            crd = {"lat": str(geo.latitude), "lng": str(geo.longitude)}
-            return crd
-        addrconv = str(request.form.get("camAddr"))
-        print(addrconv)
-        crd=geocoding(addrconv)
-        print(crd)
-        sql1 = "insert into camlist (camName, deviceNo, custNo, serviceNo,camPostno, camAddr,camLat, camLong, regDate) values (%s,%s,%s,%s,%s,%s,%s,%s,now())"
-        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),int(request.form.get("custNo")),str(request.form.get("serviceType")),str(request.form.get("camPostno")),str(request.form.get("camAddr")),crd['lat'],crd['lng']))
+        sql1 = "insert into camlist (camName, deviceNo, custNo, serviceNo,camPostno, camAddr,regDate) values (%s,%s,%s,%s,%s,%s,now())"
+        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),int(request.form.get("custNo")),str(request.form.get("serviceType")),str(request.form.get("camPostno")),str(request.form.get("camAddr"))))
         db.commit()
         cond = cur.fetchall()
         db.close()

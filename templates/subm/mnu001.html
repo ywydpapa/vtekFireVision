@@ -12,14 +12,14 @@
         <!-- commonSideMenu end-->
         <div id="commonContent">
             <div class="container">
-                <div id="map1" style="width:1024px; height:768px;"></div>
+                <div id="map" style="width:1024px; height:768px;"></div>
             </div>
         </div> 
     </div>
 </body>
 <script>
     $(document).ready(function(){
-        kakaoMapLatLng(document.getElementById("map1"));
+        kakaoMapLatLng(document.getElementById("map"));
     })
 
     function kakaoMapLatLng(container, lat, lng){
