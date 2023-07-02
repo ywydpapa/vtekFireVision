@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+<style>
+    .userAddContents{
+        width: 100%;
+        padding-bottom: 10px;
+    }
+
+    .userAddContents > div{
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        padding-bottom: 10px;
+    }
+
+    .userAddContents > table{
+        width: 100%;
+    }
+
+    .userAddContents > table > thead > tr > th{
+        padding: 5px;
+    }
+
+    .userAddContents > table > tbody > tr > td{
+        padding: 5px;
+    }
+
+    .userAddContents > table > tbody > tr > td > input{
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+    <div id="commonTopHeader">
+{% include './menu/comTopHeader.html' %}
+    </div>
+
+    <div id="commonBodyContents">
+{% include './menu/sidemenu2.html' %}
+    <div id="commonContent">
+        <div class="container">
+            <div>
+                사이트리스트
+            </div>
+            <div>
+                <table id="foo-table" class="table table-striped table-bordered nowrap overflow-auto">
+                    <thead>
+                        <tr>
+                            <th>사이트명</th>
+                            <th>고객명</th>
+                            <th>주소</th>
+                            <th>서비스종류</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k in cond %}
+                        <tr>
+                            <td>{{k[0]}}</td>
+                            <td>{{k[1]}}</td>
+                            <td>{{k[2]}}</td>
+                            <td>{{k[3]}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+ </body>
+<script>
+
+</script>
+</html>

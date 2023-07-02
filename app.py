@@ -7,6 +7,7 @@ import datetime
 import os
 import psutil
 from dotenv import load_dotenv
+from geopy.geocoders import Nominatim
 
 load_dotenv()
 db = None
@@ -24,181 +25,20 @@ app.secret_key = 'fsdfsfgsfdg3234'
 def home():
     return render_template('./login/login.html')
 
-
-@app.route('/subm/mnujson', methods=['GET'])
-def mnujson():
-    curr = datetime.datetime.now()
-    datfr = ''
-    datto = ''
-    filePath = "./menu.json"
-    with open(filePath, 'r') as file:
-        jsonDump = json.load(file)
-    splitStr = jsonDump["menuItems"][request.args.get("menuIndex")].split(",")
-    sqlStr = ''
-
-    for i in range(len(splitStr)):
-        if sqlStr == '':
-            sqlStr += " AND (d004 in(" + "'" + splitStr[i].replace(" ", "") + "'))";
-        else:
-            sqlStr += " OR (d004 in(" + "'" + splitStr[i].replace(" ", "") + "'))";
-
-    if (request.args.get("whereplus") != None):
-        wherecon = request.args.get("whereplus")
-    else:
-        wherecon = sqlStr
-
-    if request.args.get("datefrom") == '':
-        datfr = curr - datetime.timedelta(minutes=5)
-        datfr = datfr.strftime('%Y-%m-%d %H:%M')
-    else:
-        datfr = request.args.get("datefrom") + " " + request.args.get("timefrom")
-
-    if request.args.get("dateto") == '':
-        datto = curr.strftime('%Y-%m-%d %H:%M')
-    else:
-        datto = request.args.get("dateto") + " " + request.args.get("datetimetofrom")
-
-    resultlength = dbconn.fromtoTraffic(datfr, datto, wherecon)
-    result = dbconn.fromtoTrafficLimit(datfr, datto, str(wherecon), request.args)
-    resultData = {
-        "data": result,
-        "recordsTotal": len(resultlength),
-        "recordsFiltered": len(resultlength),
-    }
-    return jsonify(resultData)
-
-
 @app.route('/subm/mnu001', methods=['GET', 'POST'])
 def mnu001f():
-    curr = datetime.datetime.now()
     if request.method == 'GET':
-        datfr = ''
-        datto = ''
-        wherecon = ''
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-            datfr = datfr.strftime('%Y-%m-%d %H:%M')
-        if datto == '':
-            datto = curr.strftime('%Y-%m-%d %H:%M')
-        result = dbconn.fromtoTraffic(datfr, datto, str(wherecon))
-        cond = dbconn.menuSet("TRAF")
-        return render_template('./subm/mnu001.html', result=result, cond=cond)
+        return render_template('./subm/mnu001.html')
     else:
-        datfr = ''
-        datto = ''
-        wherecon = ''
-        datfr = request.form.get('datefrom') + " " + request.form.get('timefrom')
-        datto = request.form.get('dateto') + " " + request.form.get('timeto')
-        wherecon = request.form.get('whereplus') + " and o004 in (" + item02 + ")"
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-        if datto == '':
-            datto = curr
-        result = dbconn.fromtoTraffic(datfr, datto, str(wherecon))
-        cond = dbconn.menuSet("TRAF")
-        return render_template("./subm/mnu001.html", result=result, cond=cond)
+        return render_template("./subm/mnu001.html")
 
 
 @app.route('/subm/mnu002', methods=['GET', 'POST'])
 def mnu002f():
-    curr = datetime.datetime.now()
     if request.method == 'GET':
-        datfr = ''
-        datto = ''
-        wherecon = ''
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-            datfr = datfr.strftime('%Y-%m-%d %H:%M')
-        if datto == '':
-            datto = curr.strftime('%Y-%m-%d %H:%M')
-        print(datfr)
-        print(datto)
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("THRE")
-        return render_template('./subm/mnu002.html', result=result, cond=cond)
+        return render_template('./subm/mnu002.html')
     else:
-        datfr = request.form.get('datefrom') + " " + request.form.get('timefrom')
-        datto = request.form.get('dateto') + " " + request.form.get('timeto')
-        wherecon = request.form.get('whereplus') + " and o004 in (" + item02 + ")"
-        if wherecon != '':
-            wherecon = wherecon
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-        if datto == '':
-            datto = curr
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("THRE")
-        return render_template("./subm/mnu002.html", result=result, cond=cond)
-
-
-@app.route('/subm/mnu003', methods=['GET', 'POST'])
-def mnu003f():
-    curr = datetime.datetime.now()
-    if request.method == 'GET':
-        datfr = ''
-        datto = ''
-        wherecon = ''
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-            datfr = datfr.strftime('%Y-%m-%d %H:%M')
-        if datto == '':
-            datto = curr.strftime('%Y-%m-%d %H:%M')
-        print(datfr)
-        print(datto)
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("URLF")
-        return render_template('./subm/mnu003.html', result=result, cond=cond)
-    else:
-        datfr = request.form.get('datefrom') + " " + request.form.get('timefrom')
-        datto = request.form.get('dateto') + " " + request.form.get('timeto')
-        wherecon = request.form.get('whereplus') + " and o004 in (" + item03 + ")"
-        if wherecon != '':
-            wherecon = wherecon
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-        if datto == '':
-            datto = curr
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("URLF")
-        return render_template("./subm/mnu003.html", result=result, cond=cond)
-
-
-@app.route('/subm/mnu004', methods=['GET', 'POST'])
-def mnu004f():
-    curr = datetime.datetime.now()
-    if request.method == 'GET':
-        datfr = ''
-        datto = ''
-        wherecon = ''
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-            datfr = datfr.strftime('%Y-%m-%d %H:%M')
-        if datto == '':
-            datto = curr.strftime('%Y-%m-%d %H:%M')
-        print(datfr)
-        print(datto)
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("WILD")
-        return render_template('./subm/mnu004.html', result=result, cond=cond)
-    else:
-        datfr = request.form.get('datefrom') + " " + request.form.get('timefrom')
-        datto = request.form.get('dateto') + " " + request.form.get('timeto')
-        wherecon = request.form.get('whereplus') + " and o004 in (" + item04 + ")"
-        if wherecon != '':
-            wherecon = wherecon
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=5)
-        if datto == '':
-            datto = curr
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("WILD")
-        return render_template("./subm/mnu004.html", result=result, cond=cond)
+        return render_template("./subm/mnu002.html")
 
 
 @app.route('/subm/cpu')  # 요청
@@ -233,36 +73,15 @@ def networkstat():
 
 @app.route('/monmain', methods=['GET', 'POST'])  # 요청
 def okhome():
-    curr = datetime.datetime.now()
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "select camNo,camName, custNo, serviceNo from camlist where attrib not like 'XXX%'"
+    cur.execute(sql1)
+    cond = cur.fetchall()
     if request.method == 'GET':
-        datfr = ''
-        datto = ''
-        wherecon = ''
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=2)
-            datfr = datfr.strftime('%Y-%m-%d %H:%M')
-        if datto == '':
-            datto = curr.strftime('%Y-%m-%d %H:%M')
-        print(datfr)
-        print(datto)
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("TRAF")
-        return render_template('./stat/indexStart.html', result=result, cond=cond)
+        return render_template('./subm/camlist.html', cond=cond)
     else:
-        datfr = request.form.get('datefrom') + " " + request.form.get('timefrom')
-        datto = request.form.get('dateto') + " " + request.form.get('timeto')
-        wherecon = request.form.get('whereplus')
-        if wherecon != '':
-            wherecon = wherecon
-        if datfr == '':
-            datfr = curr - datetime.timedelta(minutes=2)
-        if datto == '':
-            datto = curr
-        print(wherecon)
-        result = dbconn.fromtoTraffic(datfr, datto, wherecon)
-        cond = dbconn.menuSet("TRAF")
-        return render_template("./stat/indexStart.html", result=result, cond=cond)
+        return render_template("./subm/camlist.html", cond=cond)
 
 
 @app.route('/menuset')
@@ -374,11 +193,27 @@ def deviceAdd():
 def siteAdd():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select camName, camPostno, serviceNo, deviceNo from camlist where attrib not like 'XXX%'"
+    sql1 = "select * from camlist where attrib not like 'XXX%'"
+    cur.execute(sql1)
+    cond = cur.fetchall()
+    sql2 = "select deviceNo, deviceSerial, deviceMacaddr from camdevice where attrib not like 'XXX%'"
+    cur.execute(sql2)
+    comba = cur.fetchall()
+    sql3 = "select custNo, custName from custmng where attrib not like 'XXX%'"
+    cur.execute(sql3)
+    combb = cur.fetchall()
+    db.close()
+    return render_template("subm/siteman.html", cond=cond, comba=comba, combb=combb)
+
+@app.route('/custAdd')
+def custAdd():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "select * from custmng where attrib not like 'XXX%'"
     cur.execute(sql1)
     cond = cur.fetchall()
     db.close()
-    return render_template("subm/siteman.html", cond=cond)
+    return render_template("subm/custman.html", cond=cond)
 
 @app.route('/userAdd', methods=['GET', 'POST'])
 def userAdd():
@@ -430,12 +265,39 @@ def siteinsert():
         db.close()
         return render_template("subm/siteman.html", cond=cond)
     else:
-        sql1 = "insert into camlist (camName, deviceNo, userNo, serviceNo, regDate) values (%s, %s, %s, %s, now())"
-        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),str(request.form.get("userNo")), str(request.form.get("serviceType"))))
+        def geocoding(address):
+            geolocoder = Nominatim(user_agent='South Korea', timeout=None)
+            geo = geolocoder.geocode(address)
+            crd = {"lat": str(geo.latitude), "lng": str(geo.longitude)}
+            return crd
+        addrconv = str(request.form.get("camAddr"))
+        print(addrconv)
+        crd=geocoding(addrconv)
+        print(crd)
+        sql1 = "insert into camlist (camName, deviceNo, custNo, serviceNo,camPostno, camAddr,camLat, camLong, regDate) values (%s,%s,%s,%s,%s,%s,%s,%s,now())"
+        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),int(request.form.get("custNo")),str(request.form.get("serviceType")),str(request.form.get("camPostno")),str(request.form.get("camAddr")),crd['lat'],crd['lng']))
         db.commit()
         cond = cur.fetchall()
         db.close()
         return render_template("subm/siteman.html")
+
+@app.route('/custInsert', methods=['GET', 'POST'])
+def custinsert():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    if request.method == 'GET':
+        sql1 = "select * from custmng where attrib not like 'XXX%'"
+        cur.execute(sql1)
+        cond = cur.fetchall()
+        db.close()
+        return render_template("subm/custman.html", cond=cond)
+    else:
+        sql1 = "insert into custmng (custName, custAddr, custTel, custMail, serviceNo, regDate) values (%s, %s, %s, %s, %s, now())"
+        cur.execute(sql1, (str(request.form.get("custName")), str(request.form.get("custAddr")),str(request.form.get("custTel")), str(request.form.get("custMail")), str(request.form.get("serviceNo"))))
+        db.commit()
+        cond = cur.fetchall()
+        db.close()
+        return render_template("subm/custman.html")
 
 
 if __name__ == '__main__':

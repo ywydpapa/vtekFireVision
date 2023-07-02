@@ -48,37 +48,56 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>사이트 번호</th>
+                            <th>사이트명</th>
                             <th>장비번호</th>
-                            <th>고객번호</th>
+                            <th>사용고객</th>
                             <th>서비스종류</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><input type="text" id="siteNo"></td>
-                            <td><input type="text" id="deviceNo"></td>
-                            <td><input type="text" id="userNo"></td>
+                            <td><select id="deviceNo">
+                                {%  for j in comba %}
+                                <option value="{{j[1]}}">{{j[2]}}({{ j[3] }})</option>
+                                {% endfor %}
+                            </select></td>
+                            <td><select id="custNo">
+                                {%  for l in combb %}
+                                <option value="{{l[0]}}">{{l[1]}}</option>
+                                {% endfor %}
+                            </select></td>
                             <td><input type="text" id="serviceType"></td>
+                        </tr>
+                        <tr>
+                            <td>우편번호</td>
+                            <td><input type="text" id="postcode" readonly></td>
+                            <td>주소</td>
+                            <td><input type="text" id="address" readonly></td>
                         </tr>
                     </tbody>
                 </table>
+
+            </div>
+            <div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
             </div>
             <div>
                 <table id="foo-table" class="table table-striped table-bordered nowrap overflow-auto">
                     <thead>
                         <tr>
-                            <th>사이트 번호</th>
-                            <th>고객명</th>
+                            <th>사이트(번호)명</th>
+                            <th>고객 번호</th>
+                            <th>사이트 주소</th>
                             <th>서비스 종류</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for k in cond %}
                         <tr>
-                            <td>{{k[1]}}</td>
-                            <td>{{k[2]}}</td>
-                            <td>{{k[4]}}</td>
+                            <td>({{k[0]}}){{k[1]}}</td>
+                            <td>{{k[9]}}</td>
+                            <td>({{k[6]}}){{k[7]}}</td>
+                            <td>{{k[8]}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -92,9 +111,10 @@
         let datas = {};
         datas.siteNo = $("#siteNo").val();
         datas.deviceNo = $("#deviceNo").val();
-        datas.userNo = $("#userNo").val();
+        datas.custNo = $("#custNo").val();
         datas.serviceType = $("#serviceType").val();
-
+        datas.camPostno = $("#postcode").val();
+        datas.camAddr = $("#address").val();
         $.ajax({
             "url": "/siteInsert",
             "method": "post",
@@ -106,4 +126,42 @@
         })
     }
 </script>
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <script>
+    // 우편번호 찾기 찾기 화면을 넣을 element
+    var element_wrap = document.getElementById('wrap');
+
+    function foldDaumPostcode() {
+        // iframe을 넣은 element를 안보이게 한다.
+        element_wrap.style.display = 'none';
+    }
+        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var fullAddr = data.address; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+                if(data.addressType === 'R'){
+                    if(data.bname !== ''){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== ''){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                }
+                localStorage.setItem('address', fullAddr);
+                console.log(fullAddr);
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById('address').value = fullAddr;
+
+                document.body.scrollTop = currentScroll;
+            },
+            onresize : function(size) {
+                element_wrap.style.height = size.height+'px';
+            },
+            width : '100%',
+            height : '100%'
+        }).embed(element_wrap);
+        element_wrap.style.display = 'block';
+    </script>
 </html>
