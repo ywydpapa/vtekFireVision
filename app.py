@@ -26,10 +26,9 @@ envcharset = os.getenv('envcharset')
 app = Flask(__name__)
 app.secret_key = 'fsdfsfgsfdg3234'
 
-source = "rtsp://coredjk:core2020@swc200e.iptimecam.com:21064/stream_ch00_0"
-cap = cv2.VideoCapture(source)
-time.sleep(2.0)
-
+source1 = "rtsp://coredjk:core2020@swc200e.iptimecam.com:21064/stream_ch00_0"
+source2 = "rtsp://coredjk:core2020@swc9004.iptime.org:554/Streaming/Channels/102"
+source3 = "rtsp://coredjk:core2020@swc9004.iptime.org:554/Streaming/Channels/202"
 
 @app.route('/')
 def home():
@@ -319,72 +318,42 @@ def custinsert():
         db.close()
         return render_template("subm/custman.html")
 
+
 @app.route("/video_feed")
 def video_feed():
-    # return the response generated along with the specific media
-    # type (mime type)
-    return Response(generate(),
-                    mimetype="multipart/x-mixed-replace; boundary=frame")
-
-def stream(frameCount):
-    global outputFrame, lock
-    if cap.isOpened():
-        # cv2.namedWindow(('CCTV camera'), cv2.WINDOW_AUTOSIZE)
-        while True:
-            ret_val, frame = cap.read()
-            if frame.shape:
-                frame = cv2.resize(frame, (640, 360))
-                with lock:
-                    outputFrame = frame.copy()
-            else:
-                continue
-    else:
-        print('camera open failed')
-
-def generate():
-    # grab global references to the output frame and lock variables
-    global outputFrame, lock
-
-    # loop over frames from the output stream
+    try_num = 1
+    program_quit = False
     while True:
-        # wait until the lock is acquired
-        with lock:
-            # check if the output frame is available, otherwise skip
-            # the iteration of the loop
-            if outputFrame is None:
-                continue
-            # encode the frame in JPEG format
-            (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
-            # ensure the frame was successfully encoded
-            if not flag:
-                continue
-        # yield the output frame in the byte format
-        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
-               bytearray(encodedImage) + b'\r\n')
+        print(f'try {try_num}')
+        cap = cv2.VideoCapture(source2)
+        ret, img_color = cap.read()
+        if ret == False:
+            try_num += 1
+            time.sleep(1)
+            continue
+        try_num = 1
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        print('fps', fps)
+        if fps == 0.0:
+            fps = 30.0
+        while True:
+            ret, img_color = cap.read()
+            if ret == False:
+                print('영상을 가져올 수 없습니다.')
+                break
 
+            cv2.imshow("vtekVision CCTV LIVE", img_color)
 
+            if cv2.waitKey(1) == 27:
+                program_quit = True
+                break
+        cap.release()
+        cv2.destroyAllWindows()
+        if program_quit:
+            break
 
 
 if __name__ == '__main__':
     app.degub = True
     # app.run(host='0.0.0.0', port="443", ssl_context="adhoc")
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--ip", type=str, required=False, default='127.0.0.1',
-                    help="ip address of the device")
-    ap.add_argument("-o", "--port", type=int, required=False, default=8000,
-                    help="ephemeral port number of the server (1024 to 65535)")
-    ap.add_argument("-f", "--frame-count", type=int, default=32,
-                    help="# of frames used to construct the background model")
-    args = vars(ap.parse_args())
-
-    t = threading.Thread(target=stream, args=(args["frame_count"],))
-    t.daemon = True
-    t.start()
-
-    # app.run(debug=True, port=80, host='0.0.0.0')
-    app.run(host=args["ip"], port=args["port"], debug=True,
-            threaded=True, use_reloader=False)
-
-# release the video stream pointer
-cap.release()
-cv2.destroyAllWindows()
+    app.run(debug=True, port=80, host='0.0.0.0')
