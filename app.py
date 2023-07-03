@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, request, render_template, redirect, session, Response
+from flask import Flask, jsonify, make_response, request, render_template, redirect, session, Response
 import dbconn
 from dbconn import selectUsers
 import pymysql
@@ -11,6 +11,9 @@ import cv2
 import imutils
 import threading
 import argparse
+from geopy.geocoders import Nominatim
+from decimal import Decimal
+geo_local = Nominatim(user_agent='South Korea')
 
 outputFrame = None
 lock = threading.Lock()
@@ -44,7 +47,7 @@ def video():
 def mnu001f():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select camName,camLat,camLong from camlist where attrib not like 'XXX%'"
+    sql = "select camName,camLat,camLong from camList where attrib not like 'XXX%'"
     cur.execute(sql)
     result = cur.fetchall()
     print(result)
@@ -57,17 +60,29 @@ def mnu001f():
 
 @app.route('/subm/mnu002', methods=['GET', 'POST'])
 def mnu002f():
+    resultArr = []
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select camName, camAddr from camlist where attrib not like 'XXX%'"
+    sql = "select camName, camLat, camLong, camAddr1, camAddr2, camLink from camList where attrib not like 'XXX%'"
     cur.execute(sql)
     result = cur.fetchall()
-    print(result)
     db.close()
+    for i in range(len(result)):
+        resultDatas = {
+            "camName": result[i][0],
+            "camLat": str(result[i][1]),
+            "camLong": str(result[i][2]),
+            "camAddr1": result[i][3],
+            "camAddr2": result[i][4],
+            "camLink": result[i][5]
+        }
+        resultArr.append(resultDatas)
+
+    print(resultArr)
     if request.method == 'GET':
-        return render_template('./subm/mnu002.html', result=result)
+        return render_template('./subm/mnu002.html', result=resultArr)
     else:
-        return render_template("./subm/mnu002.html", result=result)
+        return render_template("./subm/mnu002.html", result=resultArr)
 
 
 @app.route('/subm/cpu')  # 요청
@@ -104,13 +119,13 @@ def networkstat():
 def okhome():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select camNo,camName, custNo, serviceNo from camlist where attrib not like 'XXX%'"
+    sql1 = "select camNo,camName, custNo, serviceNo from camList where attrib not like 'XXX%'"
     cur.execute(sql1)
     cond = cur.fetchall()
     if request.method == 'GET':
-        return render_template('./subm/camlist.html', cond=cond)
+        return render_template('./subm/camList.html', cond=cond)
     else:
-        return render_template("./subm/camlist.html", cond=cond)
+        return render_template("./subm/camList.html", cond=cond)
 
 
 @app.route('/menuset')
@@ -212,7 +227,7 @@ def logout():
 def deviceAdd():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select * from camdevice where attrib not like 'XXX%'"
+    sql1 = "select * from camDevice where attrib not like 'XXX%'"
     cur.execute(sql1)
     cond = cur.fetchall()
     db.close()
@@ -222,13 +237,13 @@ def deviceAdd():
 def siteAdd():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select * from camlist where attrib not like 'XXX%'"
+    sql1 = "select * from camList where attrib not like 'XXX%'"
     cur.execute(sql1)
     cond = cur.fetchall()
-    sql2 = "select deviceNo, deviceSerial, deviceMacaddr from camdevice where attrib not like 'XXX%'"
+    sql2 = "select deviceNo, deviceSerial, deviceMacaddr from camDevice where attrib not like 'XXX%'"
     cur.execute(sql2)
     comba = cur.fetchall()
-    sql3 = "select custNo, custName from custmng where attrib not like 'XXX%'"
+    sql3 = "select custNo, custName from custMng where attrib not like 'XXX%'"
     cur.execute(sql3)
     combb = cur.fetchall()
     db.close()
@@ -238,7 +253,7 @@ def siteAdd():
 def custAdd():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select * from custmng where attrib not like 'XXX%'"
+    sql1 = "select * from custMng where attrib not like 'XXX%'"
     cur.execute(sql1)
     cond = cur.fetchall()
     db.close()
@@ -270,13 +285,13 @@ def devinsert():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     if request.method == 'GET':
-        sql1 = "select * from camdevice where attrib not like 'XXX%'"
+        sql1 = "select * from camDevice where attrib not like 'XXX%'"
         cur.execute(sql1)
         cond = cur.fetchall()
         db.close()
         return render_template("subm/deviceman.html", cond=cond)
     else:
-        sql1 = "insert into camdevice (deviceType, deviceSerial, deviceMacaddr, regDate) values (%s, %s, %s, now())"
+        sql1 = "insert into camDevice (deviceType, deviceSerial, deviceMacaddr, regDate) values (%s, %s, %s, now())"
         cur.execute(sql1, (str(request.form.get("devType")), str(request.form.get("devSerial")), str(request.form.get("devMac"))))
         db.commit()
         cond = cur.fetchall()
@@ -285,17 +300,20 @@ def devinsert():
 
 @app.route('/siteInsert', methods=['GET', 'POST'])
 def siteinsert():
+    addrStr = str(request.form.get("camAddr1"))
+    latLong = geocoding(addrStr)
+    print(latLong)
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     if request.method == 'GET':
-        sql1 = "select * from camlist where attrib not like 'XXX%'"
+        sql1 = "select * from camList where attrib not like 'XXX%'"
         cur.execute(sql1)
         cond = cur.fetchall()
         db.close()
         return render_template("subm/siteman.html", cond=cond)
     else:
-        sql1 = "insert into camlist (camName, deviceNo, custNo, serviceNo,camPostno, camAddr,regDate) values (%s,%s,%s,%s,%s,%s,now())"
-        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),int(request.form.get("custNo")),str(request.form.get("serviceType")),str(request.form.get("camPostno")),str(request.form.get("camAddr"))))
+        sql1 = "insert into camList (camName, deviceNo, camLat, camLong, custNo, serviceNo, camPostno, camAddr1, camAddr2, regDate) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,now())"
+        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),latLong[0],latLong[1],int(request.form.get("custNo")),str(request.form.get("serviceType")),str(request.form.get("camPostno")),str(request.form.get("camAddr1")),str(request.form.get("camAddr2"))))
         db.commit()
         cond = cur.fetchall()
         db.close()
@@ -306,13 +324,13 @@ def custinsert():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     if request.method == 'GET':
-        sql1 = "select * from custmng where attrib not like 'XXX%'"
+        sql1 = "select * from custMng where attrib not like 'XXX%'"
         cur.execute(sql1)
         cond = cur.fetchall()
         db.close()
         return render_template("subm/custman.html", cond=cond)
     else:
-        sql1 = "insert into custmng (custName, custAddr, custTel, custMail, serviceNo, regDate) values (%s, %s, %s, %s, %s, now())"
+        sql1 = "insert into custMng (custName, custAddr, custTel, custMail, serviceNo, regDate) values (%s, %s, %s, %s, %s, now())"
         cur.execute(sql1, (str(request.form.get("custName")), str(request.form.get("custAddr")),str(request.form.get("custTel")), str(request.form.get("custMail")), str(request.form.get("serviceNo"))))
         db.commit()
         cond = cur.fetchall()
@@ -471,8 +489,36 @@ def video_feed():
         if program_quit:
             break
 
-
+def geocoding(address):
+    try:
+        geo = geo_local.geocode(address)
+        x_y = [geo.latitude, geo.longitude]
+        print(x_y)
+        return x_y
+    except:
+        return [0,0]
+    
 if __name__ == '__main__':
     app.degub = True
     # app.run(host='0.0.0.0', port="443", ssl_context="adhoc")
     app.run(debug=True, port=80, host='0.0.0.0')
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-i", "--ip", type=str, required=False, default='127.0.0.1',
+                    help="ip address of the device")
+    ap.add_argument("-o", "--port", type=int, required=False, default=5000,
+                    help="ephemeral port number of the server (1024 to 65535)")
+    ap.add_argument("-f", "--frame-count", type=int, default=32,
+                    help="# of frames used to construct the background model")
+    args = vars(ap.parse_args())
+
+    t = threading.Thread(target=stream, args=(args["frame_count"],))
+    t.daemon = True
+    t.start()
+
+    # app.run(debug=True, port=80, host='0.0.0.0')
+    app.run(host=args["ip"], port=args["port"], debug=True,
+            threaded=True, use_reloader=False)
+
+# release the video stream pointer
+cap.release()
+cv2.destroyAllWindows()

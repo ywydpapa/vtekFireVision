@@ -73,7 +73,7 @@
                             <td>우편번호</td>
                             <td><input type="text" id="postcode" readonly></td>
                             <td>주소</td>
-                            <td><input type="text" id="address" readonly></td>
+                            <td><input type="text" id="address1" readonly><input type="text" id="address2" readonly></td>
                         </tr>
                     </tbody>
                 </table>
@@ -96,8 +96,8 @@
                         <tr>
                             <td>({{k[0]}}){{k[1]}}</td>
                             <td>{{k[9]}}</td>
-                            <td>({{k[6]}}){{k[7]}}</td>
-                            <td>{{k[8]}}</td>
+                            <td>({{k[6]}}) {{k[7]}} {{k[8]}}</td>
+                            <td>{{k[9]}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -114,7 +114,8 @@
         datas.custNo = $("#custNo").val();
         datas.serviceType = $("#serviceType").val();
         datas.camPostno = $("#postcode").val();
-        datas.camAddr = $("#address").val();
+        datas.camAddr1 = $("#address1").val();
+        datas.camAddr2 = $("#address2").val();
         $.ajax({
             "url": "/siteInsert",
             "method": "post",
@@ -127,7 +128,7 @@
     }
 </script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-    <script>
+<script>
     // 우편번호 찾기 찾기 화면을 넣을 element
     var element_wrap = document.getElementById('wrap');
 
@@ -138,8 +139,9 @@
         var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
         new daum.Postcode({
             oncomplete: function(data) {
-                var fullAddr = data.address; // 최종 주소 변수
-                var extraAddr = ''; // 조합형 주소 변수
+                console.log(data);
+                var fullAddr = data.address;
+                var extraAddr = '';
                 if(data.addressType === 'R'){
                     if(data.bname !== ''){
                         extraAddr += data.bname;
@@ -147,12 +149,13 @@
                     if(data.buildingName !== ''){
                         extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
                     }
-                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                    /* fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : ''); */
                 }
                 localStorage.setItem('address', fullAddr);
                 console.log(fullAddr);
                 document.getElementById('postcode').value = data.zonecode;
-                document.getElementById('address').value = fullAddr;
+                document.getElementById('address1').value = fullAddr;
+                document.getElementById('address2').value = "(" + extraAddr + ")";
 
                 document.body.scrollTop = currentScroll;
             },
@@ -163,5 +166,5 @@
             height : '100%'
         }).embed(element_wrap);
         element_wrap.style.display = 'block';
-    </script>
+</script>
 </html>

@@ -19,7 +19,7 @@
 </body>
 <script>
     $(document).ready(function(){
-        kakaoMapPlace("{{result[0:1]}}", document.getElementById("map2"));
+        kakaoMapPlace(document.getElementById("map2"));
     })
 
     function kakaoMapLatLng(container, lat, lng){
@@ -39,21 +39,31 @@
         marker.setMap(kakaoArr.map);
     }
 
-    function kakaoMapPlace(keyword, container, lat, lng){
-        if(lat === undefined) lat = 33.450701;
-        if(lng === undefined) lng = 126.570667;
+    function kakaoMapPlace(container){
+        let positions = [];
+        let result = "{{result}}";
+        result = JSON.parse(result.replace(/&#39;/g, "\""));
 
         kakaoArr.infowindow = new kakao.maps.InfoWindow({zIndex:1});
         kakaoArr.options = {
-            center: new kakao.maps.LatLng(lat, lng),
+            center: new kakao.maps.LatLng(result[0]["camLat"], result[0]["camLong"]),
             level: 3
         };
         kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
-        let place = new kakao.maps.services.Places();
-        place.keywordSearch(keyword, placesSearchCB);
+
+        for(let i = 0; i < result.length; i++){
+            let datas = {
+                "content": result[i]["camAddr2"].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
+                "latlng": new kakao.maps.LatLng(result[i]["camLat"], result[i]["camLong"]),
+                "link": result[i]["camLink"]
+            }
+            positions.push(datas);
+        }
+
+        displayMarker(positions);
     }
 
-    function placesSearchCB (data, status, pagination) {
+    /* function placesSearchCB (data, status, pagination) {
         if (status === kakao.maps.services.Status.OK) {
             var bounds = new kakao.maps.LatLngBounds();
 
@@ -64,18 +74,38 @@
             }
             kakaoArr.map.setBounds(bounds);
         }
+    } */
+
+    function displayMarker(positions) {
+        for(let i = 0; i < positions.length; i++){
+            var marker = new kakao.maps.Marker({
+                map: kakaoArr.map,
+                position: positions[i].latlng
+            });
+        
+            var infowindow = new kakao.maps.InfoWindow({
+                content: positions[i].content
+            });
+    
+            kakao.maps.event.addListener(marker, 'click', function(){
+                location.href = "/" + positions[i].link;
+            });
+
+            kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(kakaoArr.map, marker, infowindow));
+            kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+        }
     }
 
-    function displayMarker(place) {
-        var marker = new kakao.maps.Marker({
-            map: kakaoArr.map,
-            position: new kakao.maps.LatLng(place.y, place.x)
-        });
-
-        kakao.maps.event.addListener(marker, 'click', function() {
-            kakaoArr.infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-            kakaoArr.infowindow.open(kakaoArr.map, marker);
-        });
+    function makeOverListener(map, marker, infowindow) {
+        return function() {
+            infowindow.open(map, marker);
+        };
+    }
+    
+    function makeOutListener(infowindow) {
+        return function() {
+            infowindow.close();
+        };
     }
 </script>
 </html>
