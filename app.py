@@ -37,6 +37,7 @@ def home():
 @app.route("/video")
 def video():
     # return the rendered template
+    video_feed()
     return render_template("/subm/videofeed.html")
 
 @app.route('/subm/mnu001', methods=['GET', 'POST'])
@@ -407,6 +408,43 @@ def video_feed3():
     while True:
         print(f'try {try_num}')
         cap = cv2.VideoCapture(source3)
+        ret, img_color = cap.read()
+        if ret == False:
+            try_num += 1
+            time.sleep(1)
+            continue
+        try_num = 1
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        print('fps', fps)
+        if fps == 0.0:
+            fps = 30.0
+        while True:
+            ret, img_color = cap.read()
+            if ret == False:
+                print('영상을 가져올 수 없습니다.')
+                break
+
+            cv2.imshow("vtekVision CCTV LIVE", img_color)
+
+            if cv2.waitKey(1) == 27:
+                program_quit = True
+                break
+        cap.release()
+        cv2.destroyAllWindows()
+        if program_quit:
+            break
+
+def video_feed():
+    #db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    #cur = db.cursor()
+    #sql = "select camLink from camlist where camNo = '%s' and attrib not like 'XXX%'"
+    #cur.execute(sql,(int(camNo)))
+    #sourcelink = cur.fetchone()
+    try_num = 1
+    program_quit = False
+    while True:
+        print(f'try {try_num}')
+        cap = cv2.VideoCapture(source1)
         ret, img_color = cap.read()
         if ret == False:
             try_num += 1
