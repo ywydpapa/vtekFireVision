@@ -89,6 +89,9 @@
     
             kakao.maps.event.addListener(marker, 'click', function(){
                 location.href = "/" + positions[i].link;
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
             });
 
             kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(kakaoArr.map, marker, infowindow));
