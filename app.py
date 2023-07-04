@@ -119,7 +119,7 @@ def networkstat():
 def okhome():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select camNo,camName, custNo, serviceNo from camList where attrib not like 'XXX%'"
+    sql1 = "select * from camList where attrib not like 'XXX%'"
     cur.execute(sql1)
     cond = cur.fetchall()
     if request.method == 'GET':

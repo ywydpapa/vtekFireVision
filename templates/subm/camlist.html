@@ -58,9 +58,11 @@
                         {% for k in cond %}
                         <tr>
                             <td>{{k[0]}}</td>
-                            <td>{{k[1]}}</td>
-                            <td>{{k[2]}}</td>
-                            <td>{{k[3]}}</td>
+                            <td>
+                                <a href="/{{k[10]}}" target="_blank">{{k[1]}}</a>
+                            </td>
+                            <td>({{k[6]}}) {{k[7]}} {{k[8]}}</td>
+                            <td>{{k[9]}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
