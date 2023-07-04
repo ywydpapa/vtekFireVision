@@ -59,7 +59,7 @@
                         <tr>
                             <td>{{k[0]}}</td>
                             <td>
-                                <a href="/{{k[10]}}" target="_blank">{{k[1]}}</a>
+                                <a href="#" data-href="{{k[10]}}" onclick="linkReload(this);">{{k[1]}}</a>
                             </td>
                             <td>({{k[6]}}) {{k[7]}} {{k[8]}}</td>
                             <td>{{k[9]}}</td>
@@ -72,6 +72,12 @@
     </div>
  </body>
 <script>
-
+    function linkReload(thisEle){
+        location.href = "/" + thisEle.dataset.href;
+        
+        setTimeout(() => {
+            location.reload();
+        }, 1000)
+    }
 </script>
 </html>
