@@ -2,6 +2,7 @@ import json
 from flask import Flask, jsonify, make_response, request, render_template, redirect, session, Response
 import dbconn
 from dbconn import selectUsers
+import deviceSetup
 import pymysql
 import datetime,time
 import os
@@ -291,12 +292,34 @@ def devinsert():
         db.close()
         return render_template("subm/deviceman.html", cond=cond)
     else:
-        sql1 = "insert into camDevice (deviceType, deviceSerial, deviceMacaddr, regDate) values (%s, %s, %s, now())"
-        cur.execute(sql1, (str(request.form.get("devType")), str(request.form.get("devSerial")), str(request.form.get("devMac"))))
+        sql1 = "insert into camDevice (deviceType, deviceSerial, deviceMacaddr,deviceIp4, deviceIp6, deviceSetno, sensor01,sensor02,sensor03,sensor04, regDate) " \
+               "values (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s, now())"
+        cur.execute(sql1, (str(request.form.get("devType")), str(request.form.get("devSerial")), str(request.form.get("devMac")),
+                           str(request.form.get("deviceIp4")), str(request.form.get("deviceIp6")),
+                           str(request.form.get("deviceSetno")), str(request.form.get("sensor01")), str(request.form.get("sensor02")),
+                           str(request.form.get("sensor03")), str(request.form.get("sensor04"))))
         db.commit()
         cond = cur.fetchall()
         db.close()
         return render_template("subm/deviceman.html")
+
+@app.route('/devUpdate', methods=['GET', 'POST'])
+def devupdate():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    if request.method == 'GET':
+        return render_template("subm/deviceman.html")
+    else:
+        sql1 = "update camDevice set deviceType = %s, deviceSerial = %s,  deviceMacaddr = %s, deviceIp4 = %s , deviceIp6 = %s, deviceSetno = %s, " \
+               "sensor01 = %s, sensor02 = %s, sensor03 = %s, sensor04 = %s, modDate = now() where deviceNo = %s"
+        cur.execute(sql1, (str(request.form.get("devType")), str(request.form.get("devSerial")), str(request.form.get("devMac")),str(request.form.get("deviceIp4")),str(request.form.get("deviceIp6")),
+                           str(request.form.get("deviceSetno")),str(request.form.get("sensor01")),str(request.form.get("sensor02")),str(request.form.get("sensor03")),str(request.form.get("sensor04")),str(request.form.get("deviceNo"))
+                           ))
+        db.commit()
+        cond = cur.fetchall()
+        db.close()
+        return render_template("subm/deviceman.html")
+
 
 @app.route('/siteInsert', methods=['GET', 'POST'])
 def siteinsert():
@@ -520,5 +543,5 @@ if __name__ == '__main__':
             threaded=True, use_reloader=False)
 
 # release the video stream pointer
-cap.release()
-cv2.destroyAllWindows()
+#cap.release()
+#cv2.destroyAllWindows()

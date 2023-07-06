@@ -65,9 +65,36 @@
                             <td><input type="text" id="devSerial"></td>
                             <td><input type="text" id="devMac"></td>
                             <td><select id="devSite">
-                                <option value="">설치장소 선택</option>
+                                <option value="" selected></option>
+                                <option value="">설치장소</option>
                             </select></td>
                         </tr>
+                        <tr style="background-color: khaki">
+                            <td>IP4</td>
+                            <td>IP6</td>
+                            <td>ALARM KEY</td>
+                            <td>SETUP TYPE</td>
+                        </tr>
+                    <tr>
+                        <td><input type="text" id="ipv4"></td>
+                        <td><input type="text" id="ipv6"></td>
+                        <td><input type="text" id="alarmkey"></td>
+                        <td><input type="text" id="devicesetup"></td>
+                    </tr>
+
+                        </tr>
+                        <tr style="background-color: khaki">
+                            <td>센서 1번 KEY</td>
+                            <td>센서 2번 KEY</td>
+                            <td>센서 3번 KEY</td>
+                            <td>센서 4번 KEY</td>
+                        </tr>
+                    <tr>
+                        <td><input type="text" id="sensor01"></td>
+                        <td><input type="text" id="sensor02"></td>
+                        <td><input type="text" id="sensor03"></td>
+                        <td><input type="text" id="sensor04"></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -103,9 +130,39 @@
         datas.devSerial = $("#devSerial").val();
         datas.devMac = $("#devMac").val();
         datas.siteNo = $("#devSite").val();
-
+        datas.deviceIp4 = $("#ipv4").val();
+        datas.deviceIp6 = $("#ipv6").val();
+        datas.sensor01 = $("#sensor01").val();
+        datas.sensor02 = $("#sensor02").val();
+        datas.sensor03 = $("#sensor03").val();
+        datas.sensor04 = $("#sensor04").val();
+        datas.deviceSetno = $("#devicesetup").val();
         $.ajax({
             "url": "/devInsert",
+            "method": "post",
+            "data": datas,
+            "success": function(){
+                alert("등록되었습니다.");
+                location.reload();
+            }
+        })
+    }
+
+    function deviceUpdateSubmit(){
+        let datas = {};
+        datas.devType = $("#devType").val();
+        datas.devSerial = $("#devSerial").val();
+        datas.devMac = $("#devMac").val();
+        datas.siteNo = $("#devSite").val();
+        datas.deviceIp4 = $("#ipv4").val();
+        datas.deviceIp6 = $("#ipv6").val();
+        datas.sensor01 = $("#sensor01").val();
+        datas.sensor02 = $("#sensor02").val();
+        datas.sensor03 = $("#sensor03").val();
+        datas.sensor04 = $("#sensor04").val();
+        datas.deviceSetno = $("#devicesetup").val();
+        $.ajax({
+            "url": "/devUpdate",
             "method": "post",
             "data": datas,
             "success": function(){
