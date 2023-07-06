@@ -84,6 +84,18 @@ def mnu002f():
         return render_template('./subm/mnu002.html', result=resultArr)
     else:
         return render_template("./subm/mnu002.html", result=resultArr)
+    
+@app.route('/subm/deviceSelect', methods=['GET'])
+def deviceSelect():
+    deviceNo = request.args.get("deviceNo");
+    resultArr = []
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select * from camDevice where deviceNo = " + deviceNo + " and attrib not like 'XXX%'"
+    cur.execute(sql)
+    result = json.dumps(cur.fetchall(), default=str)
+    db.close()
+    return result
 
 
 @app.route('/subm/cpu')  # 요청
@@ -120,7 +132,7 @@ def networkstat():
 def okhome():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select * from camList where attrib not like 'XXX%'"
+    sql1 = "select * from camList where attrib not like 'XXX%' order by regDate desc limit 10"
     cur.execute(sql1)
     cond = cur.fetchall()
     if request.method == 'GET':
@@ -187,11 +199,14 @@ def searchSel():
     sql = "select * from inoutT order by d002 asc"
     cur.execute(sql)
     result_hour = cur.fetchall()
+    sql = "select * from camList where attrib not like 'XXX%' order by regDate desc limit 10"
+    cur.execute(sql)
+    camList = cur.fetchall()
     db.close()
     return render_template("stat/dashinit.html", result=result_service, area=result_area,
                            cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),
                            result_mem=psutil.virtual_memory(), result_disk=result_disk, result_month=result_month,
-                           result_hour=result_hour)
+                           result_hour=result_hour,result_camList=camList)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -303,22 +318,18 @@ def devinsert():
         db.close()
         return render_template("subm/deviceman.html")
 
-@app.route('/devUpdate', methods=['GET', 'POST'])
+@app.route('/devUpdate', methods=['POST'])
 def devupdate():
+    deviceNo = request.form.get("deviceNo")
+    print(request.form)
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    if request.method == 'GET':
-        return render_template("subm/deviceman.html")
-    else:
-        sql1 = "update camDevice set deviceType = %s, deviceSerial = %s,  deviceMacaddr = %s, deviceIp4 = %s , deviceIp6 = %s, deviceSetno = %s, " \
-               "sensor01 = %s, sensor02 = %s, sensor03 = %s, sensor04 = %s, modDate = now() where deviceNo = %s"
-        cur.execute(sql1, (str(request.form.get("devType")), str(request.form.get("devSerial")), str(request.form.get("devMac")),str(request.form.get("deviceIp4")),str(request.form.get("deviceIp6")),
-                           str(request.form.get("deviceSetno")),str(request.form.get("sensor01")),str(request.form.get("sensor02")),str(request.form.get("sensor03")),str(request.form.get("sensor04")),str(request.form.get("deviceNo"))
-                           ))
-        db.commit()
-        cond = cur.fetchall()
-        db.close()
-        return render_template("subm/deviceman.html")
+    sql1 = "update camDevice set deviceType = %s, deviceSerial = %s,  deviceMacaddr = %s, deviceIp4 = %s , deviceIp6 = %s, deviceSetno = %s, sensor01 = %s, sensor02 = %s, sensor03 = %s, sensor04 = %s, modDate = now() where deviceNo = " + deviceNo
+    cur.execute(sql1, (str(request.form.get("devType")), str(request.form.get("devSerial")), str(request.form.get("devMac")),str(request.form.get("deviceIp4")),str(request.form.get("deviceIp6")),str(request.form.get("deviceSetno")),str(request.form.get("sensor01")),str(request.form.get("sensor02")),str(request.form.get("sensor03")),str(request.form.get("sensor04"))))
+    db.commit()
+    cur.fetchall()
+    db.close()
+    return render_template("subm/deviceman.html")
 
 
 @app.route('/siteInsert', methods=['GET', 'POST'])

@@ -42,8 +42,9 @@
     <div id="commonContent">
         <div class="container">
             <div class="userAddContents">
-                <div>
-                    <button type="button" onclick="deviceAddSubmit();">장비 등록</button>
+                <div class="btns">
+                    <button type="button" class="addBtn" onclick="deviceAddSubmit();">장비 등록</button>
+                    <button type="button" class="cancelBtn" onclick="cancelClick();" style="display:none;">취소</button>
                 </div>
                 <table>
                     <thead>
@@ -75,12 +76,12 @@
                             <td>ALARM KEY</td>
                             <td>SETUP TYPE</td>
                         </tr>
-                    <tr>
-                        <td><input type="text" id="ipv4"></td>
-                        <td><input type="text" id="ipv6"></td>
-                        <td><input type="text" id="alarmkey"></td>
-                        <td><input type="text" id="devicesetup"></td>
-                    </tr>
+                        <tr>
+                            <td><input type="text" id="ipv4"></td>
+                            <td><input type="text" id="ipv6"></td>
+                            <td><input type="text" id="alarmkey"></td>
+                            <td><input type="text" id="devicesetup"></td>
+                        </tr>
 
                         </tr>
                         <tr style="background-color: khaki">
@@ -89,12 +90,12 @@
                             <td>센서 3번 KEY</td>
                             <td>센서 4번 KEY</td>
                         </tr>
-                    <tr>
-                        <td><input type="text" id="sensor01"></td>
-                        <td><input type="text" id="sensor02"></td>
-                        <td><input type="text" id="sensor03"></td>
-                        <td><input type="text" id="sensor04"></td>
-                    </tr>
+                        <tr>
+                            <td><input type="text" id="sensor01"></td>
+                            <td><input type="text" id="sensor02"></td>
+                            <td><input type="text" id="sensor03"></td>
+                            <td><input type="text" id="sensor04"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -112,7 +113,7 @@
                         {% for k in cond %}
                         <tr>
                             <td>{{k[2]}}</td>
-                            <td>{{k[3]}}</td>
+                            <td><a href="#" data-no="{{k[0]}}" onclick="updateForm(this);">{{k[3]}}</a></td>
                             <td>{{k[4]}}</td>
                             <td>{{k[4]}}</td>
                         </tr>
@@ -124,6 +125,51 @@
     </div>
 </body>
 <script>
+    function updateForm(thisEle){
+        $.ajax({
+            url: "/subm/deviceSelect",
+            method: "get",
+            data: {
+                "deviceNo": thisEle.dataset.no
+            },
+            dataType: "json",
+            contentType: "text/plain",
+            success: function(result){
+                $("#devType").val(result[0][2]);
+                $("#devSerial").val(result[0][3]);
+                $("#devMac").val(result[0][4]);
+                $("#ipv4").val(result[0][5]);
+                $("#ipv6").val(result[0][6]);
+                $("#devicesetup").val(result[0][7]);
+                $("#sensor01").val(result[0][8]);
+                $("#sensor02").val(result[0][9]);
+                $("#sensor03").val(result[0][10]);
+                $("#sensor04").val(result[0][11]);
+                $(".addBtn").text("장비 수정");
+                $(".addBtn").attr("style", "margin-right: 5px;");
+                $(".addBtn").attr("onclick", "deviceUpdateSubmit(" + thisEle.dataset.no + ");");
+                $(".cancelBtn").attr("style", "display: block;");
+            }
+        })
+    }
+
+    function cancelClick(){
+        $("#devType").val("");
+        $("#devSerial").val("");
+        $("#devMac").val("");
+        $("#ipv4").val("");
+        $("#ipv6").val("");
+        $("#devicesetup").val("");
+        $("#sensor01").val("");
+        $("#sensor02").val("");
+        $("#sensor03").val("");
+        $("#sensor04").val("");
+        $(".addBtn").text("장비 등록");
+        $(".addBtn").attr("style", "margin-right: 0;");
+        $(".addBtn").attr("onclick", "deviceAddSubmit();");
+        $(".cancelBtn").attr("style", "display: none;");
+    }
+
     function deviceAddSubmit(){
         let datas = {};
         datas.devType = $("#devType").val();
@@ -148,8 +194,9 @@
         })
     }
 
-    function deviceUpdateSubmit(){
+    function deviceUpdateSubmit(deviceNo){
         let datas = {};
+        datas.deviceNo = deviceNo;
         datas.devType = $("#devType").val();
         datas.devSerial = $("#devSerial").val();
         datas.devMac = $("#devMac").val();
@@ -166,7 +213,7 @@
             "method": "post",
             "data": datas,
             "success": function(){
-                alert("등록되었습니다.");
+                alert("수정되었습니다.");
                 location.reload();
             }
         })

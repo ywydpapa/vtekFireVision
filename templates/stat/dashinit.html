@@ -40,6 +40,30 @@
             <hr>
              <div>
                 <div class="chartContents">
+                    <div style="width: 100%;">
+                        <table id="foo-table" class="table table-striped table-bordered nowrap overflow-auto">
+                            <thead>
+                                <tr>
+                                    <th>사이트명</th>
+                                    <th>고객명</th>
+                                    <th>주소</th>
+                                    <th>서비스종류</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for k in result_camList %}
+                                <tr>
+                                    <td>{{k[0]}}</td>
+                                    <td>
+                                        <a href="#" data-href="{{k[10]}}" onclick="linkReload(this);">{{k[1]}}</a>
+                                    </td>
+                                    <td>({{k[6]}}) {{k[7]}} {{k[8]}}</td>
+                                    <td>{{k[9]}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     <div>
                         <div>SERVICE(%)</div>
                         <canvas id="serviceChart" width="375" height="400"></canvas>
@@ -372,6 +396,14 @@
                 ],
             },
         });
+    }
+
+    function linkReload(thisEle){
+        location.href = "/" + thisEle.dataset.href;
+        
+        setTimeout(() => {
+            location.reload();
+        }, 1000)
     }
 </script>
 </html>
