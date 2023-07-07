@@ -92,7 +92,7 @@ def alarmon(alarmkey):
     sql = "insert into alarmon (alarmKey, regDate) values (%s, now())"
     cur.execute(sql, str(alarmkey))
     db.commit()
-    result = cur.fetchall()
+    cur.fetchall()
     db.close()
     flash("OK")
     return render_template("./stat/emptyPage.html")
@@ -104,7 +104,7 @@ def alarmoff(alarmkey):
     sql = "update alarmon set attrib = 'XXXXX0000000000' where alarmkey = %s"
     cur.execute(sql, str(alarmkey))
     db.commit()
-    result = cur.fetchall()
+    cur.fetchall()
     db.close()
     flash("OK")
     return render_template("./stat/emptyPage.html")
