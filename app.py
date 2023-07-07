@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, make_response, request, render_template, redirect, session, Response
+from flask import Flask, flash, request, render_template, redirect, session, Response
 import dbconn
 from dbconn import selectUsers
 import deviceSetup
@@ -84,6 +84,32 @@ def mnu002f():
         return render_template('./subm/mnu002.html', result=resultArr)
     else:
         return render_template("./subm/mnu002.html", result=resultArr)
+
+@app.route('/alarmon/<alarmkey>', methods=['GET'])
+def alarmon(alarmkey):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "insert into alarmon (alarmKey, regDate) values (%s, now())"
+    cur.execute(sql, str(alarmkey))
+    db.commit()
+    result = cur.fetchall()
+    print(result)
+    db.close()
+    flash("OK")
+    return render_template("./stat/emptyPage.html")
+
+@app.route('/alarmoff/<alarmkey>', methods=['GET'])
+def alarmoff(alarmkey):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "update alarmon set attrib = 'XXXXX0000000000' where alarmkey = %s"
+    cur.execute(sql, str(alarmkey))
+    db.commit()
+    result = cur.fetchall()
+    print(result)
+    db.close()
+    flash("OK")
+    return render_template("./stat/emptyPage.html")
     
 @app.route('/subm/deviceSelect', methods=['GET'])
 def deviceSelect():
