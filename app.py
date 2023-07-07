@@ -85,6 +85,18 @@ def mnu002f():
     else:
         return render_template("./subm/mnu002.html", result=resultArr)
 
+@app.route('/mainAlarmDatas', methods=['GET'])
+def mainAlarmDatas():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select * from alarmon where attrib not like 'XXX%'"
+    cur.execute(sql)
+    result = json.dumps(cur.fetchall(), default=str)
+    print(result);
+    db.close()
+    flash("OK")
+    return result
+
 @app.route('/alarmon/<alarmkey>', methods=['GET'])
 def alarmon(alarmkey):
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)

@@ -65,7 +65,26 @@
                     }
                 }
             });
+
+            setInterval("alarmCheck()", 10000);
+            
         });
+
+        function alarmCheck(){
+            $.ajax({
+                url: "/mainAlarmDatas",
+                method: "get",
+                dataType: "json",
+                contentType: "text/plain",
+                success: function(result) {
+                    if(result.length > 0){
+                        for(let i = 0; i < result.length; i++){
+                            alert("알람 [alarmkey: " + result[i][1] + "]")
+                        }
+                    }
+                }
+            })
+        }
 
         function searchTextCol(e){
             let thisEle = $(e);
