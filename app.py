@@ -101,7 +101,7 @@ def alarmon(alarmkey):
 def alarmoff(alarmkey):
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "update alarmon set attrib = 'XXXXX0000000000' where alarmkey = %s"
+    sql = "update alarmon set attrib = 'XXXXX0000000000', modDate = now() where alarmkey = %s"
     cur.execute(sql, str(alarmkey))
     db.commit()
     cur.fetchall()
