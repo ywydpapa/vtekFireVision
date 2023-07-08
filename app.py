@@ -101,6 +101,8 @@ def mainAlarmDatas():
 def alarmon(alarmkey):
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
+    sql1 = "update alarmon set modDate = now() , attrib = 'XXXXX0000000000' where alarmKey = %s"
+    cur.execute(sql1, str(alarmkey))
     sql = "insert into alarmon (alarmKey, regDate) values (%s, now())"
     cur.execute(sql, str(alarmkey))
     db.commit()
@@ -108,6 +110,22 @@ def alarmon(alarmkey):
     db.close()
     flash("OK")
     return render_template("./stat/emptyPage.html")
+
+
+@app.route('/sensins/<sensorkey>', methods=['GET'])
+def sensorins(sensorkey):
+    svalue = request.args.get('sensorval', default='0.0', type = str)
+    print(svalue)
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "insert into sensordata (sensorKey, sensorValue, regDate) values (%s,%s, now())"
+    cur.execute(sql,(str(sensorkey), str(svalue)))
+    db.commit()
+    cur.fetchall()
+    db.close()
+    flash("OK")
+    return render_template("./stat/emptyPage.html")
+
 
 @app.route('/alarmoff/<alarmkey>', methods=['GET'])
 def alarmoff(alarmkey):
