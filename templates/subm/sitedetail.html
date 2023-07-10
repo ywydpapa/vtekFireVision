@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+</head>
+<body>
+    <div id="commonTopHeader">
+    {% include './menu/comTopHeader.html' %}
+    </div>
+    <div id="commonBodyContents">
+        {% include './menu/sidemenu2.html' %}
+        <!-- commonSideMenu end-->
+        <div id="commonContent">
+            <div class="container">
+                <div id="map2" style="width:1024px; height:768px;"></div>
+                <div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>사이트명</th>
+                            <th>사이트명</th>
+                        </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function(){
+        kakaoMapPlace(document.getElementById("map2"));
+    })
+
+    function kakaoMapLatLng(container, lat, lng){
+        if(lat === undefined) lat = 33.450701;
+        if(lng === undefined) lng = 126.570667;
+
+        kakaoArr.options = {
+            center: new kakao.maps.LatLng(lat, lng),
+            level: 3
+        };
+        kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
+        let markerPosition  = new kakao.maps.LatLng(lat, lng);
+        let marker = new kakao.maps.Marker({
+            position: markerPosition
+        });
+
+        marker.setMap(kakaoArr.map);
+    }
+
+    function kakaoMapPlace(container){
+        let positions = [];
+        let result = "{{result}}";
+        result = JSON.parse(result.replace(/&#39;/g, "\""));
+
+        kakaoArr.infowindow = new kakao.maps.InfoWindow({zIndex:1});
+        kakaoArr.options = {
+            center: new kakao.maps.LatLng(result[0]["camLat"], result[0]["camLong"]),
+            level: 3
+        };
+        kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
+
+        for(let i = 0; i < result.length; i++){
+            let datas = {
+                "content": result[i]["camAddr2"].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
+                "latlng": new kakao.maps.LatLng(result[i]["camLat"], result[i]["camLong"]),
+                "link": result[i]["camLink"]
+            }
+            positions.push(datas);
+        }
+
+        displayMarker(positions);
+    }
+
+    /* function placesSearchCB (data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+            var bounds = new kakao.maps.LatLngBounds();
+
+            for (var i=0; i < data.length; i++) {
+                console.log(data);
+                displayMarker(data[i]);
+                bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+            }
+            kakaoArr.map.setBounds(bounds);
+        }
+    } */
+
+    function displayMarker(positions) {
+        for(let i = 0; i < positions.length; i++){
+            var marker = new kakao.maps.Marker({
+                map: kakaoArr.map,
+                position: positions[i].latlng
+            });
+        
+            var infowindow = new kakao.maps.InfoWindow({
+                content: positions[i].content
+            });
+    
+            kakao.maps.event.addListener(marker, 'click', function(){
+                location.href = "/" + positions[i].link;
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            });
+
+            kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(kakaoArr.map, marker, infowindow));
+            kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+        }
+    }
+
+    function makeOverListener(map, marker, infowindow) {
+        return function() {
+            infowindow.open(map, marker);
+        };
+    }
+    
+    function makeOutListener(infowindow) {
+        return function() {
+            infowindow.close();
+        };
+    }
+</script>
+</html>

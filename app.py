@@ -85,6 +85,34 @@ def mnu002f():
     else:
         return render_template("./subm/mnu002.html", result=resultArr)
 
+
+@app.route('/sitedetail/<camno>', methods=['GET', 'POST'])
+def sitedetail(camno):
+    resultArr = []
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select camName, camLat, camLong, camAddr1, camAddr2, camLink from camList where camNo = '9' and attrib not like 'XXX%'"
+    cur.execute(sql)
+    result = cur.fetchall()
+    db.close()
+    for i in range(len(result)):
+        resultDatas = {
+            "camName": result[i][0],
+            "camLat": str(result[i][1]),
+            "camLong": str(result[i][2]),
+            "camAddr1": result[i][3],
+            "camAddr2": result[i][4],
+            "camLink": result[i][5]
+        }
+        resultArr.append(resultDatas)
+
+    print(resultArr)
+    if request.method == 'GET':
+        return render_template('./subm/sitedetail.html', result=resultArr)
+    else:
+        return render_template("./subm/sitedetail.html", result=resultArr)
+
+
 @app.route('/mainAlarmDatas', methods=['GET'])
 def mainAlarmDatas():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
