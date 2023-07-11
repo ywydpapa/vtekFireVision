@@ -39,6 +39,7 @@
                                 {% if result[0]["alramAttrib"] == '100001000010000' %}
                                     <button type="button" class="detailAlarmBtn" data-no="{{result[0]["alarmNo"]}}" onclick="alarmUpdate(this);" style="display: flex; justify-content: right;">알람해제</button>
                                 {% endif %}
+                                <button type="button" data-no="{{result[0]["camNo"]}}" onclick="clickMonitor(this);" style="display: flex; justify-content: right;">화면보기</button>
                             </td>
                         </tr>
                         <tr>
@@ -46,8 +47,12 @@
                             <td>{{result[0]["camAddr1"]}} {{result[0]["camAddr2"]}}</td>
                         </tr>
                         <tr>
-                            <th>위도, 경도</th>
-                            <td>{{result[0]["camLat"]}}, {{result[0]["camLong"]}}</td>
+                            <th>위도</th>
+                            <td>{{result[0]["camLat"]}}</td>
+                        </tr>
+                        <tr>
+                            <th>경도</th>
+                            <td>{{result[0]["camLong"]}}</td>
                         </tr>
                         <tr>
                             <td>
@@ -345,6 +350,14 @@
         }else{
             return false;
         }
+    }
+
+    function clickMonitor(thisEle){
+        location.href = "/videoFeed/" + thisEle.dataset.no;
+
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
     }
 </script>
 </html>

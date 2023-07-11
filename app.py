@@ -496,131 +496,19 @@ def custinsert():
         return render_template("subm/custman.html")
 
 
-@app.route("/video_feed1")
-def video_feed():
-    #db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
-    #cur = db.cursor()
-    #sql = "select camLink from camlist where camNo = '%s' and attrib not like 'XXX%'"
-    #cur.execute(sql,(int(camNo)))
-    #sourcelink = cur.fetchone()
+@app.route("/videoFeed/<camNo>")
+def video_feed(camNo):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select camLink from camList where camNo = " + camNo + " and attrib not like 'XXX%'"
+    cur.execute(sql)
+    result = cur.fetchone()
+    print(result)
     try_num = 1
     program_quit = False
     while True:
         print(f'try {try_num}')
-        cap = cv2.VideoCapture(source1)
-        ret, img_color = cap.read()
-        if ret == False:
-            try_num += 1
-            time.sleep(1)
-            continue
-        try_num = 1
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        print('fps', fps)
-        if fps == 0.0:
-            fps = 30.0
-        while True:
-            ret, img_color = cap.read()
-            if ret == False:
-                print('영상을 가져올 수 없습니다.')
-                break
-
-            cv2.imshow("vtekVision CCTV LIVE", img_color)
-
-            if cv2.waitKey(1) == 27:
-                program_quit = True
-                break
-        cap.release()
-        cv2.destroyAllWindows()
-        if program_quit:
-            break
-
-@app.route("/video_feed2")
-def video_feed2():
-    #db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
-    #cur = db.cursor()
-    #sql = "select camLink from camlist where camNo = '%s' and attrib not like 'XXX%'"
-    #cur.execute(sql,(int(camNo)))
-    #sourcelink = cur.fetchone()
-    try_num = 1
-    program_quit = False
-    while True:
-        print(f'try {try_num}')
-        cap = cv2.VideoCapture(source2)
-        ret, img_color = cap.read()
-        if ret == False:
-            try_num += 1
-            time.sleep(1)
-            continue
-        try_num = 1
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        print('fps', fps)
-        if fps == 0.0:
-            fps = 30.0
-        while True:
-            ret, img_color = cap.read()
-            if ret == False:
-                print('영상을 가져올 수 없습니다.')
-                break
-
-            cv2.imshow("vtekVision CCTV LIVE", img_color)
-
-            if cv2.waitKey(1) == 27:
-                program_quit = True
-                break
-        cap.release()
-        cv2.destroyAllWindows()
-        if program_quit:
-            break
-
-@app.route("/video_feed3")
-def video_feed3():
-    #db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
-    #cur = db.cursor()
-    #sql = "select camLink from camlist where camNo = '%s' and attrib not like 'XXX%'"
-    #cur.execute(sql,(int(camNo)))
-    #sourcelink = cur.fetchone()
-    try_num = 1
-    program_quit = False
-    while True:
-        print(f'try {try_num}')
-        cap = cv2.VideoCapture(source3)
-        ret, img_color = cap.read()
-        if ret == False:
-            try_num += 1
-            time.sleep(1)
-            continue
-        try_num = 1
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        print('fps', fps)
-        if fps == 0.0:
-            fps = 30.0
-        while True:
-            ret, img_color = cap.read()
-            if ret == False:
-                print('영상을 가져올 수 없습니다.')
-                break
-
-            cv2.imshow("vtekVision CCTV LIVE", img_color)
-
-            if cv2.waitKey(1) == 27:
-                program_quit = True
-                break
-        cap.release()
-        cv2.destroyAllWindows()
-        if program_quit:
-            break
-
-def video_feed():
-    #db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
-    #cur = db.cursor()
-    #sql = "select camLink from camlist where camNo = '%s' and attrib not like 'XXX%'"
-    #cur.execute(sql,(int(camNo)))
-    #sourcelink = cur.fetchone()
-    try_num = 1
-    program_quit = False
-    while True:
-        print(f'try {try_num}')
-        cap = cv2.VideoCapture(source1)
+        cap = cv2.VideoCapture(result[0])
         ret, img_color = cap.read()
         if ret == False:
             try_num += 1
