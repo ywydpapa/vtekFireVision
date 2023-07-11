@@ -64,7 +64,7 @@ def mnu002f():
     resultArr = []
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select camName, camLat, camLong, camAddr1, camAddr2, camLink from camList where attrib not like 'XXX%'"
+    sql = "select camNo, camName, camLat, camLong, camAddr1, camAddr2, camLink from camList where attrib not like 'XXX%'"
     cur.execute(sql)
     result = json.dumps(cur.fetchall(), default=str)
     db.close()

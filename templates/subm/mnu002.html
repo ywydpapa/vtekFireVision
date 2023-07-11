@@ -46,16 +46,16 @@
 
         kakaoArr.infowindow = new kakao.maps.InfoWindow({zIndex:1});
         kakaoArr.options = {
-            center: new kakao.maps.LatLng(result[0][1], result[0][2]),
+            center: new kakao.maps.LatLng(result[0][2], result[0][3]),
             level: 3
         };
         kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
 
         for(let i = 0; i < result.length; i++){
             let datas = {
-                "content": result[i][4].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
-                "latlng": new kakao.maps.LatLng(result[i][1], result[i][2]),
-                "link": result[i][5]
+                "content": result[i][5].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
+                "latlng": new kakao.maps.LatLng(result[i][2], result[i][3]),
+                "camNo": result[i][0]
             }
             positions.push(datas);
         }
@@ -88,10 +88,7 @@
             });
     
             kakao.maps.event.addListener(marker, 'click', function(){
-                location.href = "/" + positions[i].link;
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
+                location.href = "/sitedetail/" + positions[i].camNo;
             });
 
             kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(kakaoArr.map, marker, infowindow));
