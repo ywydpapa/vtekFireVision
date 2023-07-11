@@ -67,7 +67,6 @@
             });
 
             setInterval("alarmCheck()", 10000);
-            
         });
 
         function alarmCheck(){
@@ -79,7 +78,33 @@
                 success: function(result) {
                     if(result.length > 0){
                         for(let i = 0; i < result.length; i++){
-                            alert("알람 [alarmkey: " + result[i][1] + "]")
+                            $.ajax({
+                                url: "/camListSelect/" + result[i][1],
+                                method: "get",
+                                dataType: "json",
+                                contentType: "text/plain",
+                                success: function(selectData){
+                                    let camListTable = $("#camListTable");
+                                    camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").attr("style", "background-color: red;");
+                                    
+                                    let detailAlarmBtn = $(".detailAlarmBtn")[0];
+                                    if(detailAlarmBtn === undefined){
+                                        $("#alarmTable").find("tr:first td").append("<button type=\"button\" class=\"detailAlarmBtn\" data-no=\"" + result[i][0] + "\" onclick=\"alarmUpdate(this);\" style=\"display: flex; justify-content: right;\">알람해제</button>");
+                                    }
+                                    
+                                    setTimeout(() => {
+                                        if(confirm("[alarmkey: " + selectData[0][3] + "]" + " 알림을 확인하시겠습니까??")){
+                                            location.href = "/sitedetail/" + selectData[0][0];
+                                        }else{
+                                            return false;
+                                        }
+                                    }, 300)
+                                }
+                            });
+                        }
+                    }else{
+                        if($($(".detailAlarmBtn")[0]) !== undefined){
+                            $($(".detailAlarmBtn")[0]).remove();
                         }
                     }
                 }

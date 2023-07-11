@@ -2,6 +2,23 @@
 <html lang="en">
 <head>
 {% include '/menu/header.html' %}
+
+<style>
+    table{
+        width: 100%;
+        border: 1px solid #000;
+        border-collapse: collapse;
+        font-size: 1.51rem;
+    }
+
+    tr {
+        border: 1px solid #000;
+    }
+    
+    td{
+        border: 1px solid #000;
+    }
+</style>
 </head>
 <body>
     <div id="commonTopHeader">
@@ -11,17 +28,47 @@
         {% include './menu/sidemenu2.html' %}
         <!-- commonSideMenu end-->
         <div id="commonContent">
-            <div class="container">
-                <div id="map2" style="width:1024px; height:768px;"></div>
-                <div>
-                    <table>
-                        <thead>
+            <div class="container" style="display: flex;">
+                <div id="map2" style="width:100%; height:768px;"></div>
+                <div style="width: 100%;">
+                    <table id="alarmTable">
                         <tr>
-                            <th>사이트명</th>
-                            <th>사이트명</th>
+                            <th style="border-right: 1px solid #000;">사이트명</th>
+                            <td style="width: 100%; display: flex; border:0;">
+                                <div style="width: 90%; display: flex; align-items: center;">{{result[0]["camName"]}}</div>
+                                {% if result[0]["alramAttrib"] == '100001000010000' %}
+                                    <button type="button" class="detailAlarmBtn" data-no="{{result[0]["alarmNo"]}}" onclick="alarmUpdate(this);" style="display: flex; justify-content: right;">알람해제</button>
+                                {% endif %}
+                            </td>
                         </tr>
-                        </thead>
-
+                        <tr>
+                            <th>주소</th>
+                            <td>{{result[0]["camAddr1"]}} {{result[0]["camAddr2"]}}</td>
+                        </tr>
+                        <tr>
+                            <th>위도, 경도</th>
+                            <td>{{result[0]["camLat"]}}, {{result[0]["camLong"]}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>Sensor1</div>
+                                <canvas id="sensor1Chart" width="400" height="200"></canvas>
+                            </td>
+                            <td>
+                                <div>Sensor2</div>
+                                <canvas id="sensor2Chart" width="400" height="200"></canvas>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>Sensor3</div>
+                                <canvas id="sensor3Chart" width="400" height="200"></canvas>
+                            </td>
+                            <td>
+                                <div>Sensor4</div>
+                                <canvas id="sensor4Chart" width="400" height="200"></canvas>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -31,7 +78,166 @@
 <script>
     $(document).ready(function(){
         kakaoMapPlace(document.getElementById("map2"));
-    })
+        sensor1Chart();
+        sensor2Chart();
+        sensor3Chart();
+        sensor4Chart();
+
+        setInterval(sensor1Chart, 10000);
+        setInterval(sensor2Chart, 10000);
+        setInterval(sensor3Chart, 10000);
+        setInterval(sensor4Chart, 10000);
+    });
+
+    function sensor1Chart(){
+        let sensor1Chart = document.getElementById("sensor1Chart").getContext('2d');
+        let resultArr = "{{sensor01}}";
+        resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let dataArr = [];
+
+        for(let i = 0; i < resultArr.length; i++){
+            dataArr.push(resultArr[i][1]);
+        }
+
+        new Chart(sensor1Chart, {
+            type: "line",
+            data: {
+                datasets: [
+                    {
+                        data: dataArr,
+                        borderColor: "#000",
+                        fill: false,
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                legend: {
+                    display: false
+                },
+            },
+        });
+    }
+
+    function sensor2Chart(){
+        let sensor2Chart = document.getElementById("sensor2Chart").getContext('2d');
+        let resultArr = "{{sensor02}}";
+        resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let dataArr = [];
+        console.log(resultArr);
+
+        for(let i = 0; i < resultArr.length; i++){
+            console.log(resultArr[i]);
+            dataArr.push(resultArr[i][1]);
+        }
+
+        new Chart(sensor2Chart, {
+            type: "line",
+            data: {
+                datasets: [
+                    {
+                        data: dataArr,
+                        borderColor: "#000",
+                        fill: false,
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                legend: {
+                    display: false
+                },
+            },
+        });
+    }
+
+    function sensor3Chart(){
+        let sensor3Chart = document.getElementById("sensor3Chart").getContext('2d');
+        let resultArr = "{{sensor03}}";
+        resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let dataArr = [];
+
+        for(let i = 0; i < resultArr.length; i++){
+            dataArr.push(resultArr[i][1]);
+        }
+
+        new Chart(sensor3Chart, {
+            type: "line",
+            data: {
+                datasets: [
+                    {
+                        data: dataArr,
+                        borderColor: "#000",
+                        fill: false,
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                legend: {
+                    display: false
+                },
+            },
+        });
+    }
+    
+    function sensor4Chart(){
+        let sensor4Chart = document.getElementById("sensor4Chart").getContext('2d');
+        let resultArr = "{{sensor04}}";
+        resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let dataArr = [];
+
+        for(let i = 0; i < resultArr.length; i++){
+            dataArr.push(resultArr[i][1]);
+        }
+
+        new Chart(sensor4Chart, {
+            type: "line",
+            data: {
+                datasets: [
+                    {
+                        data: dataArr,
+                        borderColor: "#000",
+                        fill: false,
+                        radius:0,
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                legend: {
+                    display: false
+                },
+            },
+        });
+    }
 
     function kakaoMapLatLng(container, lat, lng){
         if(lat === undefined) lat = 33.450701;
@@ -52,21 +258,22 @@
 
     function kakaoMapPlace(container){
         let positions = [];
-        let result = "{{result}}";
-        result = JSON.parse(result.replace(/&#39;/g, "\""));
+        let result = "{{resultJson}}";
+        console.log(result);
+        result = JSON.parse(result.replace(/&#34;/g, "\""));
 
         kakaoArr.infowindow = new kakao.maps.InfoWindow({zIndex:1});
         kakaoArr.options = {
-            center: new kakao.maps.LatLng(result[0]["camLat"], result[0]["camLong"]),
+            center: new kakao.maps.LatLng(result[0][1], result[0][2]),
             level: 3
         };
         kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
 
         for(let i = 0; i < result.length; i++){
             let datas = {
-                "content": result[i]["camAddr2"].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
-                "latlng": new kakao.maps.LatLng(result[i]["camLat"], result[i]["camLong"]),
-                "link": result[i]["camLink"]
+                "content": result[i][4].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
+                "latlng": new kakao.maps.LatLng(result[i][1], result[i][2]),
+                "link": result[i][5]
             }
             positions.push(datas);
         }
@@ -120,6 +327,24 @@
         return function() {
             infowindow.close();
         };
+    }
+    
+    function alarmUpdate(thisEle){
+        if(confirm("알림을 해제하시겠습니까??")){
+            $.ajax({
+                url: "/alarmUpdate/" + thisEle.dataset.no,
+                method: "get",
+                success: function(result){
+                    alert("해제되었습니다.");
+    
+                    if($($(".detailAlarmBtn")[0]) !== undefined){
+                        $($(".detailAlarmBtn")[0]).remove();
+                    }
+                }
+            })
+        }else{
+            return false;
+        }
     }
 </script>
 </html>

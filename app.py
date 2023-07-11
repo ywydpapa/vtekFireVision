@@ -66,34 +66,60 @@ def mnu002f():
     cur = db.cursor()
     sql = "select camName, camLat, camLong, camAddr1, camAddr2, camLink from camList where attrib not like 'XXX%'"
     cur.execute(sql)
-    result = cur.fetchall()
+    result = json.dumps(cur.fetchall(), default=str)
     db.close()
-    for i in range(len(result)):
-        resultDatas = {
-            "camName": result[i][0],
-            "camLat": str(result[i][1]),
-            "camLong": str(result[i][2]),
-            "camAddr1": result[i][3],
-            "camAddr2": result[i][4],
-            "camLink": result[i][5]
-        }
-        resultArr.append(resultDatas)
-
-    print(resultArr)
+    
     if request.method == 'GET':
-        return render_template('./subm/mnu002.html', result=resultArr)
+        return render_template('./subm/mnu002.html', result=result)
     else:
-        return render_template("./subm/mnu002.html", result=resultArr)
+        return render_template("./subm/mnu002.html", result=result)
 
+@app.route('/camListSelect/<alarmkey>', methods=['GET', 'POST'])
+def camListSelect(alarmkey):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select * from camList where alarmKey = '" + str(alarmkey) + "' and attrib not like 'XXX%'"
+    cur.execute(sql)
+    result = json.dumps(cur.fetchall(), default=str)
+    db.close()
+    return result
 
 @app.route('/sitedetail/<camno>', methods=['GET', 'POST'])
 def sitedetail(camno):
     resultArr = []
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select camName, camLat, camLong, camAddr1, camAddr2, camLink from camList where camNo = '9' and attrib not like 'XXX%'"
+    sql = "select camList.camName, camList.camLat, camList.camLong, camList.camAddr1, camList.camAddr2, camList.camLink, camList.attrib, camList.camNo, camList.alarmKey, alarmon.alarmNo as alarmNo, alarmon.attrib as alramAttrib from camList"
+    sql += " left join alarmon on camList.alarmKey = alarmon.alarmKey and alarmon.attrib not like 'XXX%'"
+    sql += " where camList.camNo = " + camno
     cur.execute(sql)
     result = cur.fetchall()
+    cur.execute(sql)
+    resultJson = json.dumps(cur.fetchall(), default=str)
+    sql = "select sensordata.sensorKey, sensordata.sensorValue from sensordata"
+    sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor01"
+    sql += " left join camList on camDevice.deviceType = camList.alarmKey"
+    sql += " where camList.camNo = " + camno + " order by sensordata.regDate desc limit 50"
+    cur.execute(sql)
+    sensor1 = json.dumps(cur.fetchall(), default=str)
+    sql = "select sensordata.sensorKey, sensordata.sensorValue from sensordata"
+    sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor02"
+    sql += " left join camList on camDevice.deviceType = camList.alarmKey"
+    sql += " where camList.camNo = " + camno + " order by sensordata.regDate desc limit 50"
+    cur.execute(sql)
+    sensor2 = json.dumps(cur.fetchall(), default=str)
+    sql = "select sensordata.sensorKey, sensordata.sensorValue from sensordata"
+    sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor03"
+    sql += " left join camList on camDevice.deviceType = camList.alarmKey"
+    sql += " where camList.camNo = " + camno + " order by sensordata.regDate desc limit 50"
+    cur.execute(sql)
+    sensor3 = json.dumps(cur.fetchall(), default=str)
+    sql = "select sensordata.sensorKey, sensordata.sensorValue from sensordata"
+    sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor04"
+    sql += " left join camList on camDevice.deviceType = camList.alarmKey"
+    sql += " where camList.camNo = " + camno + " order by sensordata.regDate desc limit 50"
+    cur.execute(sql)
+    sensor4 = json.dumps(cur.fetchall(), default=str)
     db.close()
     for i in range(len(result)):
         resultDatas = {
@@ -102,15 +128,31 @@ def sitedetail(camno):
             "camLong": str(result[i][2]),
             "camAddr1": result[i][3],
             "camAddr2": result[i][4],
-            "camLink": result[i][5]
+            "camLink": result[i][5],
+            "attrib": result[i][6],
+            "camNo": result[i][7],
+            "alarmKey": result[i][8],
+            "alarmNo": result[i][9],
+            "alramAttrib": result[i][10]
         }
         resultArr.append(resultDatas)
 
-    print(resultArr)
+    print(resultJson)
     if request.method == 'GET':
-        return render_template('./subm/sitedetail.html', result=resultArr)
+        return render_template('./subm/sitedetail.html', result=resultArr,resultJson=resultJson,sensor01=sensor1,sensor02=sensor2,sensor03=sensor3,sensor04=sensor4)
     else:
-        return render_template("./subm/sitedetail.html", result=resultArr)
+        return render_template("./subm/sitedetail.html", result=resultArr,resultJson=resultJson,sensor01=sensor1,sensor02=sensor2,sensor03=sensor3,sensor04=sensor4)
+    
+@app.route('/alarmUpdate/<alarmNo>', methods=['GET'])
+def alarmUpdate(alarmNo):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "update alarmon set modDate = now(), attrib = 'XXXXX0000000000' where alarmNo = " + alarmNo
+    cur.execute(sql1)
+    db.commit()
+    cur.fetchall()
+    db.close()
+    return "";
 
 
 @app.route('/mainAlarmDatas', methods=['GET'])
