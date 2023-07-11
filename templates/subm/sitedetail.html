@@ -278,7 +278,6 @@
             let datas = {
                 "content": result[i][4].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
                 "latlng": new kakao.maps.LatLng(result[i][1], result[i][2]),
-                "link": result[i][5]
             }
             positions.push(datas);
         }
@@ -310,12 +309,12 @@
                 content: positions[i].content
             });
     
-            kakao.maps.event.addListener(marker, 'click', function(){
+            /* kakao.maps.event.addListener(marker, 'click', function(){
                 location.href = "/" + positions[i].link;
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
-            });
+            }); */
 
             kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(kakaoArr.map, marker, infowindow));
             kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
