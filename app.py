@@ -180,7 +180,6 @@ def alarmon(alarmkey):
     flash("OK")
     return render_template("./stat/emptyPage.html")
 
-
 @app.route('/sensins/<sensorkey>', methods=['GET'])
 def sensorins(sensorkey):
     svalue = request.args.get('sensorval', default='0.0', type = str)
@@ -322,7 +321,9 @@ def searchSel():
     sql = "select * from inoutT order by d002 asc"
     cur.execute(sql)
     result_hour = cur.fetchall()
-    sql = "select * from camList where attrib not like 'XXX%' order by regDate desc limit 10"
+    sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04 from camList"
+    sql += " left join camDevice on camDevice.deviceType = camList.alarmKey"
+    sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
     cur.execute(sql)
     camList = cur.fetchall()
     db.close()
@@ -360,7 +361,6 @@ def login():
 def logout():
     session.clear()
     return render_template('./login/login.html')
-
 
 @app.route('/deviceAdd')
 def deviceAdd():
