@@ -318,7 +318,7 @@ def searchSel():
     cur.execute(sql)
     result_hour = cur.fetchall()
     sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04 from camList"
-    sql += " left join camDevice on camDevice.deviceType = camList.alarmKey"
+    sql += " left join camDevice on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
     cur.execute(sql)
     camList = cur.fetchall()
