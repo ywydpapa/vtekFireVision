@@ -30,10 +30,6 @@ envcharset = os.getenv('envcharset')
 app = Flask(__name__)
 app.secret_key = 'fsdfsfgsfdg3234'
 
-source1 = "rtsp://coredjk:core2020@swc200e.iptimecam.com:21064/stream_ch00_0"
-source2 = "rtsp://coredjk:core2020@swc9004.iptime.org:554/Streaming/Channels/102"
-source3 = "rtsp://coredjk:core2020@swc9004.iptime.org:554/Streaming/Channels/202"
-
 @app.route('/')
 def home():
     return render_template('./login/login.html')
