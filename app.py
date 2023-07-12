@@ -28,7 +28,7 @@ envpassword = os.getenv('envpassword')
 envdb = os.getenv('envdb')
 envcharset = os.getenv('envcharset')
 app = Flask(__name__)
-app.secret_key = 'fsdfsfgsfdg3234'
+app.secret_key = 'vtekdjkimswcore2023071109988'
 
 @app.route('/')
 def home():
