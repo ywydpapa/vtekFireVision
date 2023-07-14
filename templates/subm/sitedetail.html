@@ -18,6 +18,10 @@
     td{
         border: 1px solid #000;
     }
+
+    .container{
+        overflow: auto;
+    }    
 </style>
 </head>
 <body>
@@ -33,13 +37,18 @@
                 <div style="width: 100%;">
                     <table id="alarmTable">
                         <tr>
+                            <td colspan="2">
+                                <img src="{{ url_for('video_feed', camno=result[0]["camNo"]) }}" style="width:100%; height: 400px">
+                            </td>
+                        </tr>
+                        <tr>
                             <th style="border-right: 1px solid #000;">사이트명</th>
                             <td style="width: 100%; display: flex; border:0;">
                                 <div style="width: 90%; display: flex; align-items: center;">{{result[0]["camName"]}}</div>
                                 {% if result[0]["alramAttrib"] == '100001000010000' %}
                                     <button type="button" class="detailAlarmBtn" data-no="{{result[0]["alarmNo"]}}" onclick="alarmUpdate(this);" style="display: flex; justify-content: right;">알람해제</button>
                                 {% endif %}
-                                <button type="button" data-no="{{result[0]["camNo"]}}" onclick="clickMonitor(this);" style="display: flex; justify-content: right;">화면보기</button>
+                                <!-- <button type="button" data-no="{{result[0]["camNo"]}}" onclick="clickMonitor(this);" style="display: flex; justify-content: right;">화면보기</button> -->
                             </td>
                         </tr>
                         <tr>
@@ -136,10 +145,8 @@
         let resultArr = "{{sensor02}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
         let dataArr = [];
-        console.log(resultArr);
 
         for(let i = 0; i < resultArr.length; i++){
-            console.log(resultArr[i]);
             dataArr.push(resultArr[i][1]);
         }
 
@@ -264,7 +271,6 @@
     function kakaoMapPlace(container){
         let positions = [];
         let result = "{{resultJson}}";
-        console.log(result);
         result = JSON.parse(result.replace(/&#34;/g, "\""));
 
         kakaoArr.infowindow = new kakao.maps.InfoWindow({zIndex:1});

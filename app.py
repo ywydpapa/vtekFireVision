@@ -36,9 +36,30 @@ def home():
 
 @app.route("/video")
 def video():
-    # return the rendered template
-    video_feed()
     return render_template("/subm/videofeed.html")
+
+def generate(camLink):
+    cap = cv2.VideoCapture(camLink)
+
+    while True :
+        _, frame = cap.read()
+        imgencode = cv2.imencode('.jpg', frame)[1]
+        stringData = imgencode.tostring()
+        yield (b'--frame\r\n' b'Content-Type: text/plain\r\n\r\n' + stringData + b'\r\n')
+
+    del(cap)
+
+@app.route("/video_feed/<camno>")
+def video_feed(camno):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select camList.camName, camList.camLat, camList.camLong, camList.camAddr1, camList.camAddr2, camList.camLink, camList.attrib, camList.camNo, camList.alarmKey, alarmon.alarmNo as alarmNo, alarmon.attrib from camList"
+    sql += " left join alarmon on camList.alarmKey = alarmon.alarmKey and alarmon.attrib not like 'XXX%'"
+    sql += " where camList.camNo = " + camno
+    cur.execute(sql)
+    result = cur.fetchall()
+    
+    return Response(generate(result[0][5]), mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 @app.route('/subm/mnu001', methods=['GET', 'POST'])
 def mnu001f():
@@ -57,7 +78,6 @@ def mnu001f():
 
 @app.route('/subm/mnu002', methods=['GET', 'POST'])
 def mnu002f():
-    resultArr = []
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     sql = "select camNo, camName, camLat, camLong, camAddr1, camAddr2, camLink from camList where attrib not like 'XXX%'"
@@ -81,11 +101,11 @@ def camListSelect(alarmkey):
     return result
 
 @app.route('/sitedetail/<camno>', methods=['GET', 'POST'])
-def sitedetail(camno):
+def index(camno):
     resultArr = []
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select camList.camName, camList.camLat, camList.camLong, camList.camAddr1, camList.camAddr2, camList.camLink, camList.attrib, camList.camNo, camList.alarmKey, alarmon.alarmNo as alarmNo, alarmon.attrib as alramAttrib from camList"
+    sql = "select camList.camName, camList.camLat, camList.camLong, camList.camAddr1, camList.camAddr2, camList.camLink, camList.attrib, camList.camNo, camList.alarmKey, alarmon.alarmNo as alarmNo, alarmon.attrib, camList.camLink as alramAttrib from camList"
     sql += " left join alarmon on camList.alarmKey = alarmon.alarmKey and alarmon.attrib not like 'XXX%'"
     sql += " where camList.camNo = " + camno
     cur.execute(sql)
@@ -132,7 +152,7 @@ def sitedetail(camno):
             "alramAttrib": result[i][10]
         }
         resultArr.append(resultDatas)
-
+    
     if request.method == 'GET':
         return render_template('./subm/sitedetail.html', result=resultArr,resultJson=resultJson,sensor01=sensor1,sensor02=sensor2,sensor03=sensor3,sensor04=sensor4)
     else:
@@ -492,7 +512,7 @@ def custinsert():
 
 
 @app.route("/videoFeed/<camNo>")
-def video_feed(camNo):
+def videoFeed(camNo):
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     sql = "select camLink from camList where camNo = " + camNo + " and attrib not like 'XXX%'"
@@ -561,5 +581,5 @@ if __name__ == '__main__':
             threaded=True, use_reloader=False)
 
 # release the video stream pointer
-#cap.release()
-#cv2.destroyAllWindows()
+# cap.release()
+# cv2.destroyAllWindows()
