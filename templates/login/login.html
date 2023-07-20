@@ -11,26 +11,34 @@
     <div id="loginContent">
         <div id="loginIntroduce">
             <div id="loginSpans">
-                <span id="loginIntroSpan_1">Welcome to </span>
+                <!-- <span id="loginIntroSpan_1">Welcome to </span> -->
+                <img src={{ url_for('static', filename='./images/login/사용자.png')}}><br />
                 <span id="loginIntroSpan_2">Vtek FireVision</span>
             </div>
 
             <div class="login">
-                <h1>Login</h1>
-                <form action="{{ url_for('login') }}" method="post">
+                <!-- <h1>Login</h1> -->
+                <form id="loginForm" action="{{ url_for('login') }}" method="post">
                     <label for="username">
-                        <i class="fas fa-user"></i>
+                        <img src={{ url_for('static', filename='./images/login/로그인1.png')}}>
                     </label>
-                    <input type="text" name="uid" placeholder="Username" id="uid" required>
+                    <input type="text" name="uid" id="uid" required>
                     <label for="password">
-                        <i class="fas fa-lock"></i>
+                        <img src={{ url_for('static', filename='./images/login/로그인2.png')}}>
                     </label>
-                    <input type="password" name="upw" placeholder="Password" id="upw" required>
-                    <input type="submit" value="Login">
+                    <input type="password" name="upw" id="upw" required>
+                    <div class="submitBtn" onClick="submitClick();">
+                        <span>LOGIN</span>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 </body>
+<script>
+    function submitClick(){
+        document.getElementById("loginForm").submit();
+    }
+</script>
 </html>
