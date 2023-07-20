@@ -21,69 +21,116 @@
 
     .container{
         overflow: auto;
-    }    
+        padding-top: 30px;
+        height: 100%;
+    }
+
+    .detailContents{
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .detailContents > div{
+        width: 50%;
+    }
+
+    .detailContents > .mapContents{
+        padding-left: 20px;
+        height: 768px;
+    }
+
+    .detailContents > .mapContents > .monitorContent{
+        background-color: #B6B6B5;
+    }
+
+    .detailContents > .mapContents > .sensorContent{
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        background-color: #3C414C;
+        margin-top: 15px;
+    }
+
+    .detailContents > .mapContents > .sensorContent > div{
+        flex-grow: 1;
+        width: 50%;
+    }
+
+    .detailContents > .mapContents > .sensorContent > div > .sensorTitle{
+        padding: 5px;
+        color: #fff;
+    }
+
+    .detailContents > .mapContents > .sensorContent > div > .chartContent{
+        width: 100%;
+        text-align: center;
+    }
+
+    .detailContents > .mapContents > .sensorContent > div > .chartContent > canvas{
+        display: inline !important;
+    }
+
+    .detailContents > .mapDiv > #map2{
+        width:100%; 
+        height:768px;
+    }
+
+    .customOverlayText{
+        background-color: #3C414C;
+        padding: 10px;
+    }
+
+    .customOverlayText > span{
+        color: #fff;
+    }
 </style>
 </head>
 <body>
-    <div id="commonTopHeader">
+    <!-- <div id="commonTopHeader">
     {% include './menu/comTopHeader.html' %}
-    </div>
+    </div> -->
     <div id="commonBodyContents">
-        {% include './menu/sidemenu2.html' %}
+        {% include './menu/sidemenu1.html' %}
         <!-- commonSideMenu end-->
         <div id="commonContent">
-            <div class="container" style="display: flex;">
-                <div id="map2" style="width:100%; height:768px;"></div>
-                <div style="width: 100%;">
-                    <table id="alarmTable">
-                        <tr>
-                            <td colspan="2">
-                                <img src="{{ url_for('video_feed', camno=result[0]["camNo"]) }}" style="width:100%; height: 400px">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="border-right: 1px solid #000;">사이트명</th>
-                            <td style="width: 100%; display: flex; border:0;">
-                                <div style="width: 90%; display: flex; align-items: center;">{{result[0]["camName"]}}</div>
-                                {% if result[0]["alramAttrib"] == '100001000010000' %}
-                                    <button type="button" class="detailAlarmBtn" data-no="{{result[0]["alarmNo"]}}" onclick="alarmUpdate(this);" style="display: flex; justify-content: right;">알람해제</button>
-                                {% endif %}
-                                <!-- <button type="button" data-no="{{result[0]["camNo"]}}" onclick="clickMonitor(this);" style="display: flex; justify-content: right;">화면보기</button> -->
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>주소</th>
-                            <td>{{result[0]["camAddr1"]}} {{result[0]["camAddr2"]}}</td>
-                        </tr>
-                        <tr>
-                            <th>위도</th>
-                            <td>{{result[0]["camLat"]}}</td>
-                        </tr>
-                        <tr>
-                            <th>경도</th>
-                            <td>{{result[0]["camLong"]}}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>Sensor1</div>
-                                <canvas id="sensor1Chart" width="400" height="200"></canvas>
-                            </td>
-                            <td>
-                                <div>Sensor2</div>
-                                <canvas id="sensor2Chart" width="400" height="200"></canvas>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>Sensor3</div>
-                                <canvas id="sensor3Chart" width="400" height="200"></canvas>
-                            </td>
-                            <td>
-                                <div>Sensor4</div>
-                                <canvas id="sensor4Chart" width="400" height="200"></canvas>
-                            </td>
-                        </tr>
-                    </table>
+            <div class="container">
+                <div class="detailContents">
+                    <div class="mapDiv">
+                        <div id="map2"></div>
+                    </div>
+                    <div class="mapContents">
+                        <div class="monitorContent">
+                            <img src="{{ url_for('video_feed', camno=result[0]["camNo"]) }}" style="width:100%; height: 400px">
+                        </div>
+                        <div class="sensorContent">
+                            <hr class="boxTopLineShort" />
+                            <div style="border-right: 1px solid #000; border-bottom: 1px solid #000;">
+                                <div class="sensorTitle">Sensor1</div>
+                                <div class="chartContent">
+                                    <canvas id="sensor1Chart"></canvas>
+                                </div>
+                            </div>
+                            <div style="border-bottom: 1px solid #000;">
+                                <div class="sensorTitle">Sensor2</div>
+                                <div class="chartContent">
+                                    <canvas id="sensor2Chart"></canvas>
+                                </div>
+                            </div>
+                            <div style="border-right: 1px solid #000;">
+                                <div class="sensorTitle">Sensor3</div>
+                                <div class="chartContent">
+                                    <canvas id="sensor3Chart"></canvas>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="sensorTitle">Sensor4</div>
+                                <div class="chartContent">
+                                    <canvas id="sensor4Chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,7 +166,7 @@
                 datasets: [
                     {
                         data: dataArr,
-                        borderColor: "#000",
+                        borderColor: "#fff",
                         fill: false,
                         radius:0,
                         borderWidth: 1,
@@ -130,7 +177,8 @@
                 responsive: false,
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        color: "#fff",
                     }
                 },
                 legend: {
@@ -156,7 +204,7 @@
                 datasets: [
                     {
                         data: dataArr,
-                        borderColor: "#000",
+                        borderColor: "#fff",
                         fill: false,
                         radius:0,
                         borderWidth: 1,
@@ -193,7 +241,8 @@
                 datasets: [
                     {
                         data: dataArr,
-                        borderColor: "#000",
+                        backgroundColor: "#fff",
+                        borderColor: "#fff",
                         fill: false,
                         radius:0,
                         borderWidth: 1,
@@ -230,7 +279,7 @@
                 datasets: [
                     {
                         data: dataArr,
-                        borderColor: "#000",
+                        borderColor: "#fff",
                         fill: false,
                         radius:0,
                         borderWidth: 1,
@@ -284,6 +333,7 @@
             let datas = {
                 "content": result[i][4].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
                 "latlng": new kakao.maps.LatLng(result[i][1], result[i][2]),
+                "text": "<div class=\"customOverlayText\"><span>사이트명 : " + result[i][7] + "</span><br /><span>주소 : " + result[i][3] + " " + result[i][4] + "</span><br /><span>위도 : " + result[i][1] + "</span><br /><span>경도 : " + result[i][2] + "</span></div>",
             }
             positions.push(datas);
         }
@@ -308,11 +358,18 @@
         for(let i = 0; i < positions.length; i++){
             var marker = new kakao.maps.Marker({
                 map: kakaoArr.map,
-                position: positions[i].latlng
+                position: positions[i].latlng,
             });
         
             var infowindow = new kakao.maps.InfoWindow({
                 content: positions[i].content
+            });
+
+            var customOverlay = new kakao.maps.CustomOverlay({
+                position: positions[i].latlng,
+                content: positions[i].text,
+                xAnchor: 0.45,
+                yAnchor: 1.4
             });
     
             /* kakao.maps.event.addListener(marker, 'click', function(){
@@ -324,6 +381,7 @@
 
             kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(kakaoArr.map, marker, infowindow));
             kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+            customOverlay.setMap(kakaoArr.map);
         }
     }
 

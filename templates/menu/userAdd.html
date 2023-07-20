@@ -33,14 +33,20 @@
 </style>
 </head>
 <body>
-    <div id="commonTopHeader">
+    <!-- <div id="commonTopHeader">
 {% include './menu/comTopHeader.html' %}
-    </div>
+    </div> -->
 
     <div id="commonBodyContents">
-{% include './menu/sidemenu3.html' %}  
+{% include './menu/sidemenu1.html' %}  
     <div id="commonContent">
         <div class="container">
+            <div class="subMenu">
+                <a href="/userAdd">관리자 등록</a>
+                <a href="/deviceAdd">장비 등록</a>
+                <a href="/siteAdd">사이트 등록</a>
+                <a href="/custAdd">고객 등록</a>
+            </div>
             <div class="userAddContents">
                 <div>
                     <button type="button" onclick="userAddSubmit();">유저등록</button>
@@ -89,21 +95,39 @@
 </body>
 <script>
     function userAddSubmit(){
-        let datas = {};
-        datas.userId = $("#userId").val();
-        datas.userPasswd = $("#userPasswd").val();
-        datas.userName = $("#userName").val();
-        datas.userEmail = $("#userEmail").val();
+        if($("#userId").val() === ""){
+            alert("아이디를 입력해주세요.");
+            $("#userId").focus();
+            return false;
+        }else if($("#userPasswd").val() === ""){
+            alert("비밀번호를 입력해주세요.");
+            $("#userPasswd").focus();
+            return false;
+        }else if($("#userName").val() === ""){
+            alert("이름을 입력해주세요.");
+            $("#userName").focus();
+            return false;
+        }else if($("#userEmail").val() === ""){
+            alert("이메일을 입력해주세요.");
+            $("#userEmail").focus();
+            return false;
+        }else{
+            let datas = {};
+            datas.userId = $("#userId").val();
+            datas.userPasswd = $("#userPasswd").val();
+            datas.userName = $("#userName").val();
+            datas.userEmail = $("#userEmail").val();
 
-        $.ajax({
-            "url": "/userAdd",
-            "method": "post",
-            "data": datas,
-            "success": function(){
-                alert("등록되었습니다.");
-                location.reload();
-            }
-        })
+            $.ajax({
+                "url": "/userAdd",
+                "method": "post",
+                "data": datas,
+                "success": function(){
+                    alert("등록되었습니다.");
+                    location.reload();
+                }
+            })
+        }
     }
 </script>
 </html>

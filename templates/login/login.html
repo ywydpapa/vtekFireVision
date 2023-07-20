@@ -27,18 +27,11 @@
                         <img src={{ url_for('static', filename='./images/login/로그인2.png')}}>
                     </label>
                     <input type="password" name="upw" id="upw" required>
-                    <div class="submitBtn" onClick="submitClick();">
-                        <span>LOGIN</span>
-                    </div>
+                    <button type="submit">LOGIN</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script>
-    function submitClick(){
-        document.getElementById("loginForm").submit();
-    }
-</script>
 </html>

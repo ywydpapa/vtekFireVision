@@ -67,7 +67,7 @@ body {
     border: 1px solid #fff;
     margin-top: 2px;
   	margin-bottom: 10px;
-  	padding: 0 15px;
+  	padding: 0 5px;
     background-color: #EDECEC;
 }
 .login form input[type="submit"], .register form input[type="submit"] {
@@ -81,19 +81,19 @@ body {
   	color: #ffffff;
   	transition: background-color 0.2s;
 }
-.login form div.submitBtn{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+.login form button[type="submit"]{
     width: 361px;
     height: 50px;
     margin-bottom: 20px;
     margin-top: 20px;
+    color: #fff;
+    cursor: pointer;
+    border: 0;
     background-image: url("../images/login/로그인3.png");
     background-size: cover;
-    color: #FFF;
-    cursor: pointer;
 }
+
 .login form input[type="submit"]:hover, .register form input[type="submit"]:hover {
   	background-color: #2868c7;
   	transition: background-color 0.2s;
@@ -304,7 +304,7 @@ body{margin:0 auto;}
 }
 
 #loginContent #loginIntroduce #loginSpans img{
-    width: 10%;
+    width: 7%;
 }
 
 #loginContent #loginIntroduce #loginSpans #loginIntroSpan_1{

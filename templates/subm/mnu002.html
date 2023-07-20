@@ -4,14 +4,18 @@
 {% include '/menu/header.html' %}
 </head>
 <body>
-    <div id="commonTopHeader">
+    <!-- <div id="commonTopHeader">
     {% include './menu/comTopHeader.html' %}
-    </div>
+    </div> -->
     <div id="commonBodyContents">
-        {% include './menu/sidemenu2.html' %}
+        {% include './menu/sidemenu1.html' %}
         <!-- commonSideMenu end-->
         <div id="commonContent">
             <div class="container">
+                <div class="subMenu">
+                    <a href="/monmain">목록 보기</a>
+                    <a href="/subm/mnu002">지도 보기</a>
+                </div>
                 <div id="map2" style="width:1024px; height:768px;"></div>
             </div>
         </div>

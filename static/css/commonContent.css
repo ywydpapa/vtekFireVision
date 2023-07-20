@@ -1,16 +1,74 @@
 ﻿@charset "utf-8";
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+* {
+  	box-sizing: border-box;
+  	/* font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif; */
+    font-family: 'Noto Sans KR', sans-serif;
+  	font-size: 16px;
+  	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+.subMenu{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.subMenu > a{
+    color: #fff;
+    margin-right: 10px;
+}
 
 table{
     font-size: 0.8rem;
 }
 
-table > thead{
-    font-family: 'Lato', sans-serif;
+.boxTopLineLong{
+    width: 88.3vw;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-image: url(../images/main/boxTopLine2.png);
+    background-size: cover;
+    border: 0px;
+    height: 2px;
 }
 
+.boxTopLineShort{
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-image: url(../images/main/boxTopLine2.png);
+    background-size: cover;
+    border: 0px;
+    height: 2px;
+}
+
+/* table > thead{
+    font-family: 'Lato', sans-serif;
+} */
+
 table > thead > tr:first-child > th{
-    background-color: #EAEAEA;
+    background-color: #262933;
+    color: #fff;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+    border: 1px solid #3C414C;
+}
+table > thead > tr:first-child > td{
+    background-color: #262933;
+    color: #fff;
+}
+.table-striped>tbody>tr>td>a{
+    color: #fff;
+}
+.table-striped>tbody>tr:nth-of-type(odd){
+    background-color: #3C414C;
+    color: #fff;
+}
+.table-striped>tbody>tr:nth-of-type(even){
+    background-color: #262933;
+    color: #fff;
 }
 
 #foo-table_wrapper{
@@ -60,7 +118,11 @@ table > thead > tr:first-child > th{
 
 .sideMenu ul li #panel li a {
     font-size: 1.2rem;
-    color: #49535b;
+    color: #fff;
+}
+
+.sideMenu ul li #panel li img{
+    width: 20px;
 }
 
 .sideMenu ul li a img {
@@ -81,7 +143,7 @@ table > thead > tr:first-child > th{
 
 #business {
     /* background-color:rgb(84 84 84); */
-    background-color: #f9f9f9;
+    background-color: #000;
     /* background-color:#2b3c4d; */
 }
 /*commonBodyContents>commonSideMenu 끝*/
@@ -89,9 +151,10 @@ table > thead > tr:first-child > th{
 /*commonBodyContents>commonContent 시작*/
 #commonContent {
     width:100%;
-    padding:12px 12px 10px 12px;
-    box-sizing: border-box;
-    display:grid;
+    /* padding:12px 12px 10px 12px; */
+    /* box-sizing: border-box; */
+    /* display:grid; */
+    background-color: #2D313A;
     overflow: hidden;
 }
 
@@ -120,25 +183,24 @@ table > thead > tr:first-child > th{
 
 #commonContent>div {
     width: 100%;
-    background: #fff;
     grid-row: span 2;
     box-shadow: 0px 2px 14px rgb(0 0 0 / 12%);
 }
 
-#commonContent>div>div hr {
+/* #commonContent>div>div hr {
     float:left;
     width:2.5px;
     height:28px;
     background-color:#332E85;
-}
+} */
 
-#commonContent>div>div span {
+/* #commonContent>div>div span {
     margin-left:8px;
     color:#332E85;
     font-family: 'NanumSquareRound';
     font-size:15px;
     line-height:36px;
-}
+} */
 
 /*topSearchWrap 시작*/
 #commonContent .container .topSearchWrap {
