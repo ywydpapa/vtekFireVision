@@ -86,8 +86,9 @@ body {
     align-items: center;
     justify-content: center;
     width: 361px;
-    height: 40px;
-    margin-bottom: 10px;
+    height: 50px;
+    margin-bottom: 20px;
+    margin-top: 20px;
     background-image: url("../images/login/로그인3.png");
     background-size: cover;
     color: #FFF;
@@ -186,7 +187,7 @@ body{margin:0 auto;}
 #loginContents #loginContent .login{
     position: relative;
     left: 50%;
-    top: 30%;
+    top: 32%;
     transform:translate(-50%,-50%);
     display:inline-block;
 }
@@ -314,7 +315,7 @@ body{margin:0 auto;}
 }
 
 #loginContent #loginIntroduce #loginSpans #loginIntroSpan_2{
-    
+    font-size: 2rem;
     color: #FFFFFF;
 }
 
