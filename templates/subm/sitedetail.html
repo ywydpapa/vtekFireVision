@@ -106,25 +106,25 @@
                         <div class="sensorContent">
                             <hr class="boxTopLineShort" />
                             <div style="border-right: 1px solid #000; border-bottom: 1px solid #000;">
-                                <div class="sensorTitle">Sensor1</div>
+                                <div class="sensorTitle">{{sensorText1}}</div>
                                 <div class="chartContent">
                                     <canvas id="sensor1Chart"></canvas>
                                 </div>
                             </div>
                             <div style="border-bottom: 1px solid #000;">
-                                <div class="sensorTitle">Sensor2</div>
+                                <div class="sensorTitle">{{sensorText2}}</div>
                                 <div class="chartContent">
                                     <canvas id="sensor2Chart"></canvas>
                                 </div>
                             </div>
                             <div style="border-right: 1px solid #000;">
-                                <div class="sensorTitle">Sensor3</div>
+                                <div class="sensorTitle">{{sensorText3}}</div>
                                 <div class="chartContent">
                                     <canvas id="sensor3Chart"></canvas>
                                 </div>
                             </div>
                             <div>
-                                <div class="sensorTitle">Sensor4</div>
+                                <div class="sensorTitle">{{sensorText4}}</div>
                                 <div class="chartContent">
                                     <canvas id="sensor4Chart"></canvas>
                                 </div>
@@ -176,10 +176,11 @@
             options: {
                 responsive: false,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        color: "#fff",
-                    }
+                    yAxes: [{
+                        ticks: {
+                            fontColor: "#fff"
+                        }
+                    }]
                 },
                 legend: {
                     display: false
@@ -214,9 +215,11 @@
             options: {
                 responsive: false,
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    yAxes: [{
+                        ticks: {
+                            fontColor: "#fff"
+                        }
+                    }]
                 },
                 legend: {
                     display: false
@@ -252,9 +255,11 @@
             options: {
                 responsive: false,
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    yAxes: [{
+                        ticks: {
+                            fontColor: "#fff"
+                        }
+                    }]
                 },
                 legend: {
                     display: false
@@ -289,9 +294,11 @@
             options: {
                 responsive: false,
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    yAxes: [{
+                        ticks: {
+                            fontColor: "#fff"
+                        }
+                    }]
                 },
                 legend: {
                     display: false

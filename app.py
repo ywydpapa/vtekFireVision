@@ -27,6 +27,10 @@ envuser = os.getenv('envuser')
 envpassword = os.getenv('envpassword')
 envdb = os.getenv('envdb')
 envcharset = os.getenv('envcharset')
+sensorText1 = os.getenv('sensor1')
+sensorText2 = os.getenv('sensor2')
+sensorText3 = os.getenv('sensor3')
+sensorText4 = os.getenv('sensor4')
 app = Flask(__name__)
 app.secret_key = 'vtekdjkimswcore2023071109988'
 
@@ -154,9 +158,9 @@ def index(camno):
         resultArr.append(resultDatas)
     
     if request.method == 'GET':
-        return render_template('./subm/sitedetail.html', result=resultArr,resultJson=resultJson,sensor01=sensor1,sensor02=sensor2,sensor03=sensor3,sensor04=sensor4)
+        return render_template('./subm/sitedetail.html', result=resultArr,resultJson=resultJson,sensor01=sensor1,sensor02=sensor2,sensor03=sensor3,sensor04=sensor4,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
     else:
-        return render_template("./subm/sitedetail.html", result=resultArr,resultJson=resultJson,sensor01=sensor1,sensor02=sensor2,sensor03=sensor3,sensor04=sensor4)
+        return render_template("./subm/sitedetail.html", result=resultArr,resultJson=resultJson,sensor01=sensor1,sensor02=sensor2,sensor03=sensor3,sensor04=sensor4,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
     
 @app.route('/alarmUpdate/<alarmNo>', methods=['GET'])
 def alarmUpdate(alarmNo):
