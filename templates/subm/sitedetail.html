@@ -25,6 +25,12 @@
         height: 100%;
     }
 
+    .alarmBtns{
+        display: flex;
+        align-items: center;
+        justify-content: right;
+    }
+
     .detailContents{
         width: 100%;
         display: flex;
@@ -95,6 +101,11 @@
         <!-- commonSideMenu end-->
         <div id="commonContent">
             <div class="container">
+                {% if result[0]["alramAttrib"] == '100001000010000' %}
+                <div class="alarmBtns">
+                    <button type="button" data-no={{result[0]["alarmNo"]}} onclick="alarmUpdate(this);">알람 해제</button>
+                </div>
+                {% endif %}
                 <div class="detailContents">
                     <div class="mapDiv">
                         <div id="map2"></div>
@@ -412,8 +423,8 @@
                 success: function(result){
                     alert("해제되었습니다.");
     
-                    if($($(".detailAlarmBtn")[0]) !== undefined){
-                        $($(".detailAlarmBtn")[0]).remove();
+                    if($($(".alarmBtns")[0]) !== undefined){
+                        $($(".alarmBtns")[0]).remove();
                     }
                 }
             })

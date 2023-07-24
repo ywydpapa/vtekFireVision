@@ -77,6 +77,13 @@
                 contentType: "text/plain",
                 success: function(result) {
                     if(result.length > 0){
+                        $.ajax({
+                            url: "/alarmCountInsert/" + result[0][1],
+                            method: "post",
+                            dataType: "json",
+                            contentType: "text/plain",
+                        });
+
                         for(let i = 0; i < result.length; i++){
                             $.ajax({
                                 url: "/camListSelect/" + result[i][1],

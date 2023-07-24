@@ -14,6 +14,7 @@ import threading
 import argparse
 from geopy.geocoders import Nominatim
 from decimal import Decimal
+from datetime import datetime
 geo_local = Nominatim(user_agent='South Korea')
 
 outputFrame = None
@@ -326,32 +327,52 @@ def updatemenu():
 
 @app.route('/dashmain')  # 요청
 def searchSel():
+    nowDate = datetime.today()
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     sql = "select * from inoutT limit 10"
     cur.execute(sql)
     result_service = cur.fetchall()
+
     sql = "select * from inoutT limit 10"
     cur.execute(sql)
     result_area = cur.fetchall()
     result_disk = psutil.disk_usage(os.getcwd())
-    sql = "select * from inoutT order by d002 asc"
+
+    today = str(nowDate.year) + "-" + str(nowDate.month) + "-" + str(nowDate.day)
+    nextToday = str(nowDate.year) + "-" + str(nowDate.month) + "-" + str(nowDate.day + 1)
+
+    sql = "select date_format(`regDate`, '%Y-%m-%d') as dateResult, count(*) as cnt from alarmCount group by date_format(`regDate`, '%Y-%m-%d') order by regDate desc limit 10"
     cur.execute(sql)
-    result_month = cur.fetchall()
-    sql = "select * from inoutT order by d002 asc"
+    result_dateList = json.dumps(cur.fetchall())
+
+    sql = "select date_format(`regDate`, '%H') as hourResult, count(*) as cnt from alarmCount where regDate between " + "'" + str(today) + "'" + " and " + "'" + str(nextToday) + "'" + " group by date_format(`regDate`, '%Y-%m-%d %H') order by regDate desc"
     cur.execute(sql)
-    result_hour = cur.fetchall()
+    result_hourList = json.dumps(cur.fetchall(), default=str)
+
+    sql = "select * from alarmon order by regDate desc limit 10"
+    cur.execute(sql)
+    alarmList = cur.fetchall()
+
     sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04 from camList"
     sql += " left join camDevice on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
     cur.execute(sql)
     camList = cur.fetchall()
-    db.close()
-    return render_template("stat/dashinit.html", result=result_service, area=result_area,
-                           cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),
-                           result_mem=psutil.virtual_memory(), result_disk=result_disk, result_month=result_month,
-                           result_hour=result_hour,result_camList=camList)
 
+    db.close()
+    return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList)
+
+@app.route('/alarmCountInsert/<alarmKey>', methods=['POST'])
+def alarmCountInsert(alarmKey):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "insert into alarmCount (alarmKey, regDate) values (%s, now())"
+    cur.execute(sql, str(alarmKey))
+    db.commit()
+    result = cur.fetchall()
+    db.close()
+    return ""
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
