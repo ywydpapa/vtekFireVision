@@ -44,12 +44,13 @@
     }
 
     .chartContents > div > .chartDiv{
+        width: 100%;
         text-align:center;
     }
 
     .chartContents > .doughnutChart > div > canvas{
         height: 35vh;
-        display: inline !important;
+        /* display: inline-block !important; */
         padding: 10px;
     }
 
@@ -140,7 +141,7 @@
                         <hr class="boxTopLineShort" />
                         <div class="chartTitle">DISK(%)</div>
                         <div class="chartDiv">
-                            <canvas id="diskChart"></canvas>
+                            <canvas id="diskChart" width="300"></canvas>
                         </div>
                     </div>
                     <div class="doughnutChart">
