@@ -49,8 +49,9 @@
     }
 
     .chartContents > .doughnutChart > div > canvas{
-        height: 35vh;
-        /* display: inline-block !important; */
+        width: 100% !important;
+        height: 35vh !important;
+        display: inline-block !important;
         padding: 10px;
     }
 
@@ -141,7 +142,7 @@
                         <hr class="boxTopLineShort" />
                         <div class="chartTitle">DISK(%)</div>
                         <div class="chartDiv">
-                            <canvas id="diskChart" width="300"></canvas>
+                            <canvas id="diskChart"></canvas>
                         </div>
                     </div>
                     <div class="doughnutChart">
@@ -162,14 +163,14 @@
                         <hr class="boxTopLineShort" />
                         <div class="chartTitle">일별(건)</div>
                         <div class="chartDiv">
-                            <canvas id="dateChart"></canvas>
+                            <canvas id="dateChart" width="500"></canvas>
                         </div>
                     </div>
                     <div class="barChart">
                         <hr class="boxTopLineShort" />
                         <div class="chartTitle">시간별(건)</div>
                         <div class="chartDiv">
-                            <canvas id="hourChart"></canvas>
+                            <canvas id="hourChart" width="500"></canvas>
                         </div>
                     </div>
                 </div>
@@ -223,14 +224,14 @@
             },
             options: {
                 maintainAspectRatio: false,
-                responsive: false,
                 scales: {
                     y: {
                         beginAtZero: true,
                     }
                 },
                 legend: {
-                    labels: { 
+                    labels: {
+                        fontSize: 16,
                         fontColor: "#fff",
                     },
                 },
@@ -260,7 +261,7 @@
                 ],
             },
             options: {
-                responsive: false,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -268,6 +269,7 @@
                 },
                 legend: {
                     labels: { 
+                        fontSize: 16,
                         fontColor: "#fff",
                     },
                 },
@@ -298,7 +300,7 @@
                 ],
             },
             options: {
-                responsive: false,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -306,6 +308,7 @@
                 },
                 legend: {
                     labels: { 
+                        fontSize: 16,
                         fontColor: "#fff",
                     },
                 },
@@ -341,21 +344,23 @@
                 ],
             },
             options: {
-                responsive: false,
                 scales: {
                     yAxes: [{
                         ticks: {
+                            fontSize: 16,
                             fontColor: "#fff"
                         }
                     }],
                     xAxes: [{
                         ticks: {
+                            fontSize: 16,
                             fontColor: "#fff"
                         }
                     }]
                 },
                 legend: {
                     labels: { 
+                        fontSize: 16,
                         fontColor: "#fff",
                     },
                 },
@@ -390,21 +395,23 @@
                 ],
             },
             options: {
-                responsive: false,
                 scales: {
                     yAxes: [{
                         ticks: {
+                            fontSize: 16,
                             fontColor: "#fff"
                         }
                     }],
                     xAxes: [{
                         ticks: {
+                            fontSize: 16,
                             fontColor: "#fff"
                         }
                     }]
                 },
                 legend: {
                     labels: { 
+                        fontSize: 16,
                         fontColor: "#fff",
                     },
                 },
