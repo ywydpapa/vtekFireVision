@@ -279,9 +279,9 @@ def okhome():
     cur.execute(sql1)
     cond = cur.fetchall()
     if request.method == 'GET':
-        return render_template('/subm/camList.html', cond=cond)
+        return render_template('/subm/camlist.html', cond=cond)
     else:
-        return render_template("/subm/camList.html", cond=cond)
+        return render_template("/subm/camlist.html", cond=cond)
 
 
 @app.route('/menuset')
