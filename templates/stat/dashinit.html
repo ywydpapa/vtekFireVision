@@ -82,28 +82,25 @@
                     <hr class="boxTopLineLong" />
                     <table id="camListTable" class="table table-striped nowrap overflow-auto" style="width: 88.3vw;">
                         <colgroup>
-                            <col width = "15%">
-                            <col width = "15%">
+                            <col width = "20%">
                             <col width = "30%">
-                            <col width = "40%">
+                            <col width = "50%">
                         </colgroup>
                         <thead>
                             <tr>
-                                <td>사이트명</td>
                                 <td>고객명</td>
-                                <td>위치</td>
                                 <td>할당센서</td>
+                                <td>위치</td>
                             </tr>
                         </thead>
                         <tbody>
                             {% for k in result_camList %}
                             <tr data-no="{{k[0]}}">
-                                <td>{{k[0]}}</td>
                                 <td>
                                     <a href="/sitedetail/{{k[0]}}">{{k[1]}}</a>
                                 </td>
-                                <td>({{k[2]}}) {{k[3]}} {{k[4]}}</td>
                                 <td>{{k[5]}}, {{k[6]}}, {{k[7]}}, {{k[8]}}</td>
+                                <td>({{k[2]}}) {{k[3]}} {{k[4]}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
