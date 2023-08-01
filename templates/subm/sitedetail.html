@@ -171,13 +171,16 @@
 
         for(let i = 0; i < resultArr.length; i++){
             let regDate = new Date(resultArr[i][2]).toISOString().substring(11, 16);
-            labelArr.push(regDate);
+            if(i % 10 == 0){
+                labelArr.push(regDate);
+            }
             dataArr.push(resultArr[i][1]);
         }
 
         new Chart(sensor1Chart, {
             type: "line",
             data: {
+                labels: labelArr,
                 datasets: [
                     {
                         data: dataArr,
@@ -215,15 +218,21 @@
         let sensor2Chart = document.getElementById("sensor2Chart").getContext('2d');
         let resultArr = "{{sensor02}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let labelArr = [];
         let dataArr = [];
 
         for(let i = 0; i < resultArr.length; i++){
+            let regDate = new Date(resultArr[i][2]).toISOString().substring(11, 16);
+            if(i % 10 == 0){
+                labelArr.push(regDate);
+            }
             dataArr.push(resultArr[i][1]);
         }
 
         new Chart(sensor2Chart, {
             type: "line",
             data: {
+                labels: labelArr,
                 datasets: [
                     {
                         data: dataArr,
@@ -242,6 +251,12 @@
                             fontSize: 16,
                             fontColor: "#fff"
                         }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 16,
+                            fontColor: "#fff"
+                        }
                     }]
                 },
                 legend: {
@@ -255,15 +270,21 @@
         let sensor3Chart = document.getElementById("sensor3Chart").getContext('2d');
         let resultArr = "{{sensor03}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let labelArr = [];
         let dataArr = [];
 
         for(let i = 0; i < resultArr.length; i++){
+            let regDate = new Date(resultArr[i][2]).toISOString().substring(11, 16);
+            if(i % 10 == 0){
+                labelArr.push(regDate);
+            }
             dataArr.push(resultArr[i][1]);
         }
 
         new Chart(sensor3Chart, {
             type: "line",
             data: {
+                labels: labelArr,
                 datasets: [
                     {
                         data: dataArr,
@@ -283,6 +304,12 @@
                             fontSize: 16,
                             fontColor: "#fff"
                         }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 16,
+                            fontColor: "#fff"
+                        }
                     }]
                 },
                 legend: {
@@ -296,15 +323,21 @@
         let sensor4Chart = document.getElementById("sensor4Chart").getContext('2d');
         let resultArr = "{{sensor04}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let labelArr = [];
         let dataArr = [];
 
         for(let i = 0; i < resultArr.length; i++){
+            let regDate = new Date(resultArr[i][2]).toISOString().substring(11, 16);
+            if(i % 10 == 0){
+                labelArr.push(regDate);
+            }
             dataArr.push(resultArr[i][1]);
         }
 
         new Chart(sensor4Chart, {
             type: "line",
             data: {
+                labels: labelArr,
                 datasets: [
                     {
                         data: dataArr,
@@ -319,6 +352,12 @@
                 responsive: false,
                 scales: {
                     yAxes: [{
+                        ticks: {
+                            fontSize: 16,
+                            fontColor: "#fff"
+                        }
+                    }],
+                    xAxes: [{
                         ticks: {
                             fontSize: 16,
                             fontColor: "#fff"

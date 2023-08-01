@@ -122,19 +122,19 @@ def index(camno):
     sql += " where camList.camNo = " + camno + " group by date_format(`sensordata`.`regDate`, '%Y-%m-%d %h:%i') order by sensordata.regDate desc limit 60"
     cur.execute(sql)
     sensor1 = json.dumps(cur.fetchall(), default=str)
-    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue) from sensordata"
+    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue), sensordata.regDate from sensordata"
     sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor02"
     sql += " left join camList on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.camNo = " + camno + " group by date_format(`sensordata`.`regDate`, '%Y-%m-%d %h:%i') order by sensordata.regDate desc limit 60"
     cur.execute(sql)
     sensor2 = json.dumps(cur.fetchall(), default=str)
-    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue) from sensordata"
+    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue), sensordata.regDate from sensordata"
     sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor03"
     sql += " left join camList on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.camNo = " + camno + " group by date_format(`sensordata`.`regDate`, '%Y-%m-%d %h:%i') order by sensordata.regDate desc limit 60"
     cur.execute(sql)
     sensor3 = json.dumps(cur.fetchall(), default=str)
-    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue) from sensordata"
+    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue), sensordata.regDate from sensordata"
     sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor04"
     sql += " left join camList on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.camNo = " + camno + " group by date_format(`sensordata`.`regDate`, '%Y-%m-%d %h:%i') order by sensordata.regDate desc limit 60"
