@@ -75,6 +75,8 @@
 
     .detailContents > .mapContents > .sensorContent > div > .chartContent > canvas{
         display: inline !important;
+        width: 95%;
+        height: 200px;
     }
 
     .detailContents > .mapDiv > #map2{
@@ -165,9 +167,12 @@
         let sensor1Chart = document.getElementById("sensor1Chart").getContext('2d');
         let resultArr = "{{sensor01}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
+        let labelArr = [];
         let dataArr = [];
 
         for(let i = 0; i < resultArr.length; i++){
+            let regDate = new Date(resultArr[i][2]).toISOString().substring(11, 16);
+            labelArr.push(regDate);
             dataArr.push(resultArr[i][1]);
         }
 
@@ -189,6 +194,13 @@
                 scales: {
                     yAxes: [{
                         ticks: {
+                            fontSize: 20,
+                            fontColor: "#fff"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 16,
                             fontColor: "#fff"
                         }
                     }]
@@ -228,6 +240,7 @@
                 scales: {
                     yAxes: [{
                         ticks: {
+                            fontSize: 20,
                             fontColor: "#fff"
                         }
                     }]
@@ -268,6 +281,7 @@
                 scales: {
                     yAxes: [{
                         ticks: {
+                            fontSize: 20,
                             fontColor: "#fff"
                         }
                     }]
@@ -307,6 +321,7 @@
                 scales: {
                     yAxes: [{
                         ticks: {
+                            fontSize: 20,
                             fontColor: "#fff"
                         }
                     }]

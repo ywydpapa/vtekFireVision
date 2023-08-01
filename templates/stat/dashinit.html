@@ -83,8 +83,8 @@
                     <table id="camListTable" class="table table-striped nowrap overflow-auto" style="width: 88.3vw;">
                         <colgroup>
                             <col width = "20%">
-                            <col width = "30%">
-                            <col width = "50%">
+                            <col width = "40%">
+                            <col width = "40%">
                         </colgroup>
                         <thead>
                             <tr>
@@ -99,7 +99,7 @@
                                 <td>
                                     <a href="/sitedetail/{{k[0]}}">{{k[1]}}</a>
                                 </td>
-                                <td>{{k[5]}}, {{k[6]}}, {{k[7]}}, {{k[8]}}</td>
+                                <td>{{k[5]}}({{sensorJsonDatas[loop.index0][0]}}), {{k[6]}}({{sensorJsonDatas[loop.index0][1]}}), {{k[7]}}({{sensorJsonDatas[loop.index0][2]}}), {{k[8]}}({{sensorJsonDatas[loop.index0][3]}})</td>
                                 <td>({{k[2]}}) {{k[3]}} {{k[4]}}</td>
                             </tr>
                             {% endfor %}
@@ -319,7 +319,6 @@
         dateList = JSON.parse(dateList.replace(/&#34;/g, "\""));
         let dateDataArr = [];
         let dataArr = [];
-        console.log(dateList)
 
         for(let i = 0; i < dateList.length; i++){
             dateDataArr.push(dateList[i][0]);

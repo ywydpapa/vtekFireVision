@@ -73,7 +73,6 @@ def mnu001f():
     sql = "select camName,camLat,camLong from camList where attrib not like 'XXX%'"
     cur.execute(sql)
     result = cur.fetchall()
-    print(result)
     db.close()
     if request.method == 'GET':
         return render_template('./subm/mnu001.html', result=result)
@@ -117,7 +116,7 @@ def index(camno):
     result = cur.fetchall()
     cur.execute(sql)
     resultJson = json.dumps(cur.fetchall(), default=str)
-    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue) from sensordata"
+    sql = "select sensordata.sensorKey, avg(sensordata.sensorValue), sensordata.regDate from sensordata"
     sql += " left join camDevice on sensordata.sensorKey = camDevice.sensor01"
     sql += " left join camList on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.camNo = " + camno + " group by date_format(`sensordata`.`regDate`, '%Y-%m-%d %h:%i') order by sensordata.regDate desc limit 60"
@@ -182,7 +181,6 @@ def mainAlarmDatas():
     sql = "select * from alarmon where attrib not like 'XXX%'"
     cur.execute(sql)
     result = json.dumps(cur.fetchall(), default=str)
-    print(result);
     db.close()
     flash("OK")
     return result
@@ -204,7 +202,6 @@ def alarmon(alarmkey):
 @app.route('/sensins/<sensorkey>', methods=['GET'])
 def sensorins(sensorkey):
     svalue = request.args.get('sensorval', default='0.0', type = str)
-    print(svalue)
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     sql = "insert into sensordata (sensorKey, sensorValue, regDate) values (%s,%s, now())"
@@ -275,13 +272,44 @@ def networkstat():
 def okhome():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select * from camList where attrib not like 'XXX%' order by regDate desc limit 10"
-    cur.execute(sql1)
+    sql = "select camList.*, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04 from camList"
+    sql += " left join camDevice on camDevice.deviceNo = camList.deviceNo"
+    sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
+    cur.execute(sql)
     cond = cur.fetchall()
+    sensorJsonDatas = {}
+    
+    for index, item in enumerate(cond):
+        sensorJsonDatas[index] = {}
+
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[15] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[15] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor1List = cur.fetchall()
+        sensor1 = sensor1List[0][1] if len(sensor1List) > 0 else 0
+        sensorJsonDatas[index][0] = sensor1
+        
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[16] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[16] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor2List = cur.fetchall()
+        sensor2 = sensor2List[0][1] if len(sensor2List) > 0 else 0
+        sensorJsonDatas[index][1] = sensor2
+
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[17] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[17] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor3List = cur.fetchall()
+        sensor3 = sensor3List[0][1] if len(sensor3List) > 0 else 0
+        sensorJsonDatas[index][2] = sensor3
+
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[18] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[18] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor4List = cur.fetchall()
+        sensor4 = sensor4List[0][1] if len(sensor4List) > 0 else 0
+        sensorJsonDatas[index][3] = sensor4
+
     if request.method == 'GET':
-        return render_template('/subm/camlist.html', cond=cond)
+        return render_template('/subm/camlist.html', cond=cond,sensorJsonDatas=sensorJsonDatas)
     else:
-        return render_template("/subm/camlist.html", cond=cond)
+        return render_template("/subm/camlist.html", cond=cond,sensorJsonDatas=sensorJsonDatas)
 
 
 @app.route('/menuset')
@@ -359,9 +387,37 @@ def searchSel():
     sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
     cur.execute(sql)
     camList = cur.fetchall()
+    sensorJsonDatas = {}
+    
+    for index, item in enumerate(camList):
+        sensorJsonDatas[index] = {}
+
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[5] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[5] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor1List = cur.fetchall()
+        sensor1 = sensor1List[0][1] if len(sensor1List) > 0 else 0
+        sensorJsonDatas[index][0] = sensor1
+        
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[6] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[6] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor2List = cur.fetchall()
+        sensor2 = sensor2List[0][1] if len(sensor2List) > 0 else 0
+        sensorJsonDatas[index][1] = sensor2
+
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[7] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[7] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor3List = cur.fetchall()
+        sensor3 = sensor3List[0][1] if len(sensor3List) > 0 else 0
+        sensorJsonDatas[index][2] = sensor3
+
+        sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[8] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[8] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
+        cur.execute(sql)
+        sensor4List = cur.fetchall()
+        sensor4 = sensor4List[0][1] if len(sensor4List) > 0 else 0
+        sensorJsonDatas[index][3] = sensor4
 
     db.close()
-    return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList)
+    return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList,sensorJsonDatas=sensorJsonDatas)
 
 @app.route('/alarmCountInsert/<alarmKey>', methods=['POST'])
 def alarmCountInsert(alarmKey):
@@ -485,7 +541,6 @@ def devinsert():
 @app.route('/devUpdate', methods=['POST'])
 def devupdate():
     deviceNo = request.form.get("deviceNo")
-    print(request.form)
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     sql1 = "update camDevice set deviceType = %s, deviceSerial = %s,  deviceMacaddr = %s, deviceIp4 = %s , deviceIp6 = %s, deviceSetno = %s, sensor01 = %s, sensor02 = %s, sensor03 = %s, sensor04 = %s, modDate = now() where deviceNo = " + deviceNo
@@ -500,7 +555,6 @@ def devupdate():
 def siteinsert():
     addrStr = str(request.form.get("camAddr1"))
     latLong = geocoding(addrStr)
-    print(latLong)
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
     if request.method == 'GET':
@@ -543,7 +597,6 @@ def videoFeed(camNo):
     sql = "select camLink from camList where camNo = " + camNo + " and attrib not like 'XXX%'"
     cur.execute(sql)
     result = cur.fetchone()
-    print(result)
     try_num = 1
     program_quit = False
     while True:
