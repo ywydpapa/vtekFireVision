@@ -119,25 +119,25 @@
                             <hr class="boxTopLineShort" />
                             <div style="border-right: 1px solid #000; border-bottom: 1px solid #000;">
                                 <div class="sensorTitle">{{sensorText1}}</div>
-                                <div class="chartContent">
+                                <div class="chartContent" id="chartContent1">
                                     <canvas id="sensor1Chart"></canvas>
                                 </div>
                             </div>
                             <div style="border-bottom: 1px solid #000;">
                                 <div class="sensorTitle">{{sensorText2}}</div>
-                                <div class="chartContent">
+                                <div class="chartContent" id="chartContent2">
                                     <canvas id="sensor2Chart"></canvas>
                                 </div>
                             </div>
                             <div style="border-right: 1px solid #000;">
                                 <div class="sensorTitle">{{sensorText3}}</div>
-                                <div class="chartContent">
+                                <div class="chartContent" id="chartContent3">
                                     <canvas id="sensor3Chart"></canvas>
                                 </div>
                             </div>
                             <div>
                                 <div class="sensorTitle">{{sensorText4}}</div>
-                                <div class="chartContent">
+                                <div class="chartContent" id="chartContent4">
                                     <canvas id="sensor4Chart"></canvas>
                                 </div>
                             </div>
@@ -163,6 +163,12 @@
     });
 
     function sensor1Chart(){
+        document.getElementById("sensor1Chart").remove();
+        let chartContent1 = document.getElementById("chartContent1");
+        let createCanvas = document.createElement("canvas");
+        createCanvas.id = "sensor1Chart";
+        chartContent1.append(createCanvas);
+
         let sensor1Chart = document.getElementById("sensor1Chart").getContext('2d');
         let resultArr = "{{sensor01}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
@@ -215,6 +221,12 @@
     }
 
     function sensor2Chart(){
+        document.getElementById("sensor2Chart").remove();
+        let chartContent2 = document.getElementById("chartContent2");
+        let createCanvas = document.createElement("canvas");
+        createCanvas.id = "sensor2Chart";
+        chartContent2.append(createCanvas);
+
         let sensor2Chart = document.getElementById("sensor2Chart").getContext('2d');
         let resultArr = "{{sensor02}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
@@ -267,6 +279,12 @@
     }
 
     function sensor3Chart(){
+        document.getElementById("sensor3Chart").remove();
+        let chartContent3 = document.getElementById("chartContent3");
+        let createCanvas = document.createElement("canvas");
+        createCanvas.id = "sensor3Chart";
+        chartContent3.append(createCanvas);
+
         let sensor3Chart = document.getElementById("sensor3Chart").getContext('2d');
         let resultArr = "{{sensor03}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
@@ -320,6 +338,12 @@
     }
     
     function sensor4Chart(){
+        document.getElementById("sensor4Chart").remove();
+        let chartContent4 = document.getElementById("chartContent4");
+        let createCanvas = document.createElement("canvas");
+        createCanvas.id = "sensor4Chart";
+        chartContent4.append(createCanvas);
+
         let sensor4Chart = document.getElementById("sensor4Chart").getContext('2d');
         let resultArr = "{{sensor04}}";
         resultArr = JSON.parse(resultArr.replace(/&#34;/g, "\""));
