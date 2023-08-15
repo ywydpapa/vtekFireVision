@@ -199,6 +199,19 @@ def alarmon(alarmkey):
     flash("OK")
     return render_template("./stat/emptyPage.html")
 
+
+@app.route('/alarmcheck/<alarmkey>', methods=['GET'])
+def alarmcheck(alarmkey):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "select count(*) from alarmon where modDate = null and alarmKey like %s"
+    cur.execute(sql1, str("%"+alarmkey))
+    alarmcnt = cur.fetchall()
+    db.close()
+    flash(alarmcnt)
+    return render_template("./stat/emptyPage.html", alarmcnt)
+
+
 @app.route('/sensins/<sensorkey>', methods=['GET'])
 def sensorins(sensorkey):
     svalue = request.args.get('sensorval', default='0.0', type = str)
