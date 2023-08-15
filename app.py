@@ -204,9 +204,9 @@ def alarmon(alarmkey):
 def alarmcheck(alarmkey):
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql1 = "select count(*) from alarmon where modDate = null and alarmKey like %s"
+    sql1 = "select count(*) from alarmon where attrib not like %s and alarmKey like %s"
     alarmkey2 = alarmkey + "%"
-    cur.execute(sql1, str(alarmkey2))
+    cur.execute(sql1,("XXXXX%",str(alarmkey2)))
     alarmcnt = cur.fetchone()
     db.close()
     return render_template("./stat/alarmlist.html", cnt = alarmcnt)
