@@ -209,6 +209,10 @@ def alarmcheck(alarmkey):
     cur.execute(sql1,("XXXXX%",str(alarmkey2)))
     alarmcnt = cur.fetchone()
     db.close()
+    if alarmcnt > 0 :
+        alarmcnt = "ON"
+    else :
+        alarmcnt = "OFF"
     return render_template("./stat/alarmlist.html", cnt = alarmcnt)
 
 @app.route('/sensins/<sensorkey>', methods=['GET'])
