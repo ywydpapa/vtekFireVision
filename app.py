@@ -104,6 +104,16 @@ def camListSelect(alarmkey):
     db.close()
     return result
 
+@app.route('/camListRate/<rate>', methods=['GET', 'POST'])
+def camListRate(rate):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select firecase from firerate where sensor01 = '" + str(rate) + "'"
+    cur.execute(sql)
+    result = json.dumps(cur.fetchall(), default=str)
+    db.close()
+    return result
+
 @app.route('/sitedetail/<camno>', methods=['GET', 'POST'])
 def index(camno):
     resultArr = []
@@ -689,7 +699,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--ip", type=str, required=False, default='127.0.0.1',
                     help="ip address of the device")
-    ap.add_argument("-o", "--port", type=int, required=False, default=5000,
+    ap.add_argument("-o", "--port", type=int, required=False, default=3306,
                     help="ephemeral port number of the server (1024 to 65535)")
     ap.add_argument("-f", "--frame-count", type=int, default=32,
                     help="# of frames used to construct the background model")

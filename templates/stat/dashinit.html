@@ -95,7 +95,7 @@
                         </thead>
                         <tbody>
                             {% for k in result_camList %}
-                            <tr data-no="{{k[0]}}">
+                            <tr data-no="{{k[0]}}" data-rate="{{sensorJsonDatas[loop.index0][0]}}">
                                 <td>
                                     <a href="/sitedetail/{{k[0]}}">{{k[1]}}</a>
                                 </td>

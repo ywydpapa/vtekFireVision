@@ -1,4 +1,4 @@
-﻿envhost="192.168.108.102"
+﻿envhost="swc9004.iptime.org"
 envuser="swcore"
 envpassword="core2020"
 envdb="vtekmon"
