@@ -200,6 +200,35 @@ def alarmon(alarmkey):
     return render_template("./stat/emptyPage.html")
 
 
+@app.route('/smokeonly/<alarmkey>', methods=['GET'])
+def smokeonly(alarmkey):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "update alarmon set modDate = now() , attrib = 'XXXXX0000000000' where alarmKey = %s"
+    cur.execute(sql1, str(alarmkey))
+    sql = "insert into alarmon (alarmKey, regDate, attrib) values (%s, now(),'kkkkk0000000000')"
+    cur.execute(sql, str(alarmkey))
+    db.commit()
+    cur.fetchall()
+    db.close()
+    flash("Smoke Only")
+    return render_template("./stat/smokeOnly.html")
+
+
+@app.route('/eleshort/<alarmkey>', methods=['GET'])
+def eleshort(alarmkey):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "update alarmon set modDate = now() , attrib = 'XXXXX0000000000' where alarmKey = %s"
+    cur.execute(sql1, str(alarmkey))
+    sql = "insert into alarmon (alarmKey, regDate, attrib) values (%s, now(),'eeeee0000000000')"
+    cur.execute(sql, str(alarmkey))
+    db.commit()
+    cur.fetchall()
+    db.close()
+    flash("Electrical Short!!")
+    return render_template("./stat/eleShort.html")
+
 @app.route('/alarmcheck/<alarmkey>', methods=['GET'])
 def alarmcheck(alarmkey):
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
