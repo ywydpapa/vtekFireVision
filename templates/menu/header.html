@@ -85,6 +85,7 @@
                         });
 
                         for(let i = 0; i < result.length; i++){
+                            console.log(result[i]);
                             $.ajax({
                                 url: "/camListSelect/" + result[i][1],
                                 method: "get",
@@ -107,10 +108,24 @@
                                         contentType: "text/plain",
                                         success: function(rateData){
                                             setTimeout(() => {
-                                                if(confirm("[alarmkey: " + selectData[0][3] + "] 알림을 확인하시겠습니까??\n화재확률: " + rateData[0] + "%")){
-                                                    location.href = "/sitedetail/" + selectData[0][0];
+                                                if(result[i][4].indexOf("kkkkk") > -1){
+                                                    if(confirm("연기가 감지되었습니다.")){
+                                                        location.href = "/sitedetail/" + selectData[0][0];
+                                                    }else{
+                                                        return false;
+                                                    }
+                                                }else if(result[i][4].indexOf("sssss") > -1){
+                                                    if(confirm("누전이 감지되었습니다.")){
+                                                        location.href = "/sitedetail/" + selectData[0][0];
+                                                    }else{
+                                                        return false;
+                                                    }
                                                 }else{
-                                                    return false;
+                                                    if(confirm("[alarmkey: " + selectData[0][3] + "] 화재 가능성이 있습니다.\n화재확률: " + rateData[0] + "%")){
+                                                        location.href = "/sitedetail/" + selectData[0][0];
+                                                    }else{
+                                                        return false;
+                                                    }
                                                 }
                                             }, 300)
                                         }
