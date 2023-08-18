@@ -30,6 +30,26 @@
     .userAddContents > table > tbody > tr > td > input{
         width: 100%;
     }
+
+    #foo-table > tbody > tr > td > span{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 15px;
+        margin-right: 5px;
+    }
+    
+    #foo-table > tbody > tr > td > .sensorRateCheck0{
+        background-color: #1DDB16;
+    }
+
+    #foo-table > tbody > tr > td > .sensorRateCheck1{
+        background-color: #FF5E00;
+    }
+
+    #foo-table > tbody > tr > td > .sensorRateCheck2{
+        background-color: #FF0000;
+    }
 </style>
 </head>
 <body>
@@ -45,13 +65,19 @@
                 <table id="foo-table" class="table table-striped table-bordered nowrap overflow-auto">
                     <colgroup>
                         <col width = "20%">
-                        <col width = "40%">
+                        <col width = "10%">
+                        <col width = "10%">
+                        <col width = "10%">
+                        <col width = "10%">
                         <col width = "40%">
                     </colgroup>
                     <thead>
                         <tr>
                             <th>고객명</th>
-                            <th>할당센서(측정값)</th>
+                            <td>{{sensorText1}}</td>
+                            <td>{{sensorText2}}</td>
+                            <td>{{sensorText3}}</td>
+                            <td>{{sensorText4}}</td>
                             <th>위치</th>
                         </tr>
                     </thead>
@@ -61,7 +87,10 @@
                             <td>
                                 <a href="/sitedetail/{{k[0]}}">{{k[1]}}</a>
                             </td>
-                            <td>{{k[15]}}({{sensorJsonDatas[loop.index0][0]}}), {{k[16]}}({{sensorJsonDatas[loop.index0][1]}}), {{k[17]}}({{sensorJsonDatas[loop.index0][2]}}), {{k[18]}}({{sensorJsonDatas[loop.index0][3]}})</td>
+                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][0]}}"></span>{{sensorJsonDatas[loop.index0][0]}}</td>
+                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][1]}}"></span>{{sensorJsonDatas[loop.index0][1]}}</td>
+                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][2]}}"></span>{{sensorJsonDatas[loop.index0][2]}}</td>
+                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][3]}}"></span>{{sensorJsonDatas[loop.index0][3]}}</td>
                             <td>({{k[6]}}) {{k[7]}} {{k[8]}}</td>
                         </tr>
                         {% endfor %}

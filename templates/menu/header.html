@@ -85,7 +85,6 @@
                         });
 
                         for(let i = 0; i < result.length; i++){
-                            console.log(result[i]);
                             $.ajax({
                                 url: "/camListSelect/" + result[i][1],
                                 method: "get",
@@ -94,7 +93,7 @@
                                 success: function(selectData){
                                     let camListTable = $("#camListTable");
                                     let rate = Math.round(camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").attr("data-rate"));
-                                    camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").attr("style", "background-color: red;");
+                                    camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "red");
                                     
                                     let detailAlarmBtn = $(".detailAlarmBtn")[0];
                                     if(detailAlarmBtn === undefined){
@@ -108,28 +107,27 @@
                                         contentType: "text/plain",
                                         success: function(rateData){
                                             setTimeout(() => {
+                                                let str = "";
+
                                                 if(result[i][4].indexOf("kkkkk") > -1 || result[i][4].indexOf("KKKKK") > -1){
-                                                    if(confirm("연기가 감지되었습니다.\n주변 온도가 낮은 상황이어서 오탐지일 가능성이 높습니다. ")){
-                                                        location.href = "/sitedetail/" + selectData[0][0];
-                                                    }else{
-                                                        return false;
-                                                    }
+                                                    str = "연기가 감지되었습니다.\n주변 온도가 낮은 상황이어서 오탐지일 가능성이 높습니다.";
                                                 }else if(result[i][4].indexOf("sssss") > -1 || result[i][4].indexOf("SSSSS") > -1){
-                                                    if(confirm("누전이 감지되었습니다.")){
-                                                        location.href = "/sitedetail/" + selectData[0][0];
-                                                    }else{
-                                                        return false;
-                                                    }
+                                                    str = "누전이 감지되었습니다.";
                                                 }else{
-                                                    if(confirm("[alarmkey: " + selectData[0][3] + "] 화재 가능성이 있습니다.\n화재확률: " + rateData[0] + "%")){
-                                                        location.href = "/sitedetail/" + selectData[0][0];
-                                                    }else{
-                                                        return false;
-                                                    }
+                                                    str = "[alarmkey: " + selectData[0][3] + "] 화재 가능성이 있습니다.\n화재확률: " + rateData[0] + "%";
+                                                }
+
+                                                if(confirm(str)){
+                                                    location.href = "/sitedetail/" + selectData[0][0];
+                                                    camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
+                                                }else{
+                                                    camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
+                                                    return false;
                                                 }
                                             }, 300)
                                         }
                                     })
+
                                 }
                             });
                         }

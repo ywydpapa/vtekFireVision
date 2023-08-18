@@ -333,38 +333,44 @@ def okhome():
     cur.execute(sql)
     cond = cur.fetchall()
     sensorJsonDatas = {}
+    sensorRateArray = {}
     
     for index, item in enumerate(cond):
         sensorJsonDatas[index] = {}
+        sensorRateArray[index] = {}
 
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[15] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[15] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor1List = cur.fetchall()
         sensor1 = sensor1List[0][1] if len(sensor1List) > 0 else 0
+        sensorRateArray[index][0] = sensorRateCheck(sensor1)
         sensorJsonDatas[index][0] = sensor1
         
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[16] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[16] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor2List = cur.fetchall()
         sensor2 = sensor2List[0][1] if len(sensor2List) > 0 else 0
+        sensorRateArray[index][1] = sensorRateCheck(sensor2)
         sensorJsonDatas[index][1] = sensor2
 
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[17] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[17] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor3List = cur.fetchall()
         sensor3 = sensor3List[0][1] if len(sensor3List) > 0 else 0
+        sensorRateArray[index][2] = sensorRateCheck(sensor3)
         sensorJsonDatas[index][2] = sensor3
 
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[18] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[18] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor4List = cur.fetchall()
         sensor4 = sensor4List[0][1] if len(sensor4List) > 0 else 0
+        sensorRateArray[index][3] = sensorRateCheck(sensor4)
         sensorJsonDatas[index][3] = sensor4
 
     if request.method == 'GET':
-        return render_template('/subm/camlist.html', cond=cond,sensorJsonDatas=sensorJsonDatas)
+        return render_template('/subm/camlist.html', cond=cond,sensorJsonDatas=sensorJsonDatas,sensorRateArray=sensorRateArray,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
     else:
-        return render_template("/subm/camlist.html", cond=cond,sensorJsonDatas=sensorJsonDatas)
+        return render_template("/subm/camlist.html", cond=cond,sensorJsonDatas=sensorJsonDatas,sensorRateArray=sensorRateArray,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
 
 
 @app.route('/menuset')
@@ -443,36 +449,54 @@ def searchSel():
     cur.execute(sql)
     camList = cur.fetchall()
     sensorJsonDatas = {}
+    sensorRateArray = {}
     
     for index, item in enumerate(camList):
         sensorJsonDatas[index] = {}
+        sensorRateArray[index] = {}
 
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[5] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[5] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor1List = cur.fetchall()
         sensor1 = sensor1List[0][1] if len(sensor1List) > 0 else 0
+        sensorRateArray[index][0] = sensorRateCheck(sensor1)
         sensorJsonDatas[index][0] = sensor1
         
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[6] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[6] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor2List = cur.fetchall()
         sensor2 = sensor2List[0][1] if len(sensor2List) > 0 else 0
+        sensorRateArray[index][1] = sensorRateCheck(sensor2)
         sensorJsonDatas[index][1] = sensor2
 
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[7] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[7] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor3List = cur.fetchall()
         sensor3 = sensor3List[0][1] if len(sensor3List) > 0 else 0
+        sensorRateArray[index][2] = sensorRateCheck(sensor3)
         sensorJsonDatas[index][2] = sensor3
 
         sql = "select sensorKey, sensorValue from sensordata where sensorKey = '" + item[8] + "' and attrib not like '%XXX' order by regDate desc limit 1" if item[8] != None else "select sensorKey, sensorValue from sensordata where sensorKey = '' and attrib not like '%XXX' order by regDate desc limit 1"
         cur.execute(sql)
         sensor4List = cur.fetchall()
         sensor4 = sensor4List[0][1] if len(sensor4List) > 0 else 0
+        sensorRateArray[index][3] = sensorRateCheck(sensor4)
         sensorJsonDatas[index][3] = sensor4
 
     db.close()
-    return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList,sensorJsonDatas=sensorJsonDatas)
+    return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList,sensorJsonDatas=sensorJsonDatas,sensorRateArray=sensorRateArray,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
+
+def sensorRateCheck(sensorRate):
+    formatFloat = float(sensorRate)
+
+    if formatFloat >= 70:
+        result = 2
+    elif formatFloat >= 40 and formatFloat < 70:
+        result = 1
+    else:
+        result = 0
+
+    return result
 
 @app.route('/alarmCountInsert/<alarmKey>', methods=['POST'])
 def alarmCountInsert(alarmKey):
