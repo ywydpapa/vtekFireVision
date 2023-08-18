@@ -231,7 +231,7 @@ def eleshort(alarmkey):
     cur = db.cursor()
     sql1 = "update alarmon set modDate = now() , attrib = 'XXXXX0000000000' where alarmKey = %s"
     cur.execute(sql1, str(alarmkey))
-    sql = "insert into alarmon (alarmKey, regDate, attrib) values (%s, now(),'eeeee0000000000')"
+    sql = "insert into alarmon (alarmKey, regDate, attrib) values (%s, now(),'sssss0000000000')"
     cur.execute(sql, str(alarmkey))
     db.commit()
     cur.fetchall()
