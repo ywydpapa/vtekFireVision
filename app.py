@@ -188,7 +188,7 @@ def alarmUpdate(alarmNo):
 def mainAlarmDatas():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select * from alarmon where attrib not like 'XXX%'"
+    sql = "select * from alarmon where attrib not like '111110000000000'"
     cur.execute(sql)
     result = json.dumps(cur.fetchall(), default=str)
     db.close()
