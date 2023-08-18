@@ -108,13 +108,13 @@
                                         contentType: "text/plain",
                                         success: function(rateData){
                                             setTimeout(() => {
-                                                if(result[i][4].indexOf("kkkkk") > -1){
-                                                    if(confirm("연기가 감지되었습니다.")){
+                                                if(result[i][4].indexOf("kkkkk") > -1 || result[i][4].indexOf("KKKKK") > -1){
+                                                    if(confirm("연기가 감지되었습니다.\n주변 온도가 낮은 상황이어서 오탐지일 가능성이 높습니다. ")){
                                                         location.href = "/sitedetail/" + selectData[0][0];
                                                     }else{
                                                         return false;
                                                     }
-                                                }else if(result[i][4].indexOf("sssss") > -1){
+                                                }else if(result[i][4].indexOf("sssss") > -1 || result[i][4].indexOf("SSSSS") > -1){
                                                     if(confirm("누전이 감지되었습니다.")){
                                                         location.href = "/sitedetail/" + selectData[0][0];
                                                     }else{

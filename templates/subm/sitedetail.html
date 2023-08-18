@@ -29,6 +29,7 @@
         display: flex;
         align-items: center;
         justify-content: right;
+        margin-bottom: 10px;
     }
 
     .detailContents{
@@ -102,7 +103,7 @@
         <!-- commonSideMenu end-->
         <div id="commonContent">
             <div class="container">
-                {% if result[0]["alramAttrib"] == '100001000010000' %}
+                {% if result[0]["alramAttrib"] != 'XXXXX0000000000' %}
                 <div class="alarmBtns">
                     <button type="button" data-no={{result[0]["alarmNo"]}} onclick="alarmUpdate(this);">알람 해제</button>
                 </div>
