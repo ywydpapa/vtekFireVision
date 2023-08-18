@@ -114,7 +114,7 @@
                                                 }else if(result[i][4].indexOf("sssss") > -1 || result[i][4].indexOf("SSSSS") > -1){
                                                     str = "누전이 감지되었습니다.";
                                                 }else{
-                                                    str = "[alarmkey: " + selectData[0][3] + "] 화재 가능성이 있습니다.\n화재확률: " + rateData[0] + "%";
+                                                    str = "[alarmkey: " + selectData[0][3] + "] 화재 가능성이 있습니다.\n습도45% 이하: " + rateData[0][1] + "\n습도65% 이하: " + rateData[0][2] + "\n습도85% 이하: " + rateData[0][3] + "\n화재확률: " + rateData[0][4] + "%";
                                                 }
 
                                                 if(confirm(str)){

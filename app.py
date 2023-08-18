@@ -108,7 +108,7 @@ def camListSelect(alarmkey):
 def camListRate(rate):
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select firecase from firerate where sensor01 = '" + str(rate) + "'"
+    sql = "select * from firerate where TEMP = '" + str(rate) + "'"
     cur.execute(sql)
     result = json.dumps(cur.fetchall(), default=str)
     db.close()
