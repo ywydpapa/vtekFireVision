@@ -428,14 +428,15 @@ def searchSel():
     result_area = cur.fetchall()
     result_disk = psutil.disk_usage(os.getcwd())
 
-    today = str(nowDate.year) + "-" + str(nowDate.month) + "-" + str(nowDate.day)
-    nextToday = str(nowDate.year) + "-" + str(nowDate.month) + "-" + str(nowDate.day + 1)
+    prev10Day = str(nowDate.year) + "-" + str(nowDate.month) + "-" + str(nowDate.day - 10) + " 00:00:00"
+    today = str(nowDate.year) + "-" + str(nowDate.month) + "-" + str(nowDate.day) + " 00:00:00"
+    nextToday = str(nowDate.year) + "-" + str(nowDate.month) + "-" + str(nowDate.day + 1) + " 00:00:00"
 
-    sql = "select date_format(`regDate`, '%Y-%m-%d') as dateResult, count(*) as cnt from alarmCount group by date_format(`regDate`, '%Y-%m-%d') order by regDate desc limit 10"
+    sql = "select date_format(`regDate`, '%Y-%m-%d') as dateResult, count(*) as cnt from alarmCount where regDate between " + "'" + str(prev10Day) + "'" + " and " + "'" + str(today) + "'" + " group by date_format(`regDate`, '%Y-%m-%d') order by regDate asc"
     cur.execute(sql)
     result_dateList = json.dumps(cur.fetchall())
 
-    sql = "select date_format(`regDate`, '%H') as hourResult, count(*) as cnt from alarmCount where regDate between " + "'" + str(today) + "'" + " and " + "'" + str(nextToday) + "'" + " group by date_format(`regDate`, '%Y-%m-%d %H') order by regDate desc"
+    sql = "select date_format(`regDate`, '%H') as hourResult, count(*) as cnt from alarmCount where regDate between " + "'" + str(today) + "'" + " and " + "'" + str(nextToday) + "'" + " group by date_format(`regDate`, '%H') order by regDate asc"
     cur.execute(sql)
     result_hourList = json.dumps(cur.fetchall(), default=str)
 
@@ -723,7 +724,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--ip", type=str, required=False, default='127.0.0.1',
                     help="ip address of the device")
-    ap.add_argument("-o", "--port", type=int, required=False, default=3306,
+    ap.add_argument("-o", "--port", type=int, required=False, default=5000,
                     help="ephemeral port number of the server (1024 to 65535)")
     ap.add_argument("-f", "--frame-count", type=int, default=32,
                     help="# of frames used to construct the background model")
