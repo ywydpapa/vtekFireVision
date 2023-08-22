@@ -351,7 +351,6 @@
         dateList = JSON.parse(dateList.replace(/&#34;/g, "\""));
         let dateDataArr = [];
         let dataArr = [];
-        console.log(dateList);
 
         for(let i = 0; i < dateList.length; i++){
             dateDataArr.push(dateList[i][0]);
@@ -405,10 +404,11 @@
         let dataArr = [];
         let tempDatas1 = {};
         let tempDatas2 = {};
+        let dataArrIndex = 0;
 
         for(let i = 0; i < hourList.length; i++){
             let item = hourList[i];
-            tempDatas1[item[0]] = item[1];
+            tempDatas1[Number(item[0])] = item[1];
         }
         
         for(let i = 0; i < 24; i++){
@@ -418,18 +418,18 @@
                 label = "0" + label;
             }
 
-            tempDatas2[label] = 0;
+            tempDatas2[Number(label)] = 0;
             dateDataArr.push(label + "시");
         }
 
         for(let key in tempDatas1){
-             tempDatas2[key] = tempDatas1[key];
+            tempDatas2[key] = tempDatas1[key];
         }
 
         for(let key in tempDatas2){
             dataArr.push(tempDatas2[key]);
         }
-        
+
         new Chart(hourChart, {
             type: "bar",
             data: {
