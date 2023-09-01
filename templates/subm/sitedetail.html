@@ -396,23 +396,6 @@
         });
     }
 
-    function kakaoMapLatLng(container, lat, lng){
-        if(lat === undefined) lat = 33.450701;
-        if(lng === undefined) lng = 126.570667;
-
-        kakaoArr.options = {
-            center: new kakao.maps.LatLng(lat, lng),
-            level: 3
-        };
-        kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
-        let markerPosition  = new kakao.maps.LatLng(lat, lng);
-        let marker = new kakao.maps.Marker({
-            position: markerPosition
-        });
-
-        marker.setMap(kakaoArr.map);
-    }
-
     function kakaoMapPlace(container){
         let positions = [];
         let result = "{{resultJson}}";
@@ -426,10 +409,18 @@
         kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
 
         for(let i = 0; i < result.length; i++){
+            let content;
+
+            if(result[i][4].split(",")[1] === undefined){
+                content = "";
+            }else{
+                content = result[i][4].split(",")[1].replaceAll(")").replaceAll("undefined", "");
+            }
+            
             let datas = {
-                "content": result[i][4].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
+                "content": content,
                 "latlng": new kakao.maps.LatLng(result[i][1], result[i][2]),
-                "text": "<div class=\"customOverlayText\"><span>사이트명 : " + result[i][7] + "</span><br /><span>주소 : " + result[i][3] + " " + result[i][4] + "</span><br /><span>위도 : " + result[i][1] + "</span><br /><span>경도 : " + result[i][2] + "</span></div>",
+                "text": "<div class=\"customOverlayText\"><span>고객명 : " + result[i][0] + "</span><br /><span>주소 : " + result[i][3] + " " + result[i][4] + "</span><br /><span>위도 : " + result[i][1] + "</span><br /><span>경도 : " + result[i][2] + "</span></div>",
             }
             positions.push(datas);
         }

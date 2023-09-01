@@ -57,6 +57,9 @@
         $(window).ready(function(){
             $("#loadingDiv").hide();
             $("#loadingDiv").loading("toggle");
+            
+            sideSetMenu();
+            
             $("html").on("keydown", function(e){
                 if(e.which==13){
                     if(document.getElementsByClassName("search")[0] !== undefined){
@@ -91,9 +94,13 @@
                                 dataType: "json",
                                 contentType: "text/plain",
                                 success: function(selectData){
-                                    let camListTable = $("#camListTable");
-                                    let rate = Math.round(camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").attr("data-rate"));
-                                    camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "red");
+                                    let listDiv = $(".mainSearchContent div[data-no=\"" + selectData[0][0] + "\"]");
+                                    listDiv.click();
+                                    let camListTableBody = $("#camListTableBody");
+                                    let camLocationListTableBody = $("#camLocationListTableBody");
+                                    let rate = Math.round(camListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").attr("data-rate"));
+                                    camListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "red");
+                                    camLocationListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "red");
                                     
                                     let detailAlarmBtn = $(".detailAlarmBtn")[0];
                                     if(detailAlarmBtn === undefined){
@@ -108,10 +115,10 @@
                                         success: function(rateData){
                                             setTimeout(() => {
                                                 let str = "";
-                                                camListTable.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
+                                                camListTableBody.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
                                                 
                                                 if(result[i][4].indexOf("kkkkk") > -1 || result[i][4].indexOf("KKKKK") > -1){
-                                                    camListTable.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("ON");
+                                                    camListTableBody.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("ON");
                                                     str = "연기가 감지되었습니다.\n주변 온도가 낮은 상황이어서 오탐지일 가능성이 높습니다.";
                                                 }else if(result[i][4].indexOf("sssss") > -1 || result[i][4].indexOf("SSSSS") > -1){
                                                     str = "누전이 감지되었습니다.";
@@ -122,10 +129,12 @@
                                                 setTimeout(() => {
                                                     if(confirm(str)){
                                                         location.href = "/sitedetail/" + selectData[0][0];
-                                                        camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
+                                                        camListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
+                                                        camLocationListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
                                                     }else{
-                                                        camListTable.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
-                                                        camListTable.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
+                                                        camListTableBody.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
+                                                        camListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
+                                                        camLocationListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
                                                         return false;
                                                     }
                                                 }, 100);
@@ -324,8 +333,23 @@
         }
 
         function pageMove(thisEle){
-            localStorage.setItem("menuTitle", $(thisEle).text());
-            localStorage.setItem("menuIndex", $(thisEle).data("index"));
+            localStorage.setItem("sideSetMenu", $(thisEle).attr("data-href"));
             location.href = $(thisEle).data("href");
+        }
+
+        function sideSetMenu(){
+            let sideSetMenu = localStorage.getItem("sideSetMenu");
+
+            if(sideSetMenu != null){
+                let element = $(".sideSubMenu a[data-href=\"" + sideSetMenu + "\"]");
+                element.parent().css("display", "block");
+                localStorage.removeItem("sideSetMenu");
+            }
+        }
+
+        function sideMenuMainClick(thisEle){
+            let sideSubMenu = $(".sideSubMenu");
+            sideSubMenu.hide();
+            $(thisEle).parent().next().css("display", "block");
         }
     </script>

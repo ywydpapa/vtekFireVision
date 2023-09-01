@@ -12,10 +12,10 @@
         <!-- commonSideMenu end-->
         <div id="commonContent">
             <div class="container">
-                <div class="subMenu">
+                <!-- <div class="subMenu">
                     <a href="/monmain">목록 보기</a>
                     <a href="/subm/mnu002">지도 보기</a>
-                </div>
+                </div> -->
                 <div id="map2" style="width:1024px; height:768px;"></div>
             </div>
         </div>
@@ -56,8 +56,16 @@
         kakaoArr.map = new kakao.maps.Map(container, kakaoArr.options);
 
         for(let i = 0; i < result.length; i++){
+            let replaceStr;
+
+            if(result[i][5].split(",")[1] === undefined){
+                replaceStr = "";
+            }else{
+                replaceStr = result[i][5].split(",")[1].replaceAll(")").replaceAll("undefined", "");
+            }
+
             let datas = {
-                "content": result[i][5].split(",")[1].replaceAll(")").replaceAll("undefined", ""),
+                "content": replaceStr,
                 "latlng": new kakao.maps.LatLng(result[i][2], result[i][3]),
                 "camNo": result[i][0]
             }

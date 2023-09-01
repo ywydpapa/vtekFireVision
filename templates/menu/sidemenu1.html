@@ -1,15 +1,45 @@
 <div id="commonSideMenu">
     <div class="sideMenu" id="sideMenu">
-        <ul id="business">
+        <div class="sideTitle">
+            <img src="/static/images/sideMenu/side_title.png" />
+        </div>
+        <div class="menuRadios">
+            <div class="sideMainMenu">
+                <img src="/static/images/sideMenu/dashboard.png"/>
+                <input type="radio" name="sideMenu" id="menuDashBoard" data-href="/dashmain" onclick="pageMove(this);"/>
+                <label for="menuDashBoard">DASHBOARD</label>
+            </div>
+            <div class="sideMainMenu">
+                <img src="/static/images/sideMenu/monitoring.png"/>
+                <input type="radio" name="sideMenu" id="menuMonitoring" onclick="sideMenuMainClick(this);"/>
+                <label for="menuMonitoring">MONITORING</label>
+            </div>
+            <div class="sideSubMenu">
+                <a href="/monmain" data-href="/monmain" onclick="pageMove(this);">목록 보기</a>
+                <a href="/subm/mnu002" data-href="/subm/mnu002" onclick="pageMove(this);">지도 보기</a>
+            </div>
+            <div class="sideMainMenu">
+                <img src="/static/images/sideMenu/admin.png"/>
+                <input type="radio" name="sideMenu" id="menuAdminSetup" onclick="sideMenuMainClick(this);"/>
+                <label for="menuAdminSetup">ADMIN SETUP</label>
+            </div>
+            <div class="sideSubMenu">
+                <a href="/userAdd" data-href="/userAdd" onclick="pageMove(this);">관리자 등록</a>
+                <a href="/deviceAdd" data-href="/deviceAdd" onclick="pageMove(this);">장비 등록</a>
+                <a href="/siteAdd" data-href="/siteAdd" onclick="pageMove(this);">사이트 등록</a>
+                <a href="/custAdd" data-href="/custAdd" onclick="pageMove(this);">고객 등록</a>
+            </div>
+        </div>
+        <!-- <ul id="business">
             <li>
                 <ul id="panel">
                     <li><img src="/static/images/sideMenu/dashboard.png">&nbsp;<a href="javascript:void(0);" data-href="/dashmain" data-index="1" onclick="pageMove(this);">DASHBOARD</a></li>
                     <li><img src="/static/images/sideMenu/monitoring.png">&nbsp;<a href="javascript:void(0);" data-href="/monmain" data-index="2" onclick="pageMove(this);">MONITORING</a></li>
                     <li><img src="/static/images/sideMenu/admin.png">&nbsp;<a href="javascript:void(0);" data-href="/userAdd" data-index="2" onclick="pageMove(this);">ADMIN SETUP</a></li>
-                    <!-- <li><img src="/static/images/sideMenu/traffic.png">&nbsp;<a href="javascript:void(0);" data-href="/monmain" data-index="1" onclick="pageMove(this);">목록 보기</a></li> -->
-                    <!-- <li><img src="/static/images/sideMenu/threat.png">&nbsp;<a href="javascript:void(0);" data-href="/subm/mnu002" data-index="2" onclick="pageMove(this);">지도 보기</a></li> -->
+                    <li><img src="/static/images/sideMenu/traffic.png">&nbsp;<a href="javascript:void(0);" data-href="/monmain" data-index="1" onclick="pageMove(this);">목록 보기</a></li>
+                    <li><img src="/static/images/sideMenu/threat.png">&nbsp;<a href="javascript:void(0);" data-href="/subm/mnu002" data-index="2" onclick="pageMove(this);">지도 보기</a></li>
                 </ul>
             </li>
-        </ul>
+        </ul> -->
     </div>
 </div>

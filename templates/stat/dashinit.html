@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 {% include '/menu/header.html' %}
-<style>
+<!-- <style>
     .container{
         padding-right: 0;
         overflow: auto;
@@ -80,6 +80,272 @@
         background-color: #FF0000;
     }
 
+</style> -->
+
+<style>
+    .container{
+        overflow-y: auto;
+    }
+
+    .mapWrap {position: absolute;left: 0;bottom: 40px;width: 330px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+    .mapWrap * {padding: 0;margin: 0;}
+    .mapWrap .mapInfo {width: 328px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+    .mapWrap .mapInfo:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+    .mapInfo .mapTitle {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+    .mapInfo .mapBody {position: relative;overflow: hidden;}
+    .mapInfo .mapDesc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+    .mapDesc .mapEllipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .mapDesc .mapJibun {font-size: 11px;color: #888;margin-top: -2px;}
+    .mapInfo .mapImg {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+    .mapInfo:after {content: '';position: absolute;margin-left: -12px;left: 44%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+    
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="date"]::-webkit-inner-spin-button {
+        display: none;
+        appearance: none;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        color: rgba(0, 0, 0, 0);
+        opacity: 1;
+        display: block;
+        background: url('/static/images/main/calendar.png'); 
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 50%;
+        width: 30px;
+    }
+
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-inner-spin-button {
+        display: none;
+        appearance: none;
+    }
+
+    input[type="time"]::-webkit-calendar-picker-indicator {
+        color: rgba(0, 0, 0, 0);
+        opacity: 1;
+        display: block;
+        background: url('/static/images/main/clock.png'); 
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 50%;
+        width: 30px;
+    }
+
+    input[type="date"]{
+        border: 0;
+        color: #fff;
+        background-color: #2D313A;
+        font-size: 1.4rem;
+        width: 44%;
+    }
+
+    input[type="time"]{
+        border: 0;
+        color: #fff;
+        background-color: #2D313A;
+        font-size: 1.4rem;
+        width: 44%;
+    }
+
+    .mainTopSettings{
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        width: 100%;
+        padding-bottom: 10px;
+        padding-top: 20px;
+        padding-right: 15px;
+    }
+
+    .mainTopSettings > img{
+        width: 25px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .mainTopSettings > div{
+        border: 1px solid #fff;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .mainTopSettings > div > span{
+        color: #fff;
+    }
+
+    .gridContainer{
+        display: grid;
+        grid-template-columns: 50% 50%;
+    }
+
+    .gridContainer > .gridFirstContents{
+        display: grid;
+        grid-template-columns: 30% 70%;
+        margin-right: 10px;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch{
+        height: 250px;
+        background-color: #3C414C;
+        margin-right: 10px;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div{
+        padding: 10px;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchText{
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border: 1px solid #fff;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent{
+        max-height: 100%;
+        overflow-y: auto;
+        height: 190px;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent > div{
+        padding: 10px;
+        color: #fff;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent > div:hover{
+        cursor: pointer;
+        background-color: #262933;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchText > img{
+        width: 25px;
+        margin-right: 10px;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchText > input{
+        background-color: #3C414C;
+        border: 0;
+        color: #fff;
+        outline: none;
+        width: 100%;
+    }
+
+    #camListTableBody > tbody > tr > td > span{
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 15px;
+        margin-right: 5px;
+    }
+    
+    #camListTableBody > tbody > tr > td > .sensorRateCheck0{
+        background-color: #1DDB16;
+    }
+
+    #camListTableBody > tbody > tr > td > .sensorRateCheck1{
+        background-color: #FF5E00;
+    }
+
+    #camListTableBody > tbody > tr > td > .sensorRateCheck2{
+        background-color: #FF0000;
+    }
+
+    .gridContainer > .gridFirstContents > .camList > #camListTableHeader{
+        margin-bottom: 0;
+    }
+
+    .gridContainer > .gridFirstContents > .camList > #camListTableBody{
+        margin-bottom: 0;
+    }
+
+    .gridContainer > .gridFirstContents > .camList > div{
+        height: 209px;
+        overflow-y: auto;
+    }
+
+    .gridContainer > .gridFirstContents > .mainAllMap{
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+    .gridContainer > .gridFirstContents > .mainOneMap{
+        margin-top: 10px;
+    }
+
+    .customOverlayText{
+        background-color: #3C414C;
+        padding: 10px;
+    }
+
+    .customOverlayText > span{
+        color: #fff;
+    }
+
+    .gridContainer > .gridFirstContents > .camLocationList{
+        margin-top: 10px;
+        grid-column: span 2;
+    }
+
+    .gridContainer > .gridFirstContents > .camLocationList > #camLocationListTableHeader{
+        margin-bottom: 0;
+    }
+
+    .gridContainer > .gridFirstContents > .camLocationList > #camLocationListTableBody{
+        margin-bottom: 0;
+    }
+
+    .gridContainer > .gridFirstContents > .camLocationList > div{
+        height: 209px;
+        overflow-y: auto;
+    }
+
+    .gridContainer > .gridSecondContents{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .doughnutChart{
+        width: 32%;
+        margin-right: 10px;
+    }
+
+    /* .doughnutChart > div > canvas{
+        height: 200px !important;
+        display: inline-block !important;
+    } */
+
+    .doughnutChart > .chartTitle{
+        color: #fff;
+        background-color: #475761;
+        padding: 5px;
+    }
+
+    .doughnutChart > .chartDiv{
+        background-color: #475761;
+    }
+
+    .barChart{
+        width: 48.5%;
+        margin-right: 10px;
+    }
+
+    .barChart > .chartTitle{
+        color: #fff;
+        background-color: #475761;
+        padding: 5px;
+    }
+
+    .barChart > .chartDiv{
+        padding-right: 20px;
+        background-color: #475761;
+    }
+
+    /* .barChart > div > canvas{
+        height: 200px !important;
+        display: inline-block !important;
+    } */
 </style>
 </head>
 <body>
@@ -88,16 +354,190 @@
     </div> -->
 
     <div id="commonBodyContents">
-{% include './menu/sidemenu1.html' %}
+    {% include './menu/sidemenu1.html' %}
         <!-- commonSideMenu end-->
 
         <div id="commonContent">
             <div class="container">
-            <div class="subMenu">
+            <!-- <div class="subMenu">
                 <a href="/monmain">목록 보기</a>
                 <a href="/subm/mnu002">지도 보기</a>
+            </div> -->
+                <div class="mainTopSettings">
+                    <img src="/static/images/main/reload.png" onclick="dateReload();"/>
+                    <div>
+                        <input type="date" id="mainSetDate"/>
+                        <span>&nbsp;|&nbsp;</span>
+                        <input type="time" id="mainSetTime"/>
+                    </div>
+                </div>
+                <div class="gridContainer">
+                    <div class="gridFirstContents">
+                        <div class="mainSearch">
+                            <hr class="boxTopLineShort" />
+                            
+                            <div>
+                                <div class="mainSearchText">
+                                    <img src="/static/images/main/glasses.png" />
+                                    <input type="text" class="mainSearchInput" onkeyup="mainSearchKeyup(this);"/>
+                                </div>
+                                <div class="mainSearchContent">
+                                    {% for k in result_camList %}
+                                        <div data-no="{{k[0]}}" onclick="searchTextActive(this);">{{k[1]}}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="camList">
+                            <hr class="boxTopLineShort" />
+
+                            <table id="camListTableHeader" class="table table-striped nowrap overflow-auto">
+                                <colgroup>
+                                    <col width = "20%">
+                                    <col width = "20%">
+                                    <col width = "20%">
+                                    <col width = "20%">
+                                    <col width = "20%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <td>고객명</td>
+                                        <td>{{sensorText1}}</td>
+                                        <td>{{sensorText2}}</td>
+                                        <td>{{sensorText3}}</td>
+                                        <td>{{sensorText4}}</td>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <div>
+                                <table id="camListTableBody" class="table table-striped nowrap overflow-auto">
+                                    <colgroup>
+                                        <col width = "20%">
+                                        <col width = "20%">
+                                        <col width = "20%">
+                                        <col width = "20%">
+                                        <col width = "20%">
+                                    </colgroup>
+                                    <tbody>
+                                        {% for k in result_camList %}
+                                        <tr data-no="{{k[0]}}" data-rate="{{sensorJsonDatas[loop.index0][0]}}">
+                                            <td>
+                                                <a href="/sitedetail/{{k[0]}}">{{k[1]}}</a>
+                                            </td>
+                                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][0]}}"></span>{{sensorJsonDatas[loop.index0][0]}}</td>
+                                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][1]}}"></span>{{sensorJsonDatas[loop.index0][1]}}</td>
+                                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][2]}}"></span>{{sensorJsonDatas[loop.index0][2]}}</td>
+                                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][3]}}"></span>{{sensorJsonDatas[loop.index0][3]}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mainAllMap">
+                            <div id="mainAllMap" style="width:100%;height:350px;"></div>
+                        </div>
+
+                        <div class="mainOneMap">
+                            <div id="mainOneMap" style="width:100%;height:350px;"></div>
+                        </div>
+
+                        <div class="camLocationList">
+                            <hr class="boxTopLineShort" />
+
+                            <table id="camLocationListTableHeader" class="table table-striped nowrap overflow-auto">
+                                <colgroup>
+                                    <col width = "33%">
+                                    <col width = "33%">
+                                    <col width = "33%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <td>위치</td>
+                                        <td>위도</td>
+                                        <td>경도</td>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <div>
+                                <table id="camLocationListTableBody" class="table table-striped nowrap overflow-auto">
+                                    <colgroup>
+                                        <col width = "33%">
+                                        <col width = "33%">
+                                        <col width = "33%">
+                                    </colgroup>
+                                    <tbody>
+                                        {% for k in result_camList %}
+                                        <tr data-no="{{k[0]}}" data-rate="{{sensorJsonDatas[loop.index0][0]}}">
+                                            <td>{{k[3]}} {{k[4]}}</td>
+                                            <td>{{k[9]}}</td>
+                                            <td>{{k[10]}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gridSecondContents">
+                        <div class="doughnutChart">
+                            <hr class="boxTopLineShort" />
+                            <div class="chartTitle">DISK(%)</div>
+                            <div class="chartDiv">
+                                <canvas id="diskChart" width="100vw" height="230vh"></canvas>
+                            </div>
+                        </div>
+                        <div class="doughnutChart">
+                            <hr class="boxTopLineShort" />
+                            <div class="chartTitle">CPU(%)</div> 
+                            <div class="chartDiv">
+                                <canvas id="cpuChart" width="100vw" height="230vh"></canvas>
+                            </div>
+                        </div>
+                        <div class="doughnutChart">
+                            <hr class="boxTopLineShort" />
+                            <div class="chartTitle">MEMORY(%)</div>
+                            <div class="chartDiv">
+                                <canvas id="memoryChart" width="100vw" height="230vh"></canvas>
+                            </div>
+                        </div>
+                        <div class="barChart">
+                            <hr class="boxTopLineShort" />
+                            <div class="chartTitle">일별(건)</div>
+                            <div class="chartDiv">
+                                <canvas id="dateChart" width="100vw" height="300vh"></canvas>
+                            </div>
+                        </div>
+                        <div class="barChart">
+                            <hr class="boxTopLineShort" />
+                            <div class="chartTitle">시간별(건)</div>
+                            <div class="chartDiv">
+                                <canvas id="hourChart" width="100vw" height="300vh"></canvas>
+                            </div>
+                        </div>
+                        <div class="barChart">
+                            <hr class="boxTopLineShort" />
+                            <div class="chartTitle">월별(건)</div>
+                            <div class="chartDiv">
+                                <canvas id="monthChart" width="100vw" height="200vh"></canvas>
+                            </div>
+                        </div>
+                        <div class="barChart">
+                            <hr class="boxTopLineShort" />
+                            <div class="chartTitle">장소별(건)</div>
+                            <div class="chartDiv">
+                                <canvas id="locationChart" width="100vw" height="200vh"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
+
+            <!-- <div>
                 <div style="width: 100%;">
                     <hr class="boxTopLineLong" />
                     <table id="camListTable" class="table table-striped nowrap overflow-auto" style="width: 88.3vw;">
@@ -164,9 +604,6 @@
                             </table>
                         </div>
                     </div>
-                    <!-- <div>
-                        <canvas id="areaChart" width="375" height="420"></canvas>
-                    </div> -->
                     <div class="doughnutChart">
                         <hr class="boxTopLineShort" />
                         <div class="chartTitle">DISK(%)</div>
@@ -203,30 +640,319 @@
                         </div>
                     </div>
                 </div>
-                <!--<div class="chartContents2">
-                    <div>
-                        <div>CPU</div> 
-                        <canvas id="cpuChart" width="400"></canvas>
-                    </div>
-                    <div>
-                        <div>MEMORY</div>
-                        <canvas id="memoryChart" width="400"></canvas>
-                    </div>
-                </div> -->
              </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </body>
 <script>
+    const variableObj = {};
+
     $(document).ready(function () {
+        mainDatasSet();
+        mainChartDatas();
         diskChartSet();
         cpuChartSet();
         memoryChartSet();
-        dateListChartSet();
-        hourListChartSet();
         //areaChartSet();
+        setTimeout(() => {
+            dateListChartSet();
+            hourListChartSet();
+            monthListChartSet();
+            locationListChartSet();
+            allMapFunc();
+            mainOneMapPlace(document.getElementById("mainOneMap"));
+        }, 700);
     });
+
+    function mainDatasSet(){
+        $.ajax({
+            url: "/getMainCamList",
+            method: "get",
+            dataType: "json",
+            contentType: "text/plain",
+            success:function(result){
+                let sensorJsonDatas = {{sensorJsonDatas|tojson}};
+                let sensorRateArray = {{sensorRateArray|tojson}};
+                variableObj.sensorJsonDatas = sensorJsonDatas;
+                variableObj.sensorRateArray = sensorRateArray;
+                variableObj.camList = result;
+            }
+        })
+    }
+
+    function mainSearchKeyup(thisEle){
+        let searchDiv = $(thisEle).parent().next().children();
+
+        for(let i = 0; i < searchDiv.length; i++){
+            let item = $(searchDiv[i]);
+
+            if(item.text().indexOf($(thisEle).val()) > -1){
+                item.css("display", "block");
+            }else{
+                item.css("display", "none");
+            }
+        }
+    }
+
+    function mainOneMapPlace(container, lat, lng){
+        let positions = [];
+        variableObj.mapConfig = {};
+
+        variableObj.mapConfig.infowindow = new kakao.maps.InfoWindow({zIndex:1});
+
+        if(lat !== undefined && lng !== undefined){
+            variableObj.mapConfig.options = {
+                center: new kakao.maps.LatLng(lat, lng),
+                level: 3
+            };
+        }else{
+            variableObj.mapConfig.options = {
+                center: new kakao.maps.LatLng(variableObj.camList[0][9], variableObj.camList[0][10]),
+                level: 3
+            };
+        }
+        variableObj.mapConfig.map = new kakao.maps.Map(container, variableObj.mapConfig.options);
+
+        for(let i = 0; i < variableObj.camList.length; i++){
+            let item = variableObj.camList[i];
+            let content;
+            let contentText = "";
+            contentText = "<div class=\"mapWrap\">";
+            contentText += "<div class=\"mapInfo\">";
+            contentText += "<div class=\"mapTitle\">" + item[1] + "</div>";
+            contentText += "<div class=\"mapBody\">";
+            contentText += "<div class=\"mapImg\"><img src=\"https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png\" width=\"73\" height=\"70\"></div>";
+            contentText += "<div class=\"mapDesc\">";
+            contentText += "<div class=\"mapEllipsis\">" + item[3] + "</div>";
+            contentText += "<div class=\"mapJibun\">(우) " + item[2] + "(지번) " + item[4] + "</div>";
+            contentText += "</div></div></div></div>";
+            
+            if(item[4].split(",")[1] === undefined){
+                content = "";
+            }else{
+                content = item[4].split(",")[1].replaceAll(")").replaceAll("undefined", "");
+            }
+
+            let datas = {
+                "content": content,
+                "latlng": new kakao.maps.LatLng(item[9], item[10]),
+                "text": contentText,
+            }
+            positions.push(datas);
+        }
+
+        displayMarker(positions);
+    }
+
+    function displayMarker(positions) {
+        for(let i = 0; i < positions.length; i++){
+            var marker = new kakao.maps.Marker({
+                map: variableObj.mapConfig.map,
+                position: positions[i].latlng,
+            });
+        
+            var infowindow = new kakao.maps.InfoWindow({
+                content: positions[i].content
+            });
+
+            var customOverlay = new kakao.maps.CustomOverlay({
+                position: positions[i].latlng,
+                content: positions[i].text,
+                xAnchor: 0.45,
+                yAnchor: 1.4
+            });
+    
+            /* kakao.maps.event.addListener(marker, 'click', function(){
+                location.href = "/" + positions[i].link;
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }); */
+
+            kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(variableObj.mapConfig.map, marker, infowindow));
+            kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+            customOverlay.setMap(variableObj.mapConfig.map);
+        }
+    }
+
+    function makeOverListener(map, marker, infowindow) {
+        return function() {
+            infowindow.open(map, marker);
+        };
+    }
+    
+    function makeOutListener(infowindow) {
+        return function() {
+            infowindow.close();
+        };
+    }
+
+    function allMapFunc(){
+        let data = {
+            "positions": [],
+        };
+
+        var map = new kakao.maps.Map(document.getElementById('mainAllMap'), {
+            center : new kakao.maps.LatLng(36.2683, 127.6358),
+            level : 14
+        });
+        
+        var clusterer = new kakao.maps.MarkerClusterer({
+            map: map,
+            averageCenter: true,
+            minLevel: 10
+        });
+
+        for(let i = 0; i < variableObj.camList.length; i++){
+            let datas = {};
+            let item = $(variableObj.camList[i]);
+            datas.lat = item[9];
+            datas.lng = item[10];
+
+            data.positions.push(datas);
+        }
+     
+        var markers = $(data.positions).map(function(i, position) {
+            return new kakao.maps.Marker({
+                position : new kakao.maps.LatLng(position.lat, position.lng)
+            });
+        });
+
+        clusterer.addMarkers(markers);
+    }
+
+    
+    function searchTextActive(thisEle){
+        let camListTbody = $("#camListTableBody tbody");
+        let camLocationListTableBody = $("#camLocationListTableBody tbody");
+        camListTbody.html("");
+        camLocationListTableBody.html("");
+        
+        for(let i = 0; i < variableObj.camList.length; i++){
+            let listHtml = "";
+            let locationlistHtml = "";
+            let item = $(variableObj.camList[i]);
+            listHtml += "<tr data-no=\"" + item[0] + "\" data-rate=\"" + variableObj.sensorJsonDatas[i][0] + "\">";
+            listHtml += "<td><a href=\"sitedetail/\"" + item[0] + "\">" + item[1] + "</a></td>";
+            listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][0] + "\"></span>" + variableObj.sensorJsonDatas[i][0] + "</td>";
+            listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][1] + "\"></span>" + variableObj.sensorJsonDatas[i][1] + "</td>";
+            listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][2] + "\"></span>" + variableObj.sensorJsonDatas[i][2] + "</td>";
+            listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][3] + "\"></span>" + variableObj.sensorJsonDatas[i][3] + "</td>";
+            listHtml += "</tr>";
+
+            locationlistHtml += "<tr data-no=\"" + item[0] + "\" data-rate=\"" + variableObj.sensorJsonDatas[i][0] + "\">";
+            locationlistHtml += "<td>" + item[3] + "(" + item[4] + ")" + "</td>";
+            locationlistHtml += "<td>" + item[9] + "</td>";
+            locationlistHtml += "<td>" + item[10] + "</td>";
+            locationlistHtml += "</tr>";
+
+            if($(thisEle).text() === item[1]){
+                camListTbody.prepend(listHtml);
+                camLocationListTableBody.prepend(locationlistHtml);
+                mainOneMapPlace(document.getElementById("mainOneMap"), item[9], item[10]);
+            }else{
+                camListTbody.append(listHtml);
+                camLocationListTableBody.append(locationlistHtml);
+            }
+        }
+    }
+
+    function mainChartDatas(){
+        let setDate = localStorage.getItem("setDate");
+        let mainSetDate = $("#mainSetDate");
+        let mainSetTime = $("#mainSetTime");
+        let offset = 1000 * 60 * 60 * 9;
+        let nowDate = new Date((new Date()).getTime() + offset);
+        let dateDatas = {};
+        let calcDate, calcHour, calcLocation, setDateFrom, setDateTo, setHourFrom, setHourTo, setYearFrom, setYearTo, setLocationFrom, setLocationTo;
+        setYearFrom = nowDate.getFullYear() + "-01-01";
+        setYearTo = nowDate.getFullYear() + "-12-31";
+        
+        if(setDate == null){
+            calcDate = new Date(nowDate);
+            calcHour = new Date(nowDate);
+            mainSetDate.val(nowDate.toISOString().substring(0, 10));
+            mainSetTime.val(nowDate.toISOString().substring(11, 16));
+            setHourFrom = nowDate.toISOString().substring(0, 10);
+            setLocationFrom = setYearFrom;
+            setLocationTo = setYearTo;
+        }else{
+            let splitStr = setDate.split(" ");
+            let splitDate = splitStr[0];
+            let splitTime = splitStr[1];
+            calcDate = new Date(splitDate);
+            calcHour = new Date(splitDate);
+            calcLocation = new Date(splitDate);
+            setLocationFrom = calcLocation.toISOString().substring(0, 10);
+            calcLocation.setDate(calcLocation.getDate() + 1);
+            setLocationTo = calcLocation.toISOString().substring(0, 10);
+            setHourFrom = calcDate.toISOString().substring(0, 10);
+            
+            mainSetDate.val(splitDate);
+            mainSetTime.val(splitTime);
+
+            localStorage.removeItem("setDate");
+        }
+
+        calcDate.setDate(calcDate.getDate() + 1);
+        setDateTo = calcDate.toISOString().substring(0, 10);
+        calcDate.setDate(calcDate.getDate() - 10);
+        setDateFrom = calcDate.toISOString().substring(0, 10);
+
+        $.ajax({
+            url: "/getMainDateList/" + setDateFrom + "/" + setDateTo,
+            method: "get",
+            dataType: "json",
+            success:function(result){
+                variableObj.dateList = result;
+            }
+        });
+
+        calcHour.setDate(calcHour.getDate() + 1);
+        setHourTo = calcHour.toISOString().substring(0, 10);
+
+        $.ajax({
+            url: "/getMainHourList/" + setHourFrom + "/" + setHourTo,
+            method: "get",
+            dataType: "json",
+            success:function(result){
+                variableObj.hourList = result;
+            }
+        });
+
+        $.ajax({
+            url: "/getMainMonthList/" + setYearFrom + "/" + setYearTo,
+            method: "get",
+            dataType: "json",
+            success:function(result){
+                variableObj.monthList = result;
+            }
+        });
+
+        $.ajax({
+            url: "/getMainLocationList/" + setLocationFrom + "/" + setLocationTo,
+            method: "get",
+            dataType: "json",
+            success:function(result){
+                variableObj.locationList = result;
+            }
+        });
+    }
+
+    function dateReload(){
+        let mainSetDate = $("#mainSetDate");
+        let mainSetTime = $("#mainSetTime");
+        localStorage.setItem("setDate", mainSetDate.val() + " " + mainSetTime.val());
+
+        mainChartDatas();
+
+        setTimeout(() => {
+            dateListChartSet();
+            hourListChartSet();
+            locationListChartSet();
+        }, 300);
+    }
 
     function diskChartSet(){
         let diskChart = document.getElementById("diskChart").getContext('2d');
@@ -346,127 +1072,291 @@
     }
 
     function dateListChartSet(){
+        let getChartContent = document.getElementById("dateChart");
+        let copyContent = getChartContent.cloneNode(true);
+        getChartContent.after(copyContent);
+        getChartContent.remove();
+
         let dateChart = document.getElementById("dateChart").getContext('2d');
-        let dateList = "{{result_dateList}}";
-        dateList = JSON.parse(dateList.replace(/&#34;/g, "\""));
+
         let dateDataArr = [];
         let dataArr = [];
 
-        for(let i = 0; i < dateList.length; i++){
-            dateDataArr.push(dateList[i][0]);
-            dataArr.push(dateList[i][1]);
-        }
-
-        new Chart(dateChart, {
-            type: "bar",
-            data: {
-                labels: dateDataArr,
-                datasets: [
-                    {
-                        label: "일자별 데이터",
-                        data: dataArr,
-                        backgroundColor: "#86E57F",
-                        radius:0,
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            fontSize: 16,
-                            fontColor: "#fff"
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontSize: 16,
-                            fontColor: "#fff"
-                        }
-                    }]
+        setTimeout(() => {
+            for(let i = 0; i < variableObj.dateList.length; i++){
+                let item = variableObj.dateList[i];
+                dateDataArr.push(item[0]);
+                dataArr.push(item[1]);
+            }
+    
+            new Chart(dateChart, {
+                type: "bar",
+                data: {
+                    labels: dateDataArr,
+                    datasets: [
+                        {
+                            label: "일자별 데이터",
+                            data: dataArr,
+                            backgroundColor: "#86E57F",
+                            radius:0,
+                            borderWidth: 1,
+                        },
+                    ],
                 },
-                legend: {
-                    labels: { 
-                        fontSize: 16,
-                        fontColor: "#fff",
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 11,
+                                fontColor: "#fff"
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 11,
+                                fontColor: "#fff"
+                            }
+                        }]
+                    },
+                    legend: {
+                        labels: { 
+                            fontSize: 11,
+                            fontColor: "#fff",
+                        },
                     },
                 },
-            },
-        });
+            });
+        }, 100);
     }
 
     function hourListChartSet(){
+        let getChartContent = document.getElementById("hourChart");
+        let copyContent = getChartContent.cloneNode(true);
+        getChartContent.after(copyContent);
+        getChartContent.remove();
+
         let hourChart = document.getElementById("hourChart").getContext('2d');
-        let hourList = "{{result_hourList}}";
-        hourList = JSON.parse(hourList.replace(/&#34;/g, "\""));
         let dateDataArr = [];
         let dataArr = [];
         let tempDatas1 = {};
         let tempDatas2 = {};
-        let dataArrIndex = 0;
 
-        for(let i = 0; i < hourList.length; i++){
-            let item = hourList[i];
-            tempDatas1[Number(item[0])] = item[1];
-        }
-        
-        for(let i = 0; i < 24; i++){
-            let label = i;
-
-            if(label < 10){
-                label = "0" + label;
+        setTimeout(() => {
+            for(let i = 0; i < variableObj.hourList.length; i++){
+                let item = variableObj.hourList[i];
+                tempDatas1[Number(item[0])] = item[1];
             }
-
-            tempDatas2[Number(label)] = 0;
-            dateDataArr.push(label + "시");
-        }
-
-        for(let key in tempDatas1){
-            tempDatas2[key] = tempDatas1[key];
-        }
-
-        for(let key in tempDatas2){
-            dataArr.push(tempDatas2[key]);
-        }
-
-        new Chart(hourChart, {
-            type: "bar",
-            data: {
-                labels: dateDataArr,
-                datasets: [
-                    {
-                        label: "시간별 데이터",
-                        data: dataArr,
-                        backgroundColor: "#6799FF",
-                        radius:0,
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            fontSize: 16,
-                            fontColor: "#fff"
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontSize: 16,
-                            fontColor: "#fff"
-                        }
-                    }]
+            
+            for(let i = 0; i < 24; i++){
+                let label = i;
+    
+                if(label < 10){
+                    label = "0" + label;
+                }
+    
+                tempDatas2[Number(label)] = 0;
+                dateDataArr.push(label);
+            }
+    
+            for(let key in tempDatas1){
+                tempDatas2[key] = tempDatas1[key];
+            }
+    
+            for(let key in tempDatas2){
+                dataArr.push(tempDatas2[key]);
+            }
+    
+            new Chart(hourChart, {
+                type: "bar",
+                data: {
+                    labels: dateDataArr,
+                    datasets: [
+                        {
+                            label: "시간별 데이터",
+                            data: dataArr,
+                            backgroundColor: "#6799FF",
+                            radius:0,
+                            borderWidth: 1,
+                        },
+                    ],
                 },
-                legend: {
-                    labels: { 
-                        fontSize: 16,
-                        fontColor: "#fff",
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 10,
+                                fontColor: "#fff"
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 10,
+                                fontColor: "#fff"
+                            }
+                        }]
+                    },
+                    legend: {
+                        labels: { 
+                            fontSize: 11,
+                            fontColor: "#fff",
+                        },
                     },
                 },
-            },
-        });
+            });
+        }, 100);
+    }
+
+    function monthListChartSet(){
+        let getChartContent = document.getElementById("monthChart");
+        let copyContent = getChartContent.cloneNode(true);
+        getChartContent.after(copyContent);
+        getChartContent.remove();
+
+        let monthChart = document.getElementById("monthChart").getContext('2d');
+        let dateDataArr = [];
+        let dataArr = [];
+        let tempDatas1 = {};
+        let tempDatas2 = {};
+
+        setTimeout(() => {
+            for(let i = 0; i < variableObj.monthList.length; i++){
+                let item = variableObj.monthList[i];
+                tempDatas1[Number(item[0])] = item[1];
+            }
+            
+            for(let i = 1; i <= 12; i++){
+                let label = i;
+    
+                if(label < 10){
+                    label = "0" + label;
+                }
+    
+                tempDatas2[Number(label)] = 0;
+                dateDataArr.push(label);
+            }
+    
+            for(let key in tempDatas1){
+                tempDatas2[key] = tempDatas1[key];
+            }
+    
+            for(let key in tempDatas2){
+                dataArr.push(tempDatas2[key]);
+            }
+    
+            new Chart(monthChart, {
+                type: "bar",
+                data: {
+                    labels: dateDataArr,
+                    datasets: [
+                        {
+                            label: "월별 데이터",
+                            data: dataArr,
+                            backgroundColor: "#86E57F",
+                            radius:0,
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 11,
+                                fontColor: "#fff"
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 11,
+                                fontColor: "#fff"
+                            }
+                        }]
+                    },
+                    legend: {
+                        labels: { 
+                            fontSize: 11,
+                            fontColor: "#fff",
+                        },
+                    },
+                },
+            });
+        }, 100);
+    }
+
+    function locationListChartSet(){
+        let getChartContent = document.getElementById("locationChart");
+        let copyContent = getChartContent.cloneNode(true);
+        getChartContent.after(copyContent);
+        getChartContent.remove();
+
+        let locationChart = document.getElementById("locationChart").getContext('2d');
+        let dateDataArr = [];
+        let dataArr = [];
+        let tempDatas = {};
+
+        setTimeout(() => {
+            for(let i = 0; i < variableObj.locationList.length; i++){
+                let item = variableObj.locationList[i];
+                
+                if(item[0] != null){
+                    tempDatas[item[0]] = item[1];
+                }
+            }
+            
+            for(let i = 0; i < variableObj.camList.length; i++){
+                let item = variableObj.camList[i];
+                let dataFind = tempDatas[item[1]];
+                dateDataArr.push(item[1]);
+
+                if(dataFind !== undefined){
+                    dataArr.push(tempDatas[item[1]]);
+                }else{
+                    dataArr.push(0);
+                }
+            }
+            
+            new Chart(locationChart, {
+                type: "bar",
+                data: {
+                    labels: dateDataArr,
+                    datasets: [
+                        {
+                            label: "장소별 데이터",
+                            data: dataArr,
+                            backgroundColor: "#6799FF",
+                            radius:0,
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 10,
+                                fontColor: "#fff"
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 10,
+                                fontColor: "#fff"
+                            }
+                        }]
+                    },
+                    legend: {
+                        labels: { 
+                            fontSize: 11,
+                            fontColor: "#fff",
+                        },
+                    },
+                },
+            });
+        }, 100);
     }
 </script>
 </html>

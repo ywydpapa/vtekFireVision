@@ -2,10 +2,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
 
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../fonts/pretendard/Pretendard-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-display: swap;
+}
+
 * {
   	box-sizing: border-box;
   	/* font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif; */
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard';
   	font-size: 16px;
   	-webkit-font-smoothing: antialiased;
   	-moz-osx-font-smoothing: grayscale;
@@ -80,12 +135,69 @@ table > thead > tr:first-child > td{
     width: 100%;
     display:flex;
     flex-wrap: nowrap;
+    height: 100%;
 }
 /*commonBodyContents>commonSideMenu 시작*/
 #sideMenu {
     width: 10vw;
     height:100%;
+    background-color: #000;
     box-shadow: 0px 2px 10px rgb(0 0 0 / 10%);
+    padding-left: 5px;
+    padding-right: 15px;
+}
+
+#sideMenu > .sideTitle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 20px;
+}
+
+#sideMenu > .sideTitle > img{
+    width: 80%;
+}
+
+#sideMenu > .menuRadios{
+    border: 1px solid #fff;
+}
+
+#sideMenu > .menuRadios > .sideMainMenu{
+    display: flex;
+    align-items: center;
+    padding: 10px 13px;
+}
+
+#sideMenu > .menuRadios > .sideSubMenu{
+    display: none;
+}
+
+#sideMenu > .menuRadios > .sideSubMenu > a{
+    display: flex;
+    color: #fff;
+    align-items: center;
+    padding-left: 43px;
+    padding-bottom: 5px;
+}
+
+#sideMenu > .menuRadios > .sideMainMenu > img{
+    width: 20px;
+    margin-right: 10px;
+}
+
+#sideMenu > .menuRadios > .sideMainMenu > input{
+    display: none;
+}
+
+#sideMenu > .menuRadios > .sideMainMenu > label{
+    color: #fff;
+    font-weight: 500;
+}
+
+#sideMenu > .menuRadios > .sideMainMenu > label:hover{
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 #sideMenu>ul object img{
@@ -139,12 +251,6 @@ table > thead > tr:first-child > td{
 
 .sideMenu ul li a.active #slideSpan {
     font-size: 24px;
-}
-
-#business {
-    /* background-color:rgb(84 84 84); */
-    background-color: #000;
-    /* background-color:#2b3c4d; */
 }
 /*commonBodyContents>commonSideMenu 끝*/
 
@@ -285,6 +391,6 @@ table > thead > tr:first-child > td{
 
 
 /*1920 commonBodyContents 시작*/
-#sideMenu ul:not(#panel), #commonContent {
+/* #sideMenu ul:not(#panel), #commonContent {
     height:calc(100vh - 40px);
-}
+} */

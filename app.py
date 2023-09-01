@@ -444,7 +444,7 @@ def searchSel():
     cur.execute(sql)
     alarmList = cur.fetchall()
 
-    sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04 from camList"
+    sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04, camList.camLat, camList.camLong from camList"
     sql += " left join camDevice on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
     cur.execute(sql)
@@ -486,6 +486,56 @@ def searchSel():
 
     db.close()
     return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList,sensorJsonDatas=sensorJsonDatas,sensorRateArray=sensorRateArray,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
+
+@app.route("/getMainCamList", methods=['GET'])
+def getMainCamList():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04, camList.camLat, camList.camLong from camList"
+    sql += " left join camDevice on camDevice.deviceNo = camList.deviceNo"
+    sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
+    cur.execute(sql)
+    result_camlist = json.dumps(cur.fetchall(), default=str)
+    return result_camlist
+
+@app.route("/getMainDateList/<getFrom>/<getTo>", methods=['GET'])
+def getMainDateList(getFrom, getTo):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select date_format(`regDate`, '%Y-%m-%d') as dateResult, count(*) as cnt from alarmCount where regDate between " + "'" + str(getFrom) + "'" + " and " + "'" + str(getTo) + "'" + " group by date_format(`regDate`, '%Y-%m-%d') order by regDate asc"
+    cur.execute(sql)
+    result_dateList = json.dumps(cur.fetchall())
+    return result_dateList
+
+@app.route("/getMainHourList/<getFrom>/<getTo>", methods=['GET'])
+def getMainHourList(getFrom, getTo):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select date_format(`regDate`, '%H') as hourResult, count(*) as cnt from alarmCount where regDate between " + "'" + str(getFrom) + "'" + " and " + "'" + str(getTo) + "'" + " group by date_format(`regDate`, '%H') order by regDate asc"
+    cur.execute(sql)
+    result_hourList = json.dumps(cur.fetchall(), default=str)
+    return result_hourList
+
+@app.route("/getMainMonthList/<getFrom>/<getTo>", methods=['GET'])
+def getMainMonthList(getFrom, getTo):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select date_format(`regDate`, '%m') as dateResult, count(*) as cnt from alarmCount where regDate between " + "'" + str(getFrom) + "'" + " and " + "'" + str(getTo) + "'" + " group by date_format(`regDate`, '%m') order by regDate asc"
+    cur.execute(sql)
+    result_monthList = json.dumps(cur.fetchall())
+    return result_monthList
+
+@app.route("/getMainLocationList/<getFrom>/<getTo>", methods=['GET'])
+def getMainLocationList(getFrom, getTo):
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql = "select camList.camName, count(*) as cnt from alarmCount"
+    sql += " left join camList on alarmCount.alarmKey = camList.alarmKey"
+    sql += " where alarmCount.regDate between " + "'" + str(getFrom) + "'" + " and " + "'" + str(getTo) + "'" + " group by camList.camName order by alarmCount.regDate asc"
+    cur.execute(sql)
+    result_locationList = json.dumps(cur.fetchall(), default=str)
+    return result_locationList
+
 
 def sensorRateCheck(sensorRate):
     formatFloat = float(sensorRate)
