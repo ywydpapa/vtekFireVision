@@ -439,12 +439,12 @@
 
         if(lat !== undefined && lng !== undefined){
             variableObj.mapConfig.options = {
-                center: new kakao.maps.LatLng(lat, lng),
+                center: new kakao.maps.LatLng(parseFloat(lat) + 0.0005, parseFloat(lng)),
                 level: 3
             };
         }else{
             variableObj.mapConfig.options = {
-                center: new kakao.maps.LatLng(variableObj.camList[0][9], variableObj.camList[0][10]),
+                center: new kakao.maps.LatLng(parseFloat(variableObj.camList[0][9]) + 0.0005, parseFloat(variableObj.camList[0][10])),
                 level: 3
             };
         }
