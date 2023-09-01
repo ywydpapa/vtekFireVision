@@ -1,0 +1,331 @@
+.container{
+    overflow-y: auto !important;
+}
+
+.mapWrap {position: absolute;left: 0;bottom: 40px;width: 330px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+.mapWrap * {padding: 0;margin: 0;}
+.mapWrap .mapInfo {width: 328px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+.mapWrap .mapInfo:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+.mapInfo .mapTitle {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+.mapInfo .mapBody {position: relative;overflow: hidden;}
+.mapInfo .mapDesc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+.mapDesc .mapEllipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.mapDesc .mapJibun {font-size: 11px;color: #888;margin-top: -2px;}
+.mapInfo .mapImg {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+.mapInfo:after {content: '';position: absolute;margin-left: -12px;left: 44%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+    appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color: rgba(0, 0, 0, 0);
+    opacity: 1;
+    display: block;
+    background: url('/static/images/main/calendar.png'); 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    width: 30px;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-inner-spin-button {
+    display: none;
+    appearance: none;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    color: rgba(0, 0, 0, 0);
+    opacity: 1;
+    display: block;
+    background: url('/static/images/main/clock.png'); 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    width: 30px;
+}
+
+input[type="date"]{
+    border: 0;
+    color: #fff;
+    background-color: #2D313A;
+    font-size: 1.4rem;
+    width: 44%;
+}
+
+input[type="time"]{
+    border: 0;
+    color: #fff;
+    background-color: #2D313A;
+    font-size: 1.4rem;
+    width: 44%;
+}
+
+.mainTopSettings{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    width: 100%;
+    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-right: 15px;
+}
+
+.mainTopSettings > img{
+    width: 25px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.mainTopSettings > div{
+    border: 1px solid #fff;
+    padding: 5px;
+    text-align: center;
+}
+
+.mainTopSettings > div > span{
+    color: #fff;
+}
+
+.gridContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.gridContainer > .gridFirstContents{
+    display: grid;
+    grid-template-columns: 30% 70%;
+    margin-right: 10px;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch{
+    height: 250px;
+    background-color: #3C414C;
+    margin-right: 10px;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch > div{
+    padding: 10px;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchText{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #fff;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent{
+    max-height: 100%;
+    overflow-y: auto;
+    height: 190px;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent > div{
+    padding: 10px;
+    color: #fff;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent > div:hover{
+    cursor: pointer;
+    background-color: #262933;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchText > img{
+    width: 25px;
+    margin-right: 10px;
+}
+
+.gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchText > input{
+    background-color: #3C414C;
+    border: 0;
+    color: #fff;
+    outline: none;
+    width: 100%;
+}
+
+#camListTableBody > tbody > tr > td > span{
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 15px;
+    margin-right: 5px;
+}
+
+#camListTableBody > tbody > tr > td > .sensorRateCheck0{
+    background-color: #1DDB16;
+}
+
+#camListTableBody > tbody > tr > td > .sensorRateCheck1{
+    background-color: #FF5E00;
+}
+
+#camListTableBody > tbody > tr > td > .sensorRateCheck2{
+    background-color: #FF0000;
+}
+
+.gridContainer > .gridFirstContents > .camList > #camListTableHeader{
+    margin-bottom: 0;
+}
+
+.gridContainer > .gridFirstContents > .camList > #camListTableBody{
+    margin-bottom: 0;
+}
+
+.gridContainer > .gridFirstContents > .camList > div{
+    height: 209px;
+    overflow-y: auto;
+}
+
+.gridContainer > .gridFirstContents > .mainAllMap{
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.gridContainer > .gridFirstContents > .mainOneMap{
+    margin-top: 10px;
+}
+
+.customOverlayText{
+    background-color: #3C414C;
+    padding: 10px;
+}
+
+.customOverlayText > span{
+    color: #fff;
+}
+
+.gridContainer > .gridFirstContents > .camLocationList{
+    margin-top: 10px;
+    grid-column: span 2;
+}
+
+.gridContainer > .gridFirstContents > .camLocationList > #camLocationListTableHeader{
+    margin-bottom: 0;
+}
+
+.gridContainer > .gridFirstContents > .camLocationList > #camLocationListTableBody{
+    margin-bottom: 0;
+}
+
+.gridContainer > .gridFirstContents > .camLocationList > div{
+    height: 209px;
+    overflow-y: auto;
+}
+
+.gridContainer > .gridSecondContents{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.doughnutChart{
+    width: 32%;
+    margin-right: 10px;
+}
+
+/* .doughnutChart > div > canvas{
+    height: 200px !important;
+    display: inline-block !important;
+} */
+
+.doughnutChart > .chartTitle{
+    color: #fff;
+    background-color: #475761;
+    padding: 5px;
+}
+
+.doughnutChart > .chartDiv{
+    background-color: #475761;
+}
+
+.barChart{
+    width: 48.5%;
+    margin-right: 10px;
+}
+
+.barChart > .chartTitle{
+    color: #fff;
+    background-color: #475761;
+    padding: 5px;
+}
+
+.barChart > .chartDiv{
+    padding-right: 20px;
+    background-color: #475761;
+}
+
+/* .barChart > div > canvas{
+    height: 200px !important;
+    display: inline-block !important;
+} */
+
+@media screen and (max-height: 1000px){
+    .gridContainer > .gridFirstContents > .mainSearch{
+        height: 250px;
+        background-color: #3C414C;
+        margin-right: 10px;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent{
+        max-height: 100%;
+        overflow-y: auto;
+        height: 190px;
+    }
+
+    .gridContainer > .gridFirstContents > .camList > div{
+        height: 209px;
+        overflow-y: auto;
+    }
+
+    .gridContainer > .gridFirstContents > .camLocationList > div{
+        height: 209px;
+        overflow-y: auto;
+    }
+
+    #mainAllMap,
+    #mainOneMap{
+        height: 35vh !important;
+    }
+
+    .doughnutChart > div > canvas{
+        height: 22vh !important;
+    }
+
+    .barChart > div > canvas{
+        height: 27vh !important;
+    }
+}
+
+@media screen and (min-height: 1000px){
+    .gridContainer > .gridFirstContents > .mainSearch{
+        height: 35vh;
+    }
+
+    .gridContainer > .gridFirstContents > .mainSearch > div > .mainSearchContent{
+        height: 29vh;
+    }
+
+    .gridContainer > .gridFirstContents > .camList > div{
+        height: 31vh;
+    }
+
+    .gridContainer > .gridFirstContents > .camLocationList > div{
+        height: 31vh;
+    }
+
+    #mainAllMap,
+    #mainOneMap{
+        height: 45vh !important;
+    }
+
+    .doughnutChart > div > canvas{
+        height: 28vh !important;
+    }
+
+    .barChart > div > canvas{
+        height: 38vh !important;
+    }
+}

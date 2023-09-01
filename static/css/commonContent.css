@@ -159,10 +159,6 @@ table > thead > tr:first-child > td{
     width: 80%;
 }
 
-#sideMenu > .menuRadios{
-    border: 1px solid #fff;
-}
-
 #sideMenu > .menuRadios > .sideMainMenu{
     display: flex;
     align-items: center;
