@@ -233,12 +233,12 @@ input[type="time"]{
 
 .doughnutChart > .chartTitle{
     color: #fff;
-    background-color: #475761;
+    background-color: #3C414C;
     padding: 5px;
 }
 
 .doughnutChart > .chartDiv{
-    background-color: #475761;
+    background-color: #3C414C;
 }
 
 .barChart{
@@ -248,13 +248,13 @@ input[type="time"]{
 
 .barChart > .chartTitle{
     color: #fff;
-    background-color: #475761;
+    background-color: #3C414C;
     padding: 5px;
 }
 
 .barChart > .chartDiv{
     padding-right: 20px;
-    background-color: #475761;
+    background-color: #3C414C;
 }
 
 /* .barChart > div > canvas{
