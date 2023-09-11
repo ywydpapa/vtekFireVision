@@ -142,8 +142,8 @@
                                         <td>고객명</td>
                                         <td>{{sensorText1}}</td>
                                         <td>{{sensorText2}}</td>
-                                        <td>{{sensorText3}}</td>
-                                        <td>{{sensorText4}}</td>
+                                        <td>불꽃</td>
+                                        <td>연기</td>
                                         <td>상세보기</td>
                                     </tr>
                                 </thead>
@@ -167,8 +167,8 @@
                                             </td>
                                             <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][0]}}"></span>{{sensorJsonDatas[loop.index0][0]}}</td>
                                             <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][1]}}"></span>{{sensorJsonDatas[loop.index0][1]}}</td>
-                                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][2]}}"></span>{{sensorJsonDatas[loop.index0][2]}}</td>
-                                            <td><span class="sensorRateCheck{{sensorRateArray[loop.index0][3]}}"></span>{{sensorJsonDatas[loop.index0][3]}}</td>
+                                            <td class="fireCheckTd" data-no="{{k[0]}}">OFF</td>
+                                            <td class="smokeCheckTd" data-no="{{k[0]}}">OFF</td>
                                             <td>
                                                 <a href="/sitedetail/{{k[0]}}">상세보기</a>
                                             </td>
@@ -583,6 +583,7 @@
                 listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][1] + "\"></span>" + variableObj.sensorJsonDatas[i][1] + "</td>";
                 listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][2] + "\"></span>" + variableObj.sensorJsonDatas[i][2] + "</td>";
                 listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][3] + "\"></span>" + variableObj.sensorJsonDatas[i][3] + "</td>";
+                listHtml += "<td><a href=\"/sitedetail/" + item[0] + "\">상세보기</a></td>";
                 listHtml += "</tr>";
     
                 locationlistHtml += "<tr data-no=\"" + item[0] + "\" data-rate=\"" + variableObj.sensorJsonDatas[i][0] + "\">";

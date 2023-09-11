@@ -116,9 +116,11 @@
                                             setTimeout(() => {
                                                 let str = "";
                                                 camListTableBody.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
+                                                camListTableBody.find("tbody tr .smokeCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
                                                 
                                                 if(result[i][4].indexOf("kkkkk") > -1 || result[i][4].indexOf("KKKKK") > -1){
                                                     camListTableBody.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("ON");
+                                                    camListTableBody.find("tbody tr .smokeCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("ON");
                                                     str = "연기가 감지되었습니다.\n주변 온도가 낮은 상황이어서 오탐지일 가능성이 높습니다.";
                                                 }else if(result[i][4].indexOf("sssss") > -1 || result[i][4].indexOf("SSSSS") > -1){
                                                     str = "누전이 감지되었습니다.";
@@ -133,6 +135,7 @@
                                                         camLocationListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
                                                     }else{
                                                         camListTableBody.find("tbody tr .fireCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
+                                                        camListTableBody.find("tbody tr .smokeCheckTd[data-no=\"" + selectData[0][0] + "\"]").text("OFF");
                                                         camListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
                                                         camLocationListTableBody.find("tbody tr[data-no=\"" + selectData[0][0] + "\"]").css("background-color", "");
                                                         return false;
