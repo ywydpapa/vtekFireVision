@@ -444,6 +444,10 @@ def searchSel():
     cur.execute(sql)
     alarmList = cur.fetchall()
 
+    sql = "select * from siteGroup group by groupName order by regDate desc"
+    cur.execute(sql)
+    groupList = cur.fetchall()
+
     sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04, camList.camLat, camList.camLong from camList"
     sql += " left join camDevice on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
@@ -485,13 +489,13 @@ def searchSel():
         sensorJsonDatas[index][3] = sensor4
 
     db.close()
-    return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList,sensorJsonDatas=sensorJsonDatas,sensorRateArray=sensorRateArray,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
+    return render_template("stat/dashinit.html", result=result_service, area=result_area,cpu_remain=psutil.cpu_times_percent().idle, cpu_percent=psutil.cpu_percent(),result_mem=psutil.virtual_memory(), result_disk=result_disk, result_dateList=result_dateList,result_hourList=result_hourList,result_camList=camList,alarmList=alarmList,sensorJsonDatas=sensorJsonDatas,sensorRateArray=sensorRateArray,groupList=groupList,sensorText1=sensorText1,sensorText2=sensorText2,sensorText3=sensorText3,sensorText4=sensorText4)
 
 @app.route("/getMainCamList", methods=['GET'])
 def getMainCamList():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
     cur = db.cursor()
-    sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04, camList.camLat, camList.camLong from camList"
+    sql = "select camList.camNo, camList.camName, camList.camPostNo, camList.camAddr1, camList.camAddr2, camDevice.sensor01, camDevice.sensor02, camDevice.sensor03, camDevice.sensor04, camList.camLat, camList.camLong, camList.groupNo from camList"
     sql += " left join camDevice on camDevice.deviceNo = camList.deviceNo"
     sql += " where camList.attrib not like 'XXX%' order by camList.regDate desc limit 10"
     cur.execute(sql)
@@ -599,6 +603,26 @@ def deviceAdd():
     db.close()
     return render_template("subm/deviceman.html", cond=cond)
 
+@app.route('/groupAdd')
+def groupAdd():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "select * from siteGroup where attrib not like 'XXX%' order by regDate desc"
+    cur.execute(sql1)
+    result = cur.fetchall()
+    db.close()
+    return render_template("subm/grouplist.html", result=result)
+
+@app.route('/groupInsert', methods=['POST'])
+def groupInsert():
+    db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
+    cur = db.cursor()
+    sql1 = "insert into siteGroup (groupName, regDate) values (%s, now())"
+    cur.execute(sql1, str(request.form.get("groupName")));
+    db.commit()
+    db.close()
+    return render_template("subm/grouplist.html")
+
 @app.route('/siteAdd')
 def siteAdd():
     db = pymysql.connect(host=envhost, user=envuser, password=envpassword, db=envdb, charset=envcharset)
@@ -612,8 +636,11 @@ def siteAdd():
     sql3 = "select custNo, custName from custMng where attrib not like 'XXX%'"
     cur.execute(sql3)
     combb = cur.fetchall()
+    sql4 = "select * from siteGroup where attrib not like 'XXX%' order by regDate desc"
+    cur.execute(sql4)
+    groupList = cur.fetchall()
     db.close()
-    return render_template("subm/siteman.html", cond=cond, comba=comba, combb=combb)
+    return render_template("subm/siteman.html", cond=cond, comba=comba, combb=combb, groupList=groupList)
 
 @app.route('/custAdd')
 def custAdd():
@@ -694,8 +721,8 @@ def siteinsert():
         db.close()
         return render_template("subm/siteman.html", cond=cond)
     else:
-        sql1 = "insert into camList (camName, deviceNo, camLat, camLong, custNo, serviceNo, camPostno, camAddr1, camAddr2, regDate) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,now())"
-        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),latLong[0],latLong[1],int(request.form.get("custNo")),str(request.form.get("serviceType")),str(request.form.get("camPostno")),str(request.form.get("camAddr1")),str(request.form.get("camAddr2"))))
+        sql1 = "insert into camList (camName, deviceNo, camLat, camLong, custNo, serviceNo, camPostno, camAddr1, camAddr2, groupNo, regDate) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now())"
+        cur.execute(sql1, (str(request.form.get("siteNo")), str(request.form.get("deviceNo")),latLong[0],latLong[1],int(request.form.get("custNo")),str(request.form.get("serviceType")),str(request.form.get("camPostno")),str(request.form.get("camAddr1")),str(request.form.get("camAddr2")),int(request.form.get("groupNo"))))
         db.commit()
         cond = cur.fetchall()
         db.close()

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include '/menu/header.html' %}
+</head>
+<style>
+    .groupAddContents > div{
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        padding: 10px;
+    }
+
+    .groupAddContents > table > tbody > tr > td > input{
+        color: #000;
+        width: 100%;
+    }
+</style>
+<body>
+    <div id="commonBodyContents">
+{% include './menu/sidemenu1.html' %}
+    <div id="commonContent">
+        <div class="container">
+            <div class="groupAddContents">
+                <div>
+                    <button type="button" onclick="groupInsert();">그룹 등록</button>
+                </div>
+                <table class="table table-striped nowrap overflow-auto">
+                    <tr>
+                        <th>그룹명</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="groupName"></td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <table id="foo-table" class="table table-striped table-bordered nowrap overflow-auto">
+                    <colgroup>
+                        <col width = "10%">
+                        <col width = "70%">
+                        <col width = "30%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <td>그룹명</td>
+                            <td>등록일</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k in result %}
+                        <tr>
+                            <td>{{k[0]}}</td>
+                            <td>{{k[1]}}</td>
+                            <td>{{k[2]}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function groupInsert(){
+        let groupName = $("#groupName");
+
+        if(groupName.val() === ""){
+            alert("그룹명을 입력해주세요.");
+            return false;
+        }else{
+            $.ajax({
+                url: "/groupInsert",
+                method: "post",
+                data: {
+                    "groupName": groupName.val(),
+                },
+                success: function(){
+                    alert("등록되었습니다.");
+                    location.reload();
+                }
+            })
+        }
+    }
+</script>

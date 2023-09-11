@@ -5,7 +5,6 @@
 <style>
     .userAddContents{
         width: 100%;
-        padding-bottom: 10px;
     }
 
     .userAddContents > div{
@@ -27,9 +26,12 @@
         padding: 5px;
     }
 
-    .userAddContents > table > tbody > tr > td > input{
+    .userAddContents > table > tbody > tr > td > input,
+    .userAddContents > table > tbody > tr > td > select{
+        color: #000;
         width: 100%;
     }
+    
 </style>
 </head>
 <body>
@@ -51,39 +53,45 @@
                 <div>
                     <button type="button" onclick="siteAddSubmit();"> 사이트 등록</button>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>사이트명</th>
-                            <th>장비번호</th>
-                            <th>사용고객</th>
-                            <th>서비스종류</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" id="siteNo"></td>
-                            <td><select id="deviceNo">
-                                {%  for j in comba %}
-                                <option value="{{j[1]}}">{{j[2]}}({{ j[3] }})</option>
+                <table class="table table-striped nowrap overflow-auto">
+                    <tr>
+                        <th>사이트명</th>
+                        <th>장비번호</th>
+                        <th>사용고객</th>
+                        <th>서비스종류</th>
+                        <th>그룹</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="siteNo"></td>
+                        <td><select id="deviceNo">
+                            {%  for j in comba %}
+                            <option value="{{j[1]}}">{{j[2]}}({{ j[3] }})</option>
+                            {% endfor %}
+                        </select></td>
+                        <td><select id="custNo">
+                            {%  for l in combb %}
+                            <option value="{{l[0]}}">{{l[1]}}</option>
+                            {% endfor %}
+                        </select></td>
+                        <td><input type="text" id="serviceType"></td>
+                        <td>
+                            <select id="groupNo">
+                                {%  for k in groupList %}
+                                <option value="{{k[0]}}">{{k[1]}}</option>
                                 {% endfor %}
-                            </select></td>
-                            <td><select id="custNo">
-                                {%  for l in combb %}
-                                <option value="{{l[0]}}">{{l[1]}}</option>
-                                {% endfor %}
-                            </select></td>
-                            <td><input type="text" id="serviceType"></td>
-                        </tr>
-                        <tr>
-                            <td>우편번호</td>
-                            <td><input type="text" id="postcode" readonly></td>
-                            <td>주소</td>
-                            <td><input type="text" id="address1" readonly><input type="text" id="address2" readonly></td>
-                        </tr>
-                    </tbody>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">우편번호</td>
+                        <td colspan="3">주소</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="text" id="postcode" readonly></td>
+                        <td colspan="3"><input type="text" id="address1" readonly style="width: 50%;"><input type="text" id="address2" readonly style="width: 50%;"></td>
+                    </tr>
                 </table>
-
+                
             </div>
             <div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
             </div>
@@ -122,6 +130,8 @@
         datas.camPostno = $("#postcode").val();
         datas.camAddr1 = $("#address1").val();
         datas.camAddr2 = $("#address2").val();
+        datas.groupNo = $("#groupNo").val();
+        
         $.ajax({
             "url": "/siteInsert",
             "method": "post",
@@ -142,34 +152,34 @@
         // iframe을 넣은 element를 안보이게 한다.
         element_wrap.style.display = 'none';
     }
-        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-        new daum.Postcode({
-            oncomplete: function(data) {
-                console.log(data);
-                var fullAddr = data.address;
-                var extraAddr = '';
-                if(data.addressType === 'R'){
-                    if(data.bname !== ''){
-                        extraAddr += data.bname;
-                    }
-                    if(data.buildingName !== ''){
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    /* fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : ''); */
-                }
-                localStorage.setItem('address', fullAddr);
-                document.getElementById('postcode').value = data.zonecode;
-                document.getElementById('address1').value = fullAddr;
-                document.getElementById('address2').value = "(" + extraAddr + ")";
 
-                document.body.scrollTop = currentScroll;
-            },
-            onresize : function(size) {
-                element_wrap.style.height = size.height+'px';
-            },
-            width : '100%',
-            height : '100%'
-        }).embed(element_wrap);
-        element_wrap.style.display = 'block';
+    var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var fullAddr = data.address;
+            var extraAddr = '';
+            if(data.addressType === 'R'){
+                if(data.bname !== ''){
+                    extraAddr += data.bname;
+                }
+                if(data.buildingName !== ''){
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                /* fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : ''); */
+            }
+            localStorage.setItem('address', fullAddr);
+            document.getElementById('postcode').value = data.zonecode;
+            document.getElementById('address1').value = fullAddr;
+            document.getElementById('address2').value = "(" + extraAddr + ")";
+
+            document.body.scrollTop = currentScroll;
+        },
+        onresize : function(size) {
+            element_wrap.style.height = size.height+'px';
+        },
+        width : '100%',
+        height : '100%'
+    }).embed(element_wrap);
+    element_wrap.style.display = 'block';
 </script>
 </html>
