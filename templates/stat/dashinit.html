@@ -581,8 +581,8 @@
                 listHtml += "<td><a href=\"#\" data-lat=\"" + item[9] + "\" data-long=\"" + item[10] + "\" onclick=\"listClickMap(this);\">" + item[1] + "</a></td>";
                 listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][0] + "\"></span>" + variableObj.sensorJsonDatas[i][0] + "</td>";
                 listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][1] + "\"></span>" + variableObj.sensorJsonDatas[i][1] + "</td>";
-                listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][2] + "\"></span>" + variableObj.sensorJsonDatas[i][2] + "</td>";
-                listHtml += "<td><span class=\"sensorRateCheck" + variableObj.sensorRateArray[i][3] + "\"></span>" + variableObj.sensorJsonDatas[i][3] + "</td>";
+                listHtml += "<td class=\"fireCheckTd\" data-no=\"" + item[0] + "\">OFF</td>";
+                listHtml += "<td class=\"smokeCheckTd\" data-no=\"" + item[0] + "\">OFF</td>";
                 listHtml += "<td><a href=\"/sitedetail/" + item[0] + "\">상세보기</a></td>";
                 listHtml += "</tr>";
     
